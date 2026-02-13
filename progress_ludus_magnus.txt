@@ -57,3 +57,31 @@
 - Review: [PASSED]
 - Next: [US-002]
 ---
+## Iteration 3 - Define state file schema and persistence layer
+- What was implemented
+  - Added full v1 JSON state schema in `internal/state/schema.go` covering Session, Lineage, AgentDefinition, Artifact, Evaluation, and Directive model types
+  - Added JSON persistence layer in `internal/state/persistence.go` with default path `.ludus-magnus/state.json`, plus load/save with directory creation and pretty JSON output
+  - Added Go tests in `internal/state/persistence_test.go` for save/load round-trip, state directory creation, and default-path save behavior
+  - Added acceptance test `tests/test_us002_state_schema.py` that validates `go test ./internal/state -v` and `go build ./internal/state`
+- Files changed
+  - internal/state/schema.go
+  - internal/state/persistence.go
+  - internal/state/persistence_test.go
+  - tests/test_us002_state_schema.py
+  - PRD_LUDUS_MAGNUS.md
+  - progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+    - Keep state structs JSON-tag aligned with PRD keys to minimize transformation logic in later commands
+  - Gotchas encountered
+    - `pytest` is only available via local virtualenv (`.venv/bin/pytest`) in this environment
+  - Useful context
+    - `Load` currently returns initialized empty state when file does not exist, which supports first-run flows for upcoming session commands
+
+**Summary:**
+- Task: [US-002: Define state file schema and persistence layer]
+- Files: [internal/state/schema.go, internal/state/persistence.go, internal/state/persistence_test.go, tests/test_us002_state_schema.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 4 passed]
+- Review: [PASSED]
+- Next: [US-003]
+---
