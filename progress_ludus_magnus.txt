@@ -471,3 +471,30 @@
 - Review: [PASSED]
 - Next: [US-013]
 ---
+## Iteration 15 - Iterate command (regenerate with evolution)
+- What was implemented
+  - Added `iterate <session-id>` command to regenerate an agent from lineage evolution feedback and persist a new version
+  - Implemented iterate flow: load session/lineage, synthesize evolution prompt from lineage history, generate new agent, increment version, save state
+  - Added provider/model/base-url/api-key flags to iterate command and default provider/model fallback from previous agent metadata
+  - Added acceptance test covering iterate output, state agent count/version increment, and changed system prompt
+- Files changed
+  - cmd/root.go
+  - cmd/iterate.go
+  - tests/test_us013_iterate_command.py
+  - PRD_LUDUS_MAGNUS.md
+  - progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+    - Reusing lineage lookup + latest-agent helpers keeps command behavior consistent between `run` and `iterate`
+  - Gotchas encountered
+    - Iterate for non-quickstart sessions needs explicit lineage selection, while quickstart can safely default to `main`
+  - Useful context
+    - Evolution prompt synthesis now directly powers versioned regeneration without auto-execution, matching manual run workflows
+
+**Summary:**
+- Task: [US-013: Iterate command (regenerate with evolution)]
+- Files: [cmd/root.go, cmd/iterate.go, tests/test_us013_iterate_command.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us013_iterate_command.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-014]
+---
