@@ -498,3 +498,31 @@
 - Review: [PASSED]
 - Next: [US-014]
 ---
+## Iteration 16 - Training mode initialization (four lineages A/B/C/D)
+- What was implemented
+- Added `training` command group with `training init --need` flow
+- Implemented training session creation (`mode=training`) with four generated lineages named `A`, `B`, `C`, and `D`
+- Added hardcoded variation strategies per lineage and generated one initial agent (version 1) for each lineage
+- Persisted all four lineages with `locked=false`, empty artifacts, and empty directives; printed session ID plus all four lineage IDs
+- Added acceptance test with local OpenAI-compatible mock to verify 4 lineages, unlocked defaults, and four distinct system prompts
+- Files changed
+- cmd/root.go
+- cmd/training.go
+- tests/test_us014_training_init.py
+- PRD_LUDUS_MAGNUS.md
+- progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+  - Reusing one provider adapter instance across multiple lineage generations keeps training init simple and consistent
+  - Gotchas encountered
+  - Validation for variation quality is more robust when mock provider responses key off explicit strategy markers
+  - Useful context
+  - Training lineages continue to be keyed by lineage ID in state; command routing should use lineage `name` for user-facing selectors
+
+**Summary:**
+- Task: [US-014: Training mode initialization (four lineages A/B/C/D)]
+- Files: [cmd/root.go, cmd/training.go, tests/test_us014_training_init.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us014_training_init.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-015]
+---
