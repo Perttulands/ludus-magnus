@@ -254,3 +254,62 @@
 - Review: [PASSED]
 - Next: [US-008]
 ---
+## Iteration 9 - Observability capture (tokens, timing, tool calls, costs)
+- What was implemented
+- Added `internal/engine/observability.go` with `CaptureExecutionMetadata` and Anthropic 2026 pricing-based cost calculation (`sonnet`, `opus`, `haiku`) plus fallback to provider-reported cost
+- Updated API execution path to centralize metadata extraction through observability capture
+- Extended provider metadata to carry `tokens_input`, `tokens_output`, and provider-level tool calls, then mapped those fields into artifact execution metadata
+- Added Go tests for Anthropic pricing accuracy and fallback behavior, and added an integration test validating persisted execution metadata includes non-zero tokens and cost
+- Files changed
+- PRD_LUDUS_MAGNUS.md
+- internal/provider/interface.go
+- internal/provider/anthropic.go
+- internal/provider/openai_compatible.go
+- internal/engine/execute.go
+- internal/engine/execute_test.go
+- internal/engine/observability.go
+- internal/engine/observability_test.go
+- tests/test_us008_observability.py
+- Learnings for future iterations:
+- Patterns discovered
+- Keep observability normalization in one engine function so provider adapters only report raw usage and execution paths stay simple
+- Gotchas encountered
+- Existing provider metadata exposed only total tokens; splitting input/output at provider boundary is required to satisfy artifact-level observability requirements
+- Useful context
+- US-009 can now rely on `run` artifacts already containing enriched metadata (`tokens_input`, `tokens_output`, `duration_ms`, `cost_usd`, `tool_calls`)
+
+**Summary:**
+- Task: [US-008: Observability capture (tokens, timing, tool calls, costs)]
+- Files: [PRD_LUDUS_MAGNUS.md, internal/provider/interface.go, internal/provider/anthropic.go, internal/provider/openai_compatible.go, internal/engine/execute.go, internal/engine/execute_test.go, internal/engine/observability.go, internal/engine/observability_test.go, tests/test_us008_observability.py]
+- Tests: [PASS with count: 6 passed (go test ./internal/engine -v), 1 passed (tests/test_us008_observability.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-009]
+---
+## Iteration 10 - Artifact storage with metadata
+- What was implemented
+  - Added `internal/state/artifact.go` with `AddArtifact(sessionID, lineageID, artifact)` to centralize artifact persistence, lineage/session validation, and default `art_` ID + `created_at` assignment
+  - Added state unit tests for successful artifact append and error handling when session/lineage are missing
+  - Updated `run` command to persist artifacts via `state.AddArtifact` instead of mutating state inline
+  - Added integration test `tests/test_us009_artifact_storage.py` validating end-to-end artifact persistence and artifact ID pattern after `quickstart init` + `run`
+- Files changed
+  - internal/state/artifact.go
+  - internal/state/artifact_test.go
+  - cmd/run.go
+  - tests/test_us009_artifact_storage.py
+  - PRD_LUDUS_MAGNUS.md
+  - progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+    - Centralizing state mutations in `internal/state` keeps command handlers thin and avoids duplicated persistence logic
+  - Gotchas encountered
+    - Refactoring persistence out of `cmd/run.go` can leave stale variables; run full compile/tests after moving storage logic
+  - Useful context
+    - `AddArtifact` locates lineages by lineage ID (`Lineage.ID`), so callers should pass lineage IDs rather than map keys or names
+
+**Summary:**
+- Task: [US-009: Artifact storage with metadata]
+- Files: [internal/state/artifact.go, internal/state/artifact_test.go, cmd/run.go, tests/test_us009_artifact_storage.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 6 passed (go test ./internal/state -v), 1 passed (tests/test_us009_artifact_storage.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-010]
+---

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/Perttulands/ludus-magnus/internal/engine"
 	"github.com/Perttulands/ludus-magnus/internal/provider"
@@ -48,7 +47,7 @@ func newRunCmd() *cobra.Command {
 				}
 			}
 
-			lineageKey, lineage, ok := findLineageByName(session, selectedLineage)
+			_, lineage, ok := findLineageByName(session, selectedLineage)
 			if !ok {
 				return fmt.Errorf("lineage %q not found", selectedLineage)
 			}
@@ -88,19 +87,14 @@ func newRunCmd() *cobra.Command {
 			}
 
 			artifact := state.Artifact{
-				ID:                newPrefixedID("art"),
 				AgentID:           agent.ID,
 				Input:             input,
 				Output:            result.Output,
-				CreatedAt:         time.Now().UTC().Format(time.RFC3339),
 				ExecutionMetadata: result.Metadata,
 			}
 
-			lineage.Artifacts = append(lineage.Artifacts, artifact)
-			session.Lineages[lineageKey] = lineage
-			st.Sessions[sessionID] = session
-
-			if err := state.Save("", st); err != nil {
+			artifact.ID = newPrefixedID("art")
+			if err := state.AddArtifact(sessionID, lineage.ID, artifact); err != nil {
 				return err
 			}
 

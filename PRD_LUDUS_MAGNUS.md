@@ -108,7 +108,7 @@ graph TD
 
 - [x] **US-007** Agent execution engine with provider integration and executor modes (~30 min, ~250 lines) [depends: US-004, US-006]
 - [x] **US-008** Observability capture (tokens, timing, tool calls, costs) (~20 min, ~150 lines) [depends: US-007]
-- [ ] **US-009** Artifact storage with metadata (~15 min, ~100 lines) [depends: US-002, US-007]
+- [x] **US-009** Artifact storage with metadata (~15 min, ~100 lines) [depends: US-002, US-007]
 - [ ] **US-010** Evaluation commands (score/comment) (~15 min, ~80 lines) [depends: US-009]
 - [ ] **US-011** Status/inspect commands for artifacts (~20 min, ~120 lines) [depends: US-009]
 - [ ] **US-REVIEW-S2** Sprint 2 Review 🚧 GATE (~10 min)
