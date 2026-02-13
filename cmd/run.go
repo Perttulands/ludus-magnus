@@ -93,12 +93,12 @@ func newRunCmd() *cobra.Command {
 				ExecutionMetadata: result.Metadata,
 			}
 
-			artifact.ID = newPrefixedID("art")
-			if err := state.AddArtifact(sessionID, lineage.ID, artifact); err != nil {
+			artifactID, err := state.AddArtifact(sessionID, lineage.ID, artifact)
+			if err != nil {
 				return err
 			}
 
-			_, err = fmt.Fprintf(cmd.OutOrStdout(), "artifact_id=%s\n", artifact.ID)
+			_, err = fmt.Fprintf(cmd.OutOrStdout(), "artifact_id=%s\n", artifactID)
 			return err
 		},
 	}

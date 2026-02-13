@@ -371,3 +371,57 @@
 - Review: [PASSED]
 - Next: [US-REVIEW-S2]
 ---
+## Review ISSUES - US-REVIEW-S2 Sprint 2 Review
+- Scope reviewed
+  - US-007 through US-011 (commits: 8999cc6, 893cb33, f3305c3, f848c28, f08421b)
+- Gate checks run
+  - `/usr/local/go/bin/go test ./... -v` PASS
+  - `/usr/local/go/bin/go build -o ludus-magnus` PASS
+  - End-to-end flow PASS (`quickstart init` -> `run` -> `evaluate` -> `artifact inspect`) using local OpenAI-compatible mock server
+  - Observability verification PASS via `jq`: metadata includes `tokens_input`, `tokens_output`, `duration_ms`, `cost_usd`, `tool_calls`
+- Linus 5-layer findings
+  - Data structures are generally coherent for Sprint 2, and observability payload is extensible
+  - Execution/evaluation flow is simple and practical for the training loop
+  - Evaluation immutability is correctly enforced
+- Issues found
+  - Artifact ID uniqueness is probabilistic only (`art_` + 8 hex), with no global collision guard before persistence
+  - `evaluate <artifact-id>` and `artifact inspect <artifact-id>` perform global first-match traversal, so a collision can target the wrong artifact
+  - This violates Sprint 2 cross-task reliability expectation for globally unique artifact identifiers
+- Action taken
+  - Inserted follow-up task in PRD: `US-009a Enforce globally unique artifact IDs and collision-safe artifact lookup` before `US-REVIEW-S2`
+- Taste score: Acceptable (needs ID-collision hardening)
+---
+## Iteration 13 - Enforce globally unique artifact IDs and collision-safe artifact lookup
+- What was implemented
+- Updated `internal/state/AddArtifact` to guarantee globally unique artifact IDs across all sessions/lineages, retry on generated collisions, and reject explicit duplicate IDs
+- Added strict artifact lookup helper (`LoadArtifactByID`) that fails when an artifact ID is missing or non-unique
+- Refactored `evaluate` and `artifact inspect` paths to use strict lookup so duplicate IDs cannot silently target the wrong artifact
+- Updated `run` command to use persisted ID returned from `AddArtifact` instead of pre-generating IDs in command layer
+- Added unit tests for duplicate-ID rejection and non-unique lookup handling, plus acceptance test covering unique ID creation and collision-safe CLI behavior
+- Files changed
+- internal/state/artifact.go
+- internal/state/artifact_lookup.go
+- internal/state/evaluation.go
+- cmd/run.go
+- cmd/artifact_inspect.go
+- internal/state/artifact_test.go
+- internal/state/artifact_lookup_test.go
+- internal/state/evaluation_test.go
+- tests/test_us009a_artifact_uniqueness.py
+- PRD_LUDUS_MAGNUS.md
+- progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+  - Keep ID generation and uniqueness guarantees in `internal/state` so command handlers stay thin and cannot bypass invariants
+  - Gotchas encountered
+  - First-match artifact traversal is unsafe when historical/corrupted state may contain collisions; fail-fast ambiguity handling is safer
+  - Useful context
+  - `LoadArtifactByID` is now the shared collision-safe lookup primitive for artifact-targeted commands
+
+**Summary:**
+- Task: [US-009a: Enforce globally unique artifact IDs and collision-safe artifact lookup]
+- Files: [internal/state/artifact.go, internal/state/artifact_lookup.go, internal/state/evaluation.go, cmd/run.go, cmd/artifact_inspect.go, internal/state/artifact_test.go, internal/state/artifact_lookup_test.go, internal/state/evaluation_test.go, tests/test_us009a_artifact_uniqueness.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 13 passed (go test ./internal/state -v), 1 passed (tests/test_us009a_artifact_uniqueness.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-REVIEW-S2]
+---

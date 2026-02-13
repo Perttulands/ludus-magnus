@@ -20,29 +20,16 @@ func newArtifactInspectCmd() *cobra.Command {
 				return fmt.Errorf("artifact id is required")
 			}
 
-			st, err := state.Load("")
+			artifact, err := state.LoadArtifactByID(artifactID)
 			if err != nil {
 				return err
 			}
-
-			for _, session := range st.Sessions {
-				for _, lineage := range session.Lineages {
-					for _, artifact := range lineage.Artifacts {
-						if artifact.ID != artifactID {
-							continue
-						}
-
-						payload, err := json.MarshalIndent(artifact, "", "  ")
-						if err != nil {
-							return err
-						}
-						_, err = fmt.Fprintf(cmd.OutOrStdout(), "%s\n", payload)
-						return err
-					}
-				}
+			payload, err := json.MarshalIndent(artifact, "", "  ")
+			if err != nil {
+				return err
 			}
-
-			return fmt.Errorf("artifact %q not found", artifactID)
+			_, err = fmt.Fprintf(cmd.OutOrStdout(), "%s\n", payload)
+			return err
 		},
 	}
 

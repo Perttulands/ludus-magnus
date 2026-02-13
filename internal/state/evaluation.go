@@ -17,28 +17,24 @@ func EvaluateArtifact(artifactID string, score int, comment string) error {
 		return err
 	}
 
-	for sessionID, session := range st.Sessions {
-		for lineageKey, lineage := range session.Lineages {
-			for idx := range lineage.Artifacts {
-				if lineage.Artifacts[idx].ID != artifactID {
-					continue
-				}
-				if lineage.Artifacts[idx].Evaluation != nil {
-					return fmt.Errorf("artifact already evaluated")
-				}
-
-				lineage.Artifacts[idx].Evaluation = &Evaluation{
-					Score:       score,
-					Comment:     strings.TrimSpace(comment),
-					EvaluatedAt: time.Now().UTC().Format(time.RFC3339),
-				}
-
-				session.Lineages[lineageKey] = lineage
-				st.Sessions[sessionID] = session
-				return Save("", st)
-			}
-		}
+	location, err := findUniqueArtifactLocation(st, artifactID)
+	if err != nil {
+		return err
 	}
 
-	return fmt.Errorf("artifact %q not found", artifactID)
+	session := st.Sessions[location.sessionID]
+	lineage := session.Lineages[location.lineageKey]
+	if lineage.Artifacts[location.index].Evaluation != nil {
+		return fmt.Errorf("artifact already evaluated")
+	}
+
+	lineage.Artifacts[location.index].Evaluation = &Evaluation{
+		Score:       score,
+		Comment:     strings.TrimSpace(comment),
+		EvaluatedAt: time.Now().UTC().Format(time.RFC3339),
+	}
+
+	session.Lineages[location.lineageKey] = lineage
+	st.Sessions[location.sessionID] = session
+	return Save("", st)
 }
