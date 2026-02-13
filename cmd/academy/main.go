@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/Perttulands/agent-academy/internal/cli"
+	"github.com/Perttulands/ludus-magnus/internal/cli"
 )
 
 func main() {

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Perttulands/agent-academy/pkg/types"
+	"github.com/Perttulands/ludus-magnus/pkg/types"
 	"github.com/google/uuid"
 )
 

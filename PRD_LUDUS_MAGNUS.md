@@ -1,8 +1,8 @@
-# PRD: Agent Academy CLI
+# PRD: Ludus Magnus CLI
 
 ## Introduction
 
-Agent Academy CLI is a Go-based tool for training and evolving AI agents through iterative evaluation loops. Designed for AI coding agents (Claude Code, Codex, Athena) to use programmatically. Core value: define intent → generate agent → execute → evaluate → evolve, with deep observability capturing all execution signals as training data.
+Ludus Magnus CLI is a Go-based tool for training and evolving AI agents through iterative evaluation loops. Designed for AI coding agents (Claude Code, Codex, Athena) to use programmatically. Core value: define intent → generate agent → execute → evaluate → evolve, with deep observability capturing all execution signals as training data.
 
 ## Goals
 
@@ -170,7 +170,7 @@ graph TD
 - Target: ~50 lines of scaffolding code
 
 **Approach:**
-1. Initialize Go module: `go mod init github.com/yourusername/agent-academy`
+1. Initialize Go module: `go mod init github.com/yourusername/ludus-magnus`
 2. Install dependencies: `go get github.com/spf13/cobra@latest`
 3. Create `main.go` with cobra root command setup
 4. Create directory structure for internal packages
@@ -182,9 +182,9 @@ graph TD
 **Acceptance Criteria:**
 - Run: `go mod tidy`
 - Expected: exit 0, no errors
-- Run: `go build -o agent-academy`
+- Run: `go build -o ludus-magnus`
 - Expected: Binary created successfully
-- Run: `./agent-academy --help`
+- Run: `./ludus-magnus --help`
 - Expected: Shows root command help text
 - Run: `ls -d internal/*/`
 - Expected: Directories exist: `internal/state/`, `internal/provider/`, `internal/engine/`, `internal/export/`
@@ -196,13 +196,13 @@ graph TD
 **Implementation:**
 - File: `internal/state/schema.go` (create), `internal/state/persistence.go` (create)
 - Data model: Session, Lineage, AgentDefinition, Artifact, Evaluation, Directive structs
-- Persistence: JSON file at `.agent-academy/state.json` in current directory
+- Persistence: JSON file at `.ludus-magnus/state.json` in current directory
 - Target: ~150 lines defining structs and load/save functions
 
 **Approach:**
 1. Define Go structs matching the data model below
 2. Use `encoding/json` for marshaling/unmarshaling
-3. State file path: `.agent-academy/state.json` relative to working directory
+3. State file path: `.ludus-magnus/state.json` relative to working directory
 4. Load function: read JSON, unmarshal to State struct
 5. Save function: marshal State struct, write JSON with indent
 6. **Functional:** Load/Save are pure operations (no side effects beyond I/O)
@@ -305,7 +305,7 @@ graph TD
 - Run: `go build ./internal/state`
 - Expected: exit 0, no errors
 - Create test: Write state to `/tmp/test-state.json`, read back, verify equality
-- Run: `ls .agent-academy/`
+- Run: `ls .ludus-magnus/`
 - Expected: Directory created on first save operation
 
 ---
@@ -316,7 +316,7 @@ graph TD
 
 **Implementation:**
 - Files: `cmd/session.go` (create), `cmd/session_create.go` (create), `cmd/session_list.go` (create), `cmd/session_inspect.go` (create)
-- Commands: `agent-academy session new --mode quickstart --need "intent"`, `session list`, `session inspect <id>`
+- Commands: `ludus-magnus session new --mode quickstart --need "intent"`, `session list`, `session inspect <id>`
 - Target: ~120 lines for cobra command definitions and handlers
 
 **Approach:**
@@ -330,13 +330,13 @@ graph TD
 8. **Do NOT** validate that `need` is non-empty (accept any string)
 
 **Acceptance Criteria:**
-- Run: `go build -o agent-academy && ./agent-academy session new --mode quickstart --need "test intent"`
+- Run: `go build -o ludus-magnus && ./ludus-magnus session new --mode quickstart --need "test intent"`
 - Expected: Prints session ID (e.g., `ses_abc123`)
-- Run: `./agent-academy session list`
+- Run: `./ludus-magnus session list`
 - Expected: Table with one row showing session ID, mode, status
-- Run: `./agent-academy session inspect <session-id>`
+- Run: `./ludus-magnus session inspect <session-id>`
 - Expected: JSON output with session details
-- Run: `cat .agent-academy/state.json | jq .sessions`
+- Run: `cat .ludus-magnus/state.json | jq .sessions`
 - Expected: Contains created session with correct mode and need
 
 ---
@@ -379,7 +379,7 @@ graph TD
 
 **Implementation:**
 - File: `cmd/quickstart.go` (create)
-- Command: `agent-academy quickstart init --need "intent"`
+- Command: `ludus-magnus quickstart init --need "intent"`
 - Flow: Create session + create main lineage scaffold
 - Target: ~100 lines for quickstart init logic
 
@@ -396,11 +396,11 @@ graph TD
 10. **Do NOT** add interactive prompt mode (flags only)
 
 **Acceptance Criteria:**
-- Run: `go build -o agent-academy && ./agent-academy quickstart init --need "customer care agent"`
+- Run: `go build -o ludus-magnus && ./ludus-magnus quickstart init --need "customer care agent"`
 - Expected: Prints session ID and lineage ID
-- Run: `./agent-academy session list`
+- Run: `./ludus-magnus session list`
 - Expected: Shows session with mode=quickstart
-- Run: `cat .agent-academy/state.json | jq '.sessions[].lineages'`
+- Run: `cat .ludus-magnus/state.json | jq '.sessions[].lineages'`
 - Expected: Contains lineage with name="main"
 
 ---
@@ -457,7 +457,7 @@ Focus on clarity, specificity, and task alignment. The agent will use Claude Son
 - Run: Integration test with real Anthropic API (requires ANTHROPIC_API_KEY)
 - Expected: Agent definition generated with non-empty system_prompt
 - Verify: Generated agent has default model, temperature, max_tokens set
-- Run: `./agent-academy quickstart init --need "customer care agent" && cat .agent-academy/state.json | jq '.sessions[].lineages[].agents[0].definition.system_prompt'`
+- Run: `./ludus-magnus quickstart init --need "customer care agent" && cat .ludus-magnus/state.json | jq '.sessions[].lineages[].agents[0].definition.system_prompt'`
 - Expected: Non-empty system prompt string
 
 ---
@@ -469,11 +469,11 @@ Focus on clarity, specificity, and task alignment. The agent will use Claude Son
 **Review Steps:**
 - Run: `go test ./... -v`
 - Expected: All tests pass
-- Run: `go build -o agent-academy`
+- Run: `go build -o ludus-magnus`
 - Expected: Binary builds successfully
-- Run: `./agent-academy --help`
+- Run: `./ludus-magnus --help`
 - Expected: Shows help with session and quickstart commands
-- Run: End-to-end test: `./agent-academy quickstart init --need "test agent" && ./agent-academy session list`
+- Run: End-to-end test: `./ludus-magnus quickstart init --need "test agent" && ./ludus-magnus session list`
 - Expected: Session created and listed
 
 **Linus 5-Layer Analysis:**
@@ -513,7 +513,7 @@ Focus on clarity, specificity, and task alignment. The agent will use Claude Son
 **Implementation:**
 - Files: `internal/engine/execute.go` (create), `cmd/run.go` (create)
 - Function: `ExecuteAgent(agent AgentDefinition, input string, provider Provider) (Artifact, error)`
-- Command: `agent-academy run <session-id> --input "test input" [--lineage A] [--mode api|cli] [--executor claude|codex]`
+- Command: `ludus-magnus run <session-id> --input "test input" [--lineage A] [--mode api|cli] [--executor claude|codex]`
 - Target: ~250 lines for execution logic and command handling
 
 **Approach:**
@@ -534,13 +534,13 @@ Focus on clarity, specificity, and task alignment. The agent will use Claude Son
 **Acceptance Criteria:**
 - Run: `go test ./internal/engine -v`
 - Expected: Tests pass (mock provider returns output)
-- Run: Integration test: `./agent-academy quickstart init --need "echo agent" && ./agent-academy run <session-id> --input "hello"`
+- Run: Integration test: `./ludus-magnus quickstart init --need "echo agent" && ./ludus-magnus run <session-id> --input "hello"`
 - Expected: Artifact created with output
-- Run: `./agent-academy run <session-id> --lineage A --input "hello"` (training mode session)
+- Run: `./ludus-magnus run <session-id> --lineage A --input "hello"` (training mode session)
 - Expected: Artifact stored under lineage A
-- Run: `./agent-academy run <session-id> --input "hello" --mode cli --executor codex` (mock executor)
+- Run: `./ludus-magnus run <session-id> --input "hello" --mode cli --executor codex` (mock executor)
 - Expected: Artifact metadata records `mode=cli` and executor identity
-- Run: `cat .agent-academy/state.json | jq '.sessions[].lineages[].artifacts[0].output'`
+- Run: `cat .ludus-magnus/state.json | jq '.sessions[].lineages[].artifacts[0].output'`
 - Expected: Contains agent response
 - Verify: Artifact includes execution_metadata with tokens, duration, cost
 
@@ -577,7 +577,7 @@ Focus on clarity, specificity, and task alignment. The agent will use Claude Son
 - Run: Integration test with real API call
 - Expected: Artifact metadata includes non-zero tokens_input, tokens_output, cost_usd
 - Verify: Cost calculation matches Anthropic pricing (within 0.01 USD)
-- Run: `./agent-academy run <session-id> --input "test" && cat .agent-academy/state.json | jq '.sessions[].lineages[].artifacts[0].execution_metadata'`
+- Run: `./ludus-magnus run <session-id> --input "test" && cat .ludus-magnus/state.json | jq '.sessions[].lineages[].artifacts[0].execution_metadata'`
 - Expected: Contains tokens, duration, cost fields
 
 ---
@@ -608,7 +608,7 @@ Focus on clarity, specificity, and task alignment. The agent will use Claude Son
 - Expected: Tests pass (verify artifact added to correct lineage)
 - Run: Integration test: Create artifact, verify it appears in state.json
 - Expected: Artifact ID uses `art_` prefix with UUID-derived suffix
-- Run: `./agent-academy run <session-id> --input "test" && cat .agent-academy/state.json | jq '.sessions[].lineages[].artifacts | length'`
+- Run: `./ludus-magnus run <session-id> --input "test" && cat .ludus-magnus/state.json | jq '.sessions[].lineages[].artifacts | length'`
 - Expected: Returns 1 (one artifact stored)
 
 ---
@@ -619,7 +619,7 @@ Focus on clarity, specificity, and task alignment. The agent will use Claude Son
 
 **Implementation:**
 - File: `cmd/evaluate.go` (create)
-- Command: `agent-academy evaluate <artifact-id> --score 1-10 --comment "feedback text"`
+- Command: `ludus-magnus evaluate <artifact-id> --score 1-10 --comment "feedback text"`
 - Storage: Update artifact.evaluation field in state
 - Target: ~80 lines for evaluate command
 
@@ -635,13 +635,13 @@ Focus on clarity, specificity, and task alignment. The agent will use Claude Son
 9. **Do NOT** implement approval/rejection workflow
 
 **Acceptance Criteria:**
-- Run: `go build -o agent-academy && ./agent-academy evaluate <artifact-id> --score 7 --comment "good but needs improvement"`
+- Run: `go build -o ludus-magnus && ./ludus-magnus evaluate <artifact-id> --score 7 --comment "good but needs improvement"`
 - Expected: Prints confirmation "Artifact <id> evaluated: 7/10"
-- Run: `cat .agent-academy/state.json | jq '.sessions[].lineages[].artifacts[0].evaluation.score'`
+- Run: `cat .ludus-magnus/state.json | jq '.sessions[].lineages[].artifacts[0].evaluation.score'`
 - Expected: Returns 7
-- Run: `./agent-academy evaluate <artifact-id> --score 11`
+- Run: `./ludus-magnus evaluate <artifact-id> --score 11`
 - Expected: Error "score must be between 1-10"
-- Run: `./agent-academy evaluate <artifact-id> --score 7` (second time)
+- Run: `./ludus-magnus evaluate <artifact-id> --score 7` (second time)
 - Expected: Error "artifact already evaluated"
 
 ---
@@ -652,7 +652,7 @@ Focus on clarity, specificity, and task alignment. The agent will use Claude Son
 
 **Implementation:**
 - Files: `cmd/artifact.go` (create), `cmd/artifact_list.go` (create), `cmd/artifact_inspect.go` (create)
-- Commands: `agent-academy artifact list <session-id>`, `artifact inspect <artifact-id>`
+- Commands: `ludus-magnus artifact list <session-id>`, `artifact inspect <artifact-id>`
 - Output: Table format for list, detailed JSON for inspect
 - Target: ~120 lines for artifact commands
 
@@ -666,11 +666,11 @@ Focus on clarity, specificity, and task alignment. The agent will use Claude Son
 7. **Do NOT** add pagination (show all artifacts)
 
 **Acceptance Criteria:**
-- Run: `./agent-academy artifact list <session-id>`
+- Run: `./ludus-magnus artifact list <session-id>`
 - Expected: Table with columns: ID, Agent Version, Score, Created At
-- Run: `./agent-academy artifact inspect <artifact-id>`
+- Run: `./ludus-magnus artifact inspect <artifact-id>`
 - Expected: JSON output with full artifact details (input, output, metadata, evaluation)
-- Run: `./agent-academy artifact list <nonexistent-session-id>`
+- Run: `./ludus-magnus artifact list <nonexistent-session-id>`
 - Expected: Error "session not found"
 
 ---
@@ -684,7 +684,7 @@ Focus on clarity, specificity, and task alignment. The agent will use Claude Son
 - Expected: All tests pass
 - Run: End-to-end test: init session → run agent → evaluate artifact → inspect
 - Expected: Full cycle completes successfully
-- Run: Verify observability data: `cat .agent-academy/state.json | jq '.sessions[].lineages[].artifacts[0].execution_metadata'`
+- Run: Verify observability data: `cat .ludus-magnus/state.json | jq '.sessions[].lineages[].artifacts[0].execution_metadata'`
 - Expected: Contains tokens, duration, cost, tool_calls
 
 **Linus 5-Layer Analysis:**
@@ -787,7 +787,7 @@ Focus on addressing low-scoring feedback while preserving high-scoring behaviors
 
 **Implementation:**
 - File: `cmd/iterate.go` (create)
-- Command: `agent-academy iterate <session-id>`
+- Command: `ludus-magnus iterate <session-id>`
 - Flow: Load lineage → generate evolution prompt → generate new agent → increment version
 - Target: ~120 lines for iterate command logic
 
@@ -804,11 +804,11 @@ Focus on addressing low-scoring feedback while preserving high-scoring behaviors
 10. **Do NOT** implement diff visualization between versions
 
 **Acceptance Criteria:**
-- Run: `./agent-academy iterate <session-id>`
+- Run: `./ludus-magnus iterate <session-id>`
 - Expected: Prints new agent ID and version number
-- Run: `cat .agent-academy/state.json | jq '.sessions[].lineages[].agents | length'`
+- Run: `cat .ludus-magnus/state.json | jq '.sessions[].lineages[].agents | length'`
 - Expected: Returns 2 (original + evolved)
-- Run: `cat .agent-academy/state.json | jq '.sessions[].lineages[].agents[1].version'`
+- Run: `cat .ludus-magnus/state.json | jq '.sessions[].lineages[].agents[1].version'`
 - Expected: Returns 2
 - Verify: New agent system_prompt is different from original
 
@@ -820,7 +820,7 @@ Focus on addressing low-scoring feedback while preserving high-scoring behaviors
 
 **Implementation:**
 - File: `cmd/training.go` (create)
-- Command: `agent-academy training init --need "intent"`
+- Command: `ludus-magnus training init --need "intent"`
 - Flow: Create session with mode=training + create 4 lineages (A, B, C, D) + generate 4 variants
 - Target: ~180 lines for training initialization
 
@@ -840,11 +840,11 @@ Focus on addressing low-scoring feedback while preserving high-scoring behaviors
 9. **Do NOT** add lineage naming customization
 
 **Acceptance Criteria:**
-- Run: `./agent-academy training init --need "customer care agent"`
+- Run: `./ludus-magnus training init --need "customer care agent"`
 - Expected: Prints session ID and 4 lineage IDs (A, B, C, D)
-- Run: `./agent-academy session inspect <session-id> | jq '.lineages | length'`
+- Run: `./ludus-magnus session inspect <session-id> | jq '.lineages | length'`
 - Expected: Returns 4
-- Run: `cat .agent-academy/state.json | jq '.sessions[].lineages[].agents[0].definition.system_prompt'`
+- Run: `cat .ludus-magnus/state.json | jq '.sessions[].lineages[].agents[0].definition.system_prompt'`
 - Expected: 4 different system prompts (variations of intent)
 - Verify: All lineages have locked=false initially
 
@@ -856,7 +856,7 @@ Focus on addressing low-scoring feedback while preserving high-scoring behaviors
 
 **Implementation:**
 - File: `cmd/lineage.go` (create)
-- Commands: `agent-academy lineage lock <session-id> <lineage-name>`, `lineage unlock <session-id> <lineage-name>`
+- Commands: `ludus-magnus lineage lock <session-id> <lineage-name>`, `lineage unlock <session-id> <lineage-name>`
 - Storage: Update lineage.locked boolean in state
 - Target: ~80 lines for lock/unlock commands
 
@@ -870,13 +870,13 @@ Focus on addressing low-scoring feedback while preserving high-scoring behaviors
 7. **Do NOT** add bulk lock/unlock operations
 
 **Acceptance Criteria:**
-- Run: `./agent-academy lineage lock <session-id> A`
+- Run: `./ludus-magnus lineage lock <session-id> A`
 - Expected: Prints "Lineage A locked"
-- Run: `cat .agent-academy/state.json | jq '.sessions[].lineages.A.locked'`
+- Run: `cat .ludus-magnus/state.json | jq '.sessions[].lineages.A.locked'`
 - Expected: Returns true
-- Run: `./agent-academy lineage unlock <session-id> A`
+- Run: `./ludus-magnus lineage unlock <session-id> A`
 - Expected: Prints "Lineage A unlocked"
-- Run: `./agent-academy lineage lock <session-id> nonexistent`
+- Run: `./ludus-magnus lineage lock <session-id> nonexistent`
 - Expected: Error "lineage not found"
 
 ---
@@ -887,7 +887,7 @@ Focus on addressing low-scoring feedback while preserving high-scoring behaviors
 
 **Implementation:**
 - File: `cmd/training_iterate.go` (create)
-- Command: `agent-academy training iterate <session-id>`
+- Command: `ludus-magnus training iterate <session-id>`
 - Flow: For each unlocked lineage → generate evolution → create new agent version
 - Target: ~120 lines for training iteration logic
 
@@ -903,11 +903,11 @@ Focus on addressing low-scoring feedback while preserving high-scoring behaviors
 9. **Do NOT** implement automatic locking of top-scoring lineages
 
 **Acceptance Criteria:**
-- Run: `./agent-academy training init --need "test" && ./agent-academy lineage lock <session-id> A && ./agent-academy training iterate <session-id>`
+- Run: `./ludus-magnus training init --need "test" && ./ludus-magnus lineage lock <session-id> A && ./ludus-magnus training iterate <session-id>`
 - Expected: Prints "Regenerated 3 lineages: B, C, D. Locked: A."
-- Run: `cat .agent-academy/state.json | jq '.sessions[].lineages.A.agents | length'`
+- Run: `cat .ludus-magnus/state.json | jq '.sessions[].lineages.A.agents | length'`
 - Expected: Returns 1 (locked, not regenerated)
-- Run: `cat .agent-academy/state.json | jq '.sessions[].lineages.B.agents | length'`
+- Run: `cat .ludus-magnus/state.json | jq '.sessions[].lineages.B.agents | length'`
 - Expected: Returns 2 (unlocked, regenerated)
 - Verify: Locked lineages preserve original agent, unlocked get new version
 
@@ -919,7 +919,7 @@ Focus on addressing low-scoring feedback while preserving high-scoring behaviors
 
 **Implementation:**
 - File: `cmd/promote.go` (create)
-- Command: `agent-academy promote <session-id> --strategy variations|alternatives`
+- Command: `ludus-magnus promote <session-id> --strategy variations|alternatives`
 - Flow: Convert quickstart session to training mode with 4 lineages
 - Target: ~100 lines for promotion logic
 
@@ -936,11 +936,11 @@ Focus on addressing low-scoring feedback while preserving high-scoring behaviors
 10. **Do NOT** implement demotion (training → quickstart)
 
 **Acceptance Criteria:**
-- Run: `./agent-academy quickstart init --need "test" && ./agent-academy promote <session-id> --strategy variations`
+- Run: `./ludus-magnus quickstart init --need "test" && ./ludus-magnus promote <session-id> --strategy variations`
 - Expected: Prints "Session promoted to training mode with 4 lineages"
-- Run: `./agent-academy session inspect <session-id> | jq '.mode'`
+- Run: `./ludus-magnus session inspect <session-id> | jq '.mode'`
 - Expected: Returns "training"
-- Run: `cat .agent-academy/state.json | jq '.sessions[].lineages | length'`
+- Run: `cat .ludus-magnus/state.json | jq '.sessions[].lineages | length'`
 - Expected: Returns 4 (A, B, C, D)
 - Verify: Lineage A contains agent similar to original quickstart agent
 
@@ -994,7 +994,7 @@ Focus on addressing low-scoring feedback while preserving high-scoring behaviors
 
 **Implementation:**
 - Files: `cmd/directive.go` (create), `cmd/directive_set.go` (create), `cmd/directive_clear.go` (create)
-- Commands: `agent-academy directive set <session-id> <lineage-name> --text "guidance" --oneshot|--sticky`, `directive clear <session-id> <lineage-name> <directive-id>`
+- Commands: `ludus-magnus directive set <session-id> <lineage-name> --text "guidance" --oneshot|--sticky`, `directive clear <session-id> <lineage-name> <directive-id>`
 - Storage: Add directive to lineage.directives.oneshot or .sticky array
 - Target: ~120 lines for directive commands
 
@@ -1009,15 +1009,15 @@ Focus on addressing low-scoring feedback while preserving high-scoring behaviors
 8. **Do NOT** add directive versioning or history
 
 **Acceptance Criteria:**
-- Run: `./agent-academy directive set <session-id> A --text "be friendly" --sticky`
+- Run: `./ludus-magnus directive set <session-id> A --text "be friendly" --sticky`
 - Expected: Prints directive ID
-- Run: `cat .agent-academy/state.json | jq '.sessions[].lineages.A.directives.sticky[0].text'`
+- Run: `cat .ludus-magnus/state.json | jq '.sessions[].lineages.A.directives.sticky[0].text'`
 - Expected: Returns "be friendly"
-- Run: `./agent-academy directive set <session-id> B --text "fix typo" --oneshot`
+- Run: `./ludus-magnus directive set <session-id> B --text "fix typo" --oneshot`
 - Expected: Directive added to oneshot array
-- Run: `./agent-academy directive clear <session-id> A <directive-id>`
+- Run: `./ludus-magnus directive clear <session-id> A <directive-id>`
 - Expected: Directive removed from sticky array
-- Run: `./agent-academy directive set <session-id> A --text "test"` (no type specified)
+- Run: `./ludus-magnus directive set <session-id> A --text "test"` (no type specified)
 - Expected: Error "must specify --oneshot or --sticky"
 
 ---
@@ -1061,7 +1061,7 @@ Focus on addressing low-scoring feedback while preserving high-scoring behaviors
 
 **Implementation:**
 - Files: `cmd/export.go` (create), `internal/export/agent.go` (create)
-- Command: `agent-academy export agent <agent-id> --format json|python|typescript`
+- Command: `ludus-magnus export agent <agent-id> --format json|python|typescript`
 - Output: Agent definition in specified format, written to stdout
 - Target: ~180 lines for export logic and templates
 
@@ -1101,13 +1101,13 @@ const agentDefinition: AgentDefinition = {
 ```
 
 **Acceptance Criteria:**
-- Run: `./agent-academy export agent <agent-id> --format json`
+- Run: `./ludus-magnus export agent <agent-id> --format json`
 - Expected: Valid JSON printed to stdout
-- Run: `./agent-academy export agent <agent-id> --format python > agent.py && python -c "import agent; print(agent.agent_definition['model'])"`
+- Run: `./ludus-magnus export agent <agent-id> --format python > agent.py && python -c "import agent; print(agent.agent_definition['model'])"`
 - Expected: Prints model name (e.g., "claude-sonnet-4-5")
-- Run: `./agent-academy export agent <agent-id> --format typescript > agent.ts`
+- Run: `./ludus-magnus export agent <agent-id> --format typescript > agent.ts`
 - Expected: Valid TypeScript code (can be verified with tsc if available)
-- Run: `./agent-academy export agent nonexistent-id --format json`
+- Run: `./ludus-magnus export agent nonexistent-id --format json`
 - Expected: Error "agent not found"
 
 ---
@@ -1118,7 +1118,7 @@ const agentDefinition: AgentDefinition = {
 
 **Implementation:**
 - File: `internal/export/evidence.go` (create)
-- Command: `agent-academy export evidence <session-id> --format json`
+- Command: `ludus-magnus export evidence <session-id> --format json`
 - Output: JSON with all artifacts, evaluations, lineage history
 - Target: ~100 lines for evidence export logic
 
@@ -1173,9 +1173,9 @@ const agentDefinition: AgentDefinition = {
 ```
 
 **Acceptance Criteria:**
-- Run: `./agent-academy export evidence <session-id> --format json | jq .`
+- Run: `./ludus-magnus export evidence <session-id> --format json | jq .`
 - Expected: Valid JSON with session, lineages, artifacts
-- Run: `./agent-academy export evidence <session-id> --format json | jq '.lineages[0].artifacts | length'`
+- Run: `./ludus-magnus export evidence <session-id> --format json | jq '.lineages[0].artifacts | length'`
 - Expected: Returns artifact count for lineage
 - Verify: Evidence pack includes all evaluated artifacts
 - Verify: Evidence pack includes complete agent evolution history
@@ -1188,7 +1188,7 @@ const agentDefinition: AgentDefinition = {
 
 **Implementation:**
 - File: `cmd/doctor.go` (create)
-- Command: `agent-academy doctor`
+- Command: `ludus-magnus doctor`
 - Checks: provider credentials/config, optional executor binaries, state file readable
 - Target: ~120 lines for diagnostic checks
 
@@ -1205,13 +1205,13 @@ const agentDefinition: AgentDefinition = {
 10. **Do NOT** add version update checks
 
 **Acceptance Criteria:**
-- Run: `ANTHROPIC_API_KEY=sk-ant-test ./agent-academy doctor`
+- Run: `ANTHROPIC_API_KEY=sk-ant-test ./ludus-magnus doctor`
 - Expected: Prints "✓ ANTHROPIC_API_KEY set"
-- Run: `./agent-academy doctor` (no env var)
+- Run: `./ludus-magnus doctor` (no env var)
 - Expected: Prints missing credential for configured provider, exit 1
-- Run: `./agent-academy doctor` (with existing state file)
-- Expected: Prints "✓ State file readable: .agent-academy/state.json"
-- Run: `which codex && ./agent-academy doctor`
+- Run: `./ludus-magnus doctor` (with existing state file)
+- Expected: Prints "✓ State file readable: .ludus-magnus/state.json"
+- Run: `which codex && ./ludus-magnus doctor`
 - Expected: Prints "✓ codex binary found (optional)" if installed
 - Verify: All required checks implemented (env var, provider)
 
@@ -1266,11 +1266,11 @@ const agentDefinition: AgentDefinition = {
 ```
 
 **Acceptance Criteria:**
-- Run: `./agent-academy session list --json | jq .`
+- Run: `./ludus-magnus session list --json | jq .`
 - Expected: Valid JSON output
-- Run: `./agent-academy artifact list <session-id> --json | jq '.artifacts[0].id'`
+- Run: `./ludus-magnus artifact list <session-id> --json | jq '.artifacts[0].id'`
 - Expected: Returns artifact ID
-- Run: `./agent-academy doctor --json | jq .checks`
+- Run: `./ludus-magnus doctor --json | jq .checks`
 - Expected: JSON with check results
 - Verify: All commands support --json flag
 - Verify: Human-readable output unchanged when --json not specified
@@ -1290,7 +1290,7 @@ const agentDefinition: AgentDefinition = {
 - Expected: Oneshot directives cleared after use
 - Run: Test export: export agent → validate output format (JSON/Python/TypeScript)
 - Expected: Valid output in all formats
-- Run: Test doctor: `./agent-academy doctor --json`
+- Run: Test doctor: `./ludus-magnus doctor --json`
 - Expected: JSON output with check results
 
 **Linus 5-Layer Analysis:**
@@ -1407,7 +1407,7 @@ const agentDefinition: AgentDefinition = {
 7. **Do NOT** add troubleshooting guide (defer to doctor command)
 
 **Acceptance Criteria:**
-- Run: `cat docs/CLI_USAGE.md | grep "agent-academy session new"`
+- Run: `cat docs/CLI_USAGE.md | grep "ludus-magnus session new"`
 - Expected: Returns command examples
 - Verify: All major commands documented with examples
 - Verify: Example workflows are copy-pasteable and complete
@@ -1439,7 +1439,7 @@ const agentDefinition: AgentDefinition = {
 - Expected: Migration tests pass
 - Create test: Write state with version "0.9", load, verify migration to "1.0"
 - Expected: State updated to current version
-- Run: `cat .agent-academy/state.json | jq .version`
+- Run: `cat .ludus-magnus/state.json | jq .version`
 - Expected: Returns "1.0"
 - Verify: Migration framework extensible for future versions
 
@@ -1496,7 +1496,7 @@ const agentDefinition: AgentDefinition = {
 **Review Steps:**
 - Run: `go test ./... -v -race`
 - Expected: All tests pass including race detector
-- Run: `go build -o agent-academy && ./agent-academy doctor`
+- Run: `go build -o ludus-magnus && ./ludus-magnus doctor`
 - Expected: All doctor checks pass
 - Run: Full workflow test: quickstart init → run → evaluate → iterate → promote → training iterate → export
 - Expected: Complete workflow succeeds
@@ -1560,7 +1560,7 @@ const agentDefinition: AgentDefinition = {
 ## Technical Considerations
 
 - **Language**: Go 1.21+
-- **State**: JSON file at `.agent-academy/state.json` (no SQLite for v1)
+- **State**: JSON file at `.ludus-magnus/state.json` (no SQLite for v1)
 - **CLI Framework**: cobra for command structure
 - **Provider Layer**: Anthropic adapter + OpenAI-compatible adapter via `net/http`
 - **ID Generation**: github.com/google/uuid for session/lineage/agent/artifact IDs
@@ -1593,46 +1593,46 @@ const agentDefinition: AgentDefinition = {
 
 ## Appendix: Core Use Case (Customer Care Agent)
 
-While Agent Academy CLI is general-purpose, the primary target use case is **customer care agents**:
+While Ludus Magnus CLI is general-purpose, the primary target use case is **customer care agents**:
 
 **Scenario**: Train an agent that handles customer support tickets, looks up customer info, checks order status, and provides helpful responses.
 
 **Quickstart Flow**:
 ```bash
 # Initialize with intent
-agent-academy quickstart init --need "customer care agent that is friendly and helpful"
+ludus-magnus quickstart init --need "customer care agent that is friendly and helpful"
 
 # Run with test input
-agent-academy run <session-id> --input "My order hasn't arrived yet, tracking number 12345"
+ludus-magnus run <session-id> --input "My order hasn't arrived yet, tracking number 12345"
 
 # Evaluate response
-agent-academy evaluate <artifact-id> --score 6 --comment "good lookup but tone too formal"
+ludus-magnus evaluate <artifact-id> --score 6 --comment "good lookup but tone too formal"
 
 # Iterate to improve
-agent-academy iterate <session-id>
+ludus-magnus iterate <session-id>
 
 # Run again to verify improvement
-agent-academy run <session-id> --input "My order hasn't arrived yet, tracking number 12345"
+ludus-magnus run <session-id> --input "My order hasn't arrived yet, tracking number 12345"
 ```
 
 **Training Flow**:
 ```bash
 # Promote to training mode for parallel exploration
-agent-academy promote <session-id> --strategy variations
+ludus-magnus promote <session-id> --strategy variations
 
 # Run all 4 lineages with test inputs
-agent-academy run <session-id> --lineage A --input "test input"
+ludus-magnus run <session-id> --lineage A --input "test input"
 # ... repeat for B, C, D
 
 # Evaluate and lock winners
-agent-academy evaluate <artifact-A> --score 9 --comment "excellent"
-agent-academy lineage lock <session-id> A
+ludus-magnus evaluate <artifact-A> --score 9 --comment "excellent"
+ludus-magnus lineage lock <session-id> A
 
 # Iterate to regenerate unlocked lineages
-agent-academy training iterate <session-id>
+ludus-magnus training iterate <session-id>
 
 # Export winning agent
-agent-academy export agent <agent-id> --format typescript > agent.ts
+ludus-magnus export agent <agent-id> --format typescript > agent.ts
 ```
 
 **Observability Captured**:

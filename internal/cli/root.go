@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Perttulands/agent-academy/internal/store"
+	"github.com/Perttulands/ludus-magnus/internal/store"
 	"github.com/charmbracelet/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

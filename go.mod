@@ -1,4 +1,4 @@
-module github.com/Perttulands/agent-academy
+module github.com/Perttulands/ludus-magnus
 
 go 1.25.0
 

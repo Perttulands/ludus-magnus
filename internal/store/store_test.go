@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Perttulands/agent-academy/internal/store"
-	"github.com/Perttulands/agent-academy/pkg/types"
+	"github.com/Perttulands/ludus-magnus/internal/store"
+	"github.com/Perttulands/ludus-magnus/pkg/types"
 )
 
 func TestStoreCreateAndListSessions(t *testing.T) {

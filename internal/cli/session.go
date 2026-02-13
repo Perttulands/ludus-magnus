@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/Perttulands/agent-academy/internal/session"
-	"github.com/Perttulands/agent-academy/internal/store"
+	"github.com/Perttulands/ludus-magnus/internal/session"
+	"github.com/Perttulands/ludus-magnus/internal/store"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

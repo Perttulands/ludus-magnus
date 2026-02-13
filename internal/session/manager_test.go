@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/Perttulands/agent-academy/internal/session"
-	"github.com/Perttulands/agent-academy/internal/store"
-	"github.com/Perttulands/agent-academy/pkg/types"
+	"github.com/Perttulands/ludus-magnus/internal/session"
+	"github.com/Perttulands/ludus-magnus/internal/store"
+	"github.com/Perttulands/ludus-magnus/pkg/types"
 )
 
 func TestManagerCreateAndList(t *testing.T) {
