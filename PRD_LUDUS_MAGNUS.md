@@ -159,7 +159,7 @@ graph TD
 - [x] **US-025** Integration test: training flow with promotion (~15 min, ~180 lines)
 - [x] **US-026** CLI usage documentation and examples (~10 min, ~200 lines)
 - [x] **US-027** State file migration/compaction strategy (~10 min, ~100 lines)
-- [ ] **US-REVIEW-S5** Sprint 5 Review 🚧 GATE (~10 min)
+- [x] **US-REVIEW-S5** Sprint 5 Review 🚧 GATE (~10 min)
 
 ---
 

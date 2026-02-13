@@ -977,3 +977,26 @@
 - Review: [PASSED]
 - Next: [US-REVIEW-S5]
 ---
+## Review PASSED - US-REVIEW-S5 Sprint 5 Review
+- Scope reviewed
+  - US-024 through US-027 (commits: 070a5f5, 7252a27, f00c48e, 30c121f)
+- Gate checks run
+  - `/usr/local/go/bin/go test ./... -v` PASS
+  - `/usr/local/go/bin/go test ./test/integration -run TestQuickstartFlowEndToEnd -v` PASS
+  - `/usr/local/go/bin/go test ./test/integration -run TestTrainingFlowWithPromotionAndLocks -v` PASS
+- Documentation completeness
+  - `docs/CLI_USAGE.md` includes command coverage for session/quickstart/training/run/evaluate/iterate/lineage/promote/directive/artifact/export/doctor
+  - Workflow sections present for quickstart, training, and promotion
+  - `--json` usage and `.ludus-magnus/state.json` location documented
+- Linus 5-layer findings
+  - Data structures: Migration framework is extensible via version-step map and `CurrentVersion` constant in `internal/state/migration.go`
+  - Special cases: Integration tests exercise both quickstart and training happy paths plus lock behavior; unsupported migration versions fail fast
+  - Complexity: Integration test helpers remain focused and reused; migration code is small and linear
+  - Destructive analysis: Migration path (`0.9` -> `1.0`) preserves session payload and initializes nil maps safely
+  - Practicality: Docs provide runnable command sequences and examples aligned with implemented CLI behavior
+- Cross-task consistency checks
+  - Integration tests validate real command chains with deterministic mock providers
+  - Migration handling is invoked from `state.Load`, so legacy files are upgraded on read
+  - Sprint 5 artifacts (tests/docs/migration) integrate cleanly without conflicting abstractions
+- Taste score: Good taste
+---
