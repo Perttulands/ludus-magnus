@@ -120,7 +120,7 @@ graph TD
 
 **Priority:** HIGH
 **Purpose:** Evolution logic, iterate command, training mode with four lineages, promotion
-**Status:** IN PROGRESS
+**Status:** COMPLETE
 
 - [x] **US-012** Evolution prompt generation from evaluations (~25 min, ~200 lines) [depends: US-010]
 - [x] **US-013** Iterate command (regenerate with evolution) (~20 min, ~120 lines) [depends: US-006, US-012]
@@ -136,9 +136,9 @@ graph TD
 
 **Priority:** MEDIUM
 **Purpose:** Directive controls, export functionality, doctor checks, JSON output
-**Status:** NOT STARTED
+**Status:** IN PROGRESS
 
-- [ ] **US-018** Directive set/clear commands (oneshot/sticky) (~20 min, ~120 lines) [depends: US-002]
+- [x] **US-018** Directive set/clear commands (oneshot/sticky) (~20 min, ~120 lines) [depends: US-002]
 - [ ] **US-019** Directive application in evolution (~15 min, ~80 lines) [depends: US-012, US-018]
 - [ ] **US-020** Export agent definitions (JSON/Python/TypeScript) (~25 min, ~180 lines) [depends: US-006]
 - [ ] **US-021** Export evidence packs (scores/comments/lineage history) (~15 min, ~100 lines) [depends: US-010]

@@ -625,3 +625,32 @@
   - Evolution prompt output includes current agent prompt, evaluation summary, feedback, and directives context
 - Taste score: Good taste
 ---
+## Iteration 20 - Directive set/clear commands (oneshot/sticky)
+- What was implemented
+  - Added `directive` command group with `set` and `clear` subcommands
+  - Implemented `directive set <session-id> <lineage-name> --text ... --oneshot|--sticky` with directive ID generation and lineage persistence
+  - Implemented `directive clear <session-id> <lineage-name> <directive-id>` removing directives from sticky/oneshot arrays
+  - Added acceptance test covering sticky set, oneshot set, clear by ID, and validation error when no directive type is provided
+- Files changed
+  - cmd/root.go
+  - cmd/directive.go
+  - cmd/directive_set.go
+  - cmd/directive_clear.go
+  - tests/test_us018_directive_commands.py
+  - PRD_LUDUS_MAGNUS.md
+  - progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+    - Reusing `findLineageByName` keeps lineage-targeted command behavior consistent across lock/run/iterate/directive flows
+  - Gotchas encountered
+    - Cobra type-selection flags require explicit mutual-exclusion checks in command logic (`--oneshot` xor `--sticky`)
+  - Useful context
+    - Directive IDs now use `dir_<8-hex>` format via shared `newPrefixedID`, so US-019 can consume directives without schema changes
+
+**Summary:**
+- Task: [US-018: Directive set/clear commands (oneshot/sticky)]
+- Files: [cmd/root.go, cmd/directive.go, cmd/directive_set.go, cmd/directive_clear.go, tests/test_us018_directive_commands.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us018_directive_commands.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-019]
+---
