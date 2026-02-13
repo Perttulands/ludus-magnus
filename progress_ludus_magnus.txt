@@ -680,3 +680,31 @@
 - Review: [PASSED]
 - Next: [US-020]
 ---
+## Iteration 22 - Export agent definitions (JSON/Python/TypeScript)
+- What was implemented
+- Added `export` command group with `export agent <agent-id> --format json|python|typescript` and wired it into the root command
+- Implemented export logic in `internal/export/agent.go` to locate agent definitions by ID and render JSON, Python, or TypeScript output to stdout
+- Added Go unit tests for format rendering and missing-agent errors, plus US-020 acceptance test covering JSON/Python/TypeScript exports and nonexistent-agent failure path
+- Files changed
+- cmd/root.go
+- cmd/export.go
+- internal/export/agent.go
+- internal/export/agent_test.go
+- tests/test_us020_export_agent.py
+- PRD_LUDUS_MAGNUS.md
+- progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+  - Keeping export rendering in `internal/export` allows CLI commands to stay thin and reuse format logic for future export subcommands
+  - Gotchas encountered
+  - Shell quoting inside Python one-liners is brittle; use `dict.get('key')` style and explicit quoting to avoid bash interpolation bugs
+  - Useful context
+  - TypeScript export now emits a local `AgentDefinition` type plus `export default agentDefinition` so emitted code is self-contained
+
+**Summary:**
+- Task: [US-020: Export agent definitions (JSON/Python/TypeScript)]
+- Files: [cmd/root.go, cmd/export.go, internal/export/agent.go, internal/export/agent_test.go, tests/test_us020_export_agent.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us020_export_agent.py), 4 passed (go test ./internal/export -v), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-021]
+---
