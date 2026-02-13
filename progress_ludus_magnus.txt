@@ -115,3 +115,35 @@
 - Review: [PASSED]
 - Next: [US-004]
 ---
+## Iteration 5 - Provider adapter interface with Anthropic + OpenAI-compatible implementations
+- What was implemented
+  - Added provider contract in `internal/provider/interface.go` with `Provider` methods for agent generation and execution plus metadata structs
+  - Implemented `AnthropicProvider` in `internal/provider/anthropic.go` using Messages API request/response mapping, token metadata extraction, and pricing-based cost calculation
+  - Implemented `OpenAICompatibleProvider` in `internal/provider/openai_compatible.go` for chat-completions style APIs (OpenAI-compatible base URLs), output/usage parsing, and optional cost calculation
+  - Added provider factory in `internal/provider/factory.go` with default provider selection (`anthropic`), provider alias normalization, and env-based credential validation (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`/equivalents)
+  - Added provider tests in `internal/provider/provider_test.go` with mock HTTP servers covering Anthropic parsing, OpenAI-compatible parsing, factory defaults, and credential failures
+  - Added acceptance test `tests/test_us004_provider_adapters.py` validating `go test ./internal/provider -v` and `go build ./internal/provider`
+- Files changed
+  - internal/provider/interface.go
+  - internal/provider/anthropic.go
+  - internal/provider/openai_compatible.go
+  - internal/provider/factory.go
+  - internal/provider/provider_test.go
+  - tests/test_us004_provider_adapters.py
+  - PRD_LUDUS_MAGNUS.md
+  - progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+    - Provider adapters should keep transport/request parsing local, exposing a minimal interface for engine integration
+  - Gotchas encountered
+    - Tests using `t.Setenv` cannot run with `t.Parallel`; env-dependent tests must run serially
+  - Useful context
+    - OpenAI-compatible factory supports aliases (`openai`, `openrouter`, `litellm`) by normalizing to one adapter path
+
+**Summary:**
+- Task: [US-004: Provider adapter interface with Anthropic + OpenAI-compatible implementations]
+- Files: [internal/provider/interface.go, internal/provider/anthropic.go, internal/provider/openai_compatible.go, internal/provider/factory.go, internal/provider/provider_test.go, tests/test_us004_provider_adapters.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 5 passed (go test ./internal/provider), 1 passed (tests/test_us004_provider_adapters.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-005]
+---
