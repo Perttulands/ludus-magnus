@@ -90,7 +90,7 @@ graph TD
 **Purpose:** Establish project structure, state management, and agent generation
 **Status:** IN PROGRESS
 
-- [ ] **US-001** Project scaffolding and Go module setup (~15 min, ~50 lines)
+- [x] **US-001** Project scaffolding and Go module setup (~15 min, ~50 lines)
 - [ ] **US-002** Define state file schema and persistence layer (~20 min, ~150 lines)
 - [ ] **US-003** Session create/list/inspect commands (~20 min, ~120 lines) [depends: US-002]
 - [ ] **US-004** Provider adapter interface with Anthropic + OpenAI-compatible implementations (~25 min, ~200 lines)

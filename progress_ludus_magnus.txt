@@ -4,3 +4,56 @@
 (Patterns discovered during implementation)
 
 ---
+## Iteration 1 - Project scaffolding and Go module setup
+- What was implemented
+  - Added root CLI scaffolding files: `main.go` and `cmd/root.go` with cobra root command (`ludus-magnus`)
+  - Created required package directories with Go files: `internal/state/doc.go` and `internal/engine/doc.go`
+  - Added acceptance test: `tests/test_us001_scaffolding.py`
+  - Created local Python virtualenv `.venv` to run pytest in this environment
+- Files changed
+  - main.go
+  - cmd/root.go
+  - internal/state/doc.go
+  - internal/engine/doc.go
+  - tests/test_us001_scaffolding.py
+  - progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+    - This environment has no `go` binary available in PATH, so Go acceptance checks cannot execute
+  - Gotchas encountered
+    - `pytest` is not installed globally and requires a local virtualenv (`.venv`)
+  - Useful context
+    - Current blocker for US-001 completion is environment setup (`go` toolchain missing), not scaffolding code edits
+
+**Summary:**
+- Task: [US-001: Project scaffolding and Go module setup]
+- Files: [main.go, cmd/root.go, internal/state/doc.go, internal/engine/doc.go, tests/test_us001_scaffolding.py, progress_ludus_magnus.txt]
+- Tests: [FAIL with count: 1 failed]
+- Review: [SKIPPED]
+- Next: [US-001]
+---
+## Iteration 2 - Project scaffolding and Go module setup
+- What was implemented
+  - Finalized US-001 scaffolding validation by ensuring root help output includes `ludus-magnus`
+  - Updated acceptance test command runner to prepend `/usr/local/go/bin` to PATH so Go commands execute in this environment
+  - Re-ran US-001 acceptance test to GREEN
+- Files changed
+  - cmd/root.go
+  - tests/test_us001_scaffolding.py
+  - PRD_LUDUS_MAGNUS.md
+  - progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+    - In this environment, Python subprocesses launched via `bash -lc` need explicit PATH prepending for Go
+  - Gotchas encountered
+    - Cobra root `--help` output did not include the binary name until `Short` text included `ludus-magnus`
+  - Useful context
+    - Keep acceptance tests environment-aware when toolchains are installed outside default PATH
+
+**Summary:**
+- Task: [US-001: Project scaffolding and Go module setup]
+- Files: [cmd/root.go, tests/test_us001_scaffolding.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed]
+- Review: [PASSED]
+- Next: [US-002]
+---
