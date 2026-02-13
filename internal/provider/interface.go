@@ -12,9 +12,20 @@ type AgentDefinition struct {
 
 // Metadata captures provider call observability signals.
 type Metadata struct {
-	TokensUsed int
+	TokensInput  int
+	TokensOutput int
+	TokensUsed   int
+	DurationMs   int
+	CostUSD      float64
+	ToolCalls    []ToolCall
+}
+
+// ToolCall captures one provider-level tool invocation.
+type ToolCall struct {
+	Name       string
+	Input      string
+	Output     string
 	DurationMs int
-	CostUSD    float64
 }
 
 // ProviderInfo describes the provider instance identity.

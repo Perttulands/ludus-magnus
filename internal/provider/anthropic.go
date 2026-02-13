@@ -80,10 +80,10 @@ func (p *AnthropicProvider) GetMetadata() ProviderInfo {
 }
 
 type anthropicMessageRequest struct {
-	Model     string              `json:"model"`
-	MaxTokens int                 `json:"max_tokens"`
-	System    string              `json:"system,omitempty"`
-	Messages  []anthropicMessage  `json:"messages"`
+	Model     string             `json:"model"`
+	MaxTokens int                `json:"max_tokens"`
+	System    string             `json:"system,omitempty"`
+	Messages  []anthropicMessage `json:"messages"`
 }
 
 type anthropicMessage struct {
@@ -163,9 +163,23 @@ func (p *AnthropicProvider) messagesCall(ctx context.Context, system, user strin
 func (p *AnthropicProvider) metadataFromUsage(usage anthropicUsage, durationMs int) Metadata {
 	rate, ok := anthropicPricing[p.model]
 	if !ok {
-		return Metadata{TokensUsed: usage.InputTokens + usage.OutputTokens, DurationMs: durationMs, CostUSD: 0}
+		return Metadata{
+			TokensInput:  usage.InputTokens,
+			TokensOutput: usage.OutputTokens,
+			TokensUsed:   usage.InputTokens + usage.OutputTokens,
+			DurationMs:   durationMs,
+			CostUSD:      0,
+			ToolCalls:    []ToolCall{},
+		}
 	}
 
 	cost := (float64(usage.InputTokens)*rate.inputPerMillion + float64(usage.OutputTokens)*rate.outputPerMillion) / 1_000_000.0
-	return Metadata{TokensUsed: usage.InputTokens + usage.OutputTokens, DurationMs: durationMs, CostUSD: cost}
+	return Metadata{
+		TokensInput:  usage.InputTokens,
+		TokensOutput: usage.OutputTokens,
+		TokensUsed:   usage.InputTokens + usage.OutputTokens,
+		DurationMs:   durationMs,
+		CostUSD:      cost,
+		ToolCalls:    []ToolCall{},
+	}
 }

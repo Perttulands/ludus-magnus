@@ -68,15 +68,12 @@ func executeAPI(ctx context.Context, req ExecuteRequest) (ExecuteResult, error) 
 
 	return ExecuteResult{
 		Output: out,
-		Metadata: state.ExecutionMetadata{
-			Mode:         ExecutionModeAPI,
-			Provider:     ptr(providerName),
-			TokensInput:  0,
-			TokensOutput: meta.TokensUsed,
-			DurationMS:   meta.DurationMs,
-			CostUSD:      meta.CostUSD,
-			ToolCalls:    []state.ToolCall{},
-		},
+		Metadata: CaptureExecutionMetadata(ProviderResponse{
+			Mode:     ExecutionModeAPI,
+			Provider: ptr(providerName),
+			Model:    info.Model,
+			Metadata: meta,
+		}),
 	}, nil
 }
 

@@ -80,10 +80,10 @@ func (p *OpenAICompatibleProvider) GetMetadata() ProviderInfo {
 }
 
 type openAIChatRequest struct {
-	Model       string             `json:"model"`
-	Messages    []openAIChatMsg    `json:"messages"`
-	Temperature float64            `json:"temperature"`
-	MaxTokens   int                `json:"max_tokens"`
+	Model       string          `json:"model"`
+	Messages    []openAIChatMsg `json:"messages"`
+	Temperature float64         `json:"temperature"`
+	MaxTokens   int             `json:"max_tokens"`
 }
 
 type openAIChatMsg struct {
@@ -169,15 +169,31 @@ func (p *OpenAICompatibleProvider) completionsURL() string {
 }
 
 func (p *OpenAICompatibleProvider) metadataFromUsage(usage openAIUsage, durationMs int) Metadata {
+	tokensInput := usage.PromptTokens
+	tokensOutput := usage.CompletionTokens
 	tokens := usage.TotalTokens
 	if tokens == 0 {
-		tokens = usage.PromptTokens + usage.CompletionTokens
+		tokens = tokensInput + tokensOutput
 	}
 
 	rate, ok := openAICompatiblePricing[p.model]
 	if !ok {
-		return Metadata{TokensUsed: tokens, DurationMs: durationMs, CostUSD: 0}
+		return Metadata{
+			TokensInput:  tokensInput,
+			TokensOutput: tokensOutput,
+			TokensUsed:   tokens,
+			DurationMs:   durationMs,
+			CostUSD:      0,
+			ToolCalls:    []ToolCall{},
+		}
 	}
-	cost := (float64(usage.PromptTokens)*rate.inputPerMillion + float64(usage.CompletionTokens)*rate.outputPerMillion) / 1_000_000.0
-	return Metadata{TokensUsed: tokens, DurationMs: durationMs, CostUSD: cost}
+	cost := (float64(tokensInput)*rate.inputPerMillion + float64(tokensOutput)*rate.outputPerMillion) / 1_000_000.0
+	return Metadata{
+		TokensInput:  tokensInput,
+		TokensOutput: tokensOutput,
+		TokensUsed:   tokens,
+		DurationMs:   durationMs,
+		CostUSD:      cost,
+		ToolCalls:    []ToolCall{},
+	}
 }

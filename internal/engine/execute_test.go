@@ -33,12 +33,15 @@ func TestExecuteAPIMode(t *testing.T) {
 	p := &execMockProvider{
 		output: "provider output",
 		meta: provider.Metadata{
-			TokensUsed: 33,
-			DurationMs: 12,
-			CostUSD:    0.0042,
+			TokensInput:  21,
+			TokensOutput: 12,
+			TokensUsed:   33,
+			DurationMs:   12,
+			CostUSD:      0.0042,
 		},
 		info: provider.ProviderInfo{
 			Provider: "openai-compatible",
+			Model:    "gpt-4o-mini",
 		},
 	}
 
@@ -60,7 +63,10 @@ func TestExecuteAPIMode(t *testing.T) {
 	if result.Metadata.Provider == nil || *result.Metadata.Provider != "openai-compatible" {
 		t.Fatalf("unexpected provider metadata: %+v", result.Metadata.Provider)
 	}
-	if result.Metadata.TokensOutput != 33 {
+	if result.Metadata.TokensInput != 21 {
+		t.Fatalf("unexpected tokens input: %d", result.Metadata.TokensInput)
+	}
+	if result.Metadata.TokensOutput != 12 {
 		t.Fatalf("unexpected tokens output: %d", result.Metadata.TokensOutput)
 	}
 	if result.Metadata.CostUSD != 0.0042 {
