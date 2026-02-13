@@ -849,3 +849,22 @@
 - Review: [PASSED]
 - Next: [US-REVIEW-S4]
 ---
+## Review PASSED - US-REVIEW-S4 Sprint 4 Review
+- Scope reviewed
+  - US-018 through US-023 (commits: 22d61a6, 019783a, c52c9b3, 6c986f2, b51fcf0, 6436730, 559e5ad)
+- Gate checks run
+  - `PATH=/usr/local/go/bin:$PATH /usr/local/go/bin/go test ./... -v` PASS
+  - `.venv/bin/pytest -v tests/test_us018_directive_commands.py tests/test_us019_directive_application.py tests/test_us020_export_agent.py tests/test_us021_export_evidence.py tests/test_us022_doctor.py tests/test_us023_json_output_flag.py` PASS
+  - `ANTHROPIC_API_KEY=sk-ant-test ./ludus-magnus doctor --json` PASS (required checks passed; JSON shape valid)
+- Linus 5-layer findings
+  - Data structures: Directive storage cleanly separates `sticky` and `oneshot`; evidence export shape is stable and explicit
+  - Special cases: Oneshot clearing is handled by design in iterate/training-iterate instead of ad hoc command patches
+  - Complexity: Doctor checks are linear and readable; JSON output logic is centralized via `cmd/output.go`
+  - Destructive analysis: Agent/evidence exports preserve core training signal (definition fields, lineage artifacts, evaluations, directives)
+  - Practicality: Export outputs are directly consumable (JSON/Python/TypeScript), and doctor catches real misconfiguration failures
+- Cross-task consistency checks
+  - Global `--json` flag behavior is consistent across Sprint 4 command outputs
+  - Directive lifecycle validated end-to-end (sticky persists, oneshot clears after iterate)
+  - Export templates preserve non-empty `tools` arrays in Python and TypeScript renderers
+- Taste score: Good taste
+---

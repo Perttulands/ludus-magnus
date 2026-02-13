@@ -145,7 +145,7 @@ graph TD
 - [x] **US-021** Export evidence packs (scores/comments/lineage history) (~15 min, ~100 lines) [depends: US-010]
 - [x] **US-022** Doctor command (env diagnostics, provider and executor checks) (~20 min, ~120 lines) [depends: US-004]
 - [x] **US-023** JSON output flag for all commands (~15 min, ~100 lines)
-- [ ] **US-REVIEW-S4** Sprint 4 Review 🚧 GATE (~10 min)
+- [x] **US-REVIEW-S4** Sprint 4 Review 🚧 GATE (~10 min)
 
 ---
 
