@@ -1,6 +1,5 @@
 import json
 import threading
-import re
 import subprocess
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -15,6 +14,7 @@ def run(cmd: str, cwd: Path) -> subprocess.CompletedProcess[str]:
         text=True,
     )
 
+
 class _MockOpenAIHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         if self.path != "/chat/completions":
@@ -26,8 +26,8 @@ class _MockOpenAIHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "application/json")
         self.end_headers()
         payload = {
-            "choices": [{"message": {"content": "You are a customer care agent."}}],
-            "usage": {"prompt_tokens": 12, "completion_tokens": 8, "total_tokens": 20},
+            "choices": [{"message": {"content": "You are a reliable customer care agent."}}],
+            "usage": {"prompt_tokens": 20, "completion_tokens": 10, "total_tokens": 30},
         }
         self.wfile.write(json.dumps(payload).encode("utf-8"))
 
@@ -42,12 +42,16 @@ def _start_server() -> tuple[HTTPServer, threading.Thread]:
     return server, thread
 
 
-def test_us005_quickstart_init_acceptance(tmp_path: Path):
+def test_us006_agent_definition_generation(tmp_path: Path):
     repo_root = Path(__file__).resolve().parents[1]
     binary = repo_root / "ludus-magnus"
     server, thread = _start_server()
 
     try:
+        engine_tests = run("go test ./internal/engine -v", cwd=repo_root)
+        assert engine_tests.returncode == 0, engine_tests.stderr
+        assert "PASS" in engine_tests.stdout
+
         build = run("go build -o ludus-magnus", cwd=repo_root)
         assert build.returncode == 0, build.stderr
 
@@ -60,37 +64,19 @@ def test_us005_quickstart_init_acceptance(tmp_path: Path):
         )
         assert init.returncode == 0, init.stderr
 
-        lines = [line.strip() for line in init.stdout.splitlines() if line.strip()]
-        assert len(lines) == 2
+        state_doc = json.loads((tmp_path / ".ludus-magnus" / "state.json").read_text())
+        session = next(iter(state_doc["sessions"].values()))
+        lineage = next(iter(session["lineages"].values()))
+        agent = lineage["agents"][0]
 
-        session_line, lineage_line = lines
-        assert session_line.startswith("session_id=")
-        assert lineage_line.startswith("lineage_id=")
-
-        session_id = session_line.split("=", 1)[1]
-        lineage_id = lineage_line.split("=", 1)[1]
-
-        assert re.fullmatch(r"ses_[a-f0-9]{8}", session_id)
-        assert re.fullmatch(r"lin_[a-f0-9]{8}", lineage_id)
-
-        listed = run(f"{binary} session list", cwd=tmp_path)
-        assert listed.returncode == 0, listed.stderr
-        assert session_id in listed.stdout
-        assert "quickstart" in listed.stdout
-
-        state_file = tmp_path / ".ludus-magnus" / "state.json"
-        assert state_file.exists()
-
-        state_doc = json.loads(state_file.read_text())
-        session = state_doc["sessions"][session_id]
-        assert session["mode"] == "quickstart"
-        assert session["need"] == "customer care agent"
-
-        lineages = session["lineages"]
-        assert lineage_id in lineages
-        assert lineages[lineage_id]["name"] == "main"
-        assert lineages[lineage_id]["agents"][0]["definition"]["system_prompt"] != ""
+        definition = agent["definition"]
+        assert definition["system_prompt"] != ""
+        assert definition["model"] == "gpt-4o-mini"
+        assert definition["temperature"] == 1.0
+        assert definition["max_tokens"] == 4096
+        assert definition["tools"] == []
     finally:
         server.shutdown()
         server.server_close()
         thread.join(timeout=1)
+

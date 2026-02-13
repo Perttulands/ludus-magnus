@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/Perttulands/ludus-magnus/internal/engine"
+	"github.com/Perttulands/ludus-magnus/internal/provider"
 	"github.com/Perttulands/ludus-magnus/internal/state"
 	"github.com/spf13/cobra"
 )
@@ -20,6 +22,10 @@ func newQuickstartCmd() *cobra.Command {
 
 func newQuickstartInitCmd() *cobra.Command {
 	var need string
+	var providerName string
+	var model string
+	var baseURL string
+	var apiKey string
 
 	cmd := &cobra.Command{
 		Use:   "init",
@@ -33,13 +39,38 @@ func newQuickstartInitCmd() *cobra.Command {
 			now := time.Now().UTC().Format(time.RFC3339)
 			sessionID := newPrefixedID("ses")
 			lineageID := newPrefixedID("lin")
+			agentID := newPrefixedID("agt")
+
+			adapter, err := provider.NewFactory(provider.Config{
+				Provider: providerName,
+				Model:    model,
+				BaseURL:  baseURL,
+				APIKey:   apiKey,
+			})
+			if err != nil {
+				return err
+			}
+
+			agentDef, generationMeta, err := engine.GenerateAgentDefinitionWithMetadata(need, nil, adapter)
+			if err != nil {
+				return err
+			}
 
 			mainLineage := state.Lineage{
-				ID:         lineageID,
-				SessionID:  sessionID,
-				Name:       "main",
-				Locked:     false,
-				Agents:     []state.Agent{},
+				ID:        lineageID,
+				SessionID: sessionID,
+				Name:      "main",
+				Locked:    false,
+				Agents: []state.Agent{
+					{
+						ID:                 agentID,
+						LineageID:          lineageID,
+						Version:            1,
+						Definition:         agentDef,
+						CreatedAt:          now,
+						GenerationMetadata: generationMeta,
+					},
+				},
 				Artifacts:  []state.Artifact{},
 				Directives: state.Directives{Oneshot: []state.Directive{}, Sticky: []state.Directive{}},
 			}
@@ -66,6 +97,10 @@ func newQuickstartInitCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&need, "need", "", "Intent for the session")
+	cmd.Flags().StringVar(&providerName, "provider", "anthropic", "Provider name (anthropic or openai-compatible)")
+	cmd.Flags().StringVar(&model, "model", "", "Override provider model")
+	cmd.Flags().StringVar(&baseURL, "base-url", "", "Override provider base URL")
+	cmd.Flags().StringVar(&apiKey, "api-key", "", "Override provider API key")
 	_ = cmd.MarkFlagRequired("need")
 
 	return cmd

@@ -176,3 +176,32 @@
 - Review: [PASSED]
 - Next: [US-006]
 ---
+## Iteration 7 - Agent definition generation from intent
+- What was implemented
+  - Added generation engine in `internal/engine/generate.go` with deterministic prompt template construction, provider invocation, defaulted agent definition fields, and generation metadata mapping
+  - Wired `quickstart init` to generate and persist agent version 1 during session creation, including provider/model/base-url/api-key flags for adapter configuration
+  - Added engine unit tests and acceptance coverage for generated agent defaults and non-empty system prompt persisted in state
+  - Updated quickstart acceptance test to use a local mock OpenAI-compatible API so generation is validated without external dependencies
+- Files changed
+  - internal/engine/generate.go
+  - internal/engine/generate_test.go
+  - cmd/quickstart.go
+  - tests/test_us005_quickstart_init.py
+  - tests/test_us006_agent_generation.py
+  - PRD_LUDUS_MAGNUS.md
+  - progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+    - Keep generation prompt assembly centralized in engine to avoid provider-specific prompt drift
+  - Gotchas encountered
+    - `quickstart init` now requires provider credentials unless explicit `--api-key` is supplied during tests
+  - Useful context
+    - `engine.GenerateAgentDefinitionWithMetadata` is the reusable path for future iterate/training flows needing both definition and observability metadata
+
+**Summary:**
+- Task: [US-006: Agent definition generation from intent]
+- Files: [internal/engine/generate.go, internal/engine/generate_test.go, cmd/quickstart.go, tests/test_us005_quickstart_init.py, tests/test_us006_agent_generation.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 2 passed (pytest US-005/US-006), 2 passed (go test ./internal/engine -v), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-REVIEW-S1]
+---
