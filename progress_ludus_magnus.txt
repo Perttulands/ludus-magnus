@@ -921,3 +921,28 @@
 - Review: [PASSED]
 - Next: [US-026]
 ---
+## Iteration 29 - CLI usage documentation and examples
+- What was implemented
+  - Added `docs/CLI_USAGE.md` with structured command reference, flag usage, JSON output examples, and copy-pasteable workflows for quickstart, training, and promotion flows
+  - Added acceptance test `tests/test_us026_cli_usage_docs.py` validating command coverage, required sections, and state path documentation
+  - Verified PRD acceptance checks with `grep` for `ludus-magnus session new` and `## Commands`
+- Files changed
+  - docs/CLI_USAGE.md
+  - tests/test_us026_cli_usage_docs.py
+  - PRD_LUDUS_MAGNUS.md
+  - progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+    - Documentation tasks are reliable when backed by a focused pytest that asserts required command strings and workflow headers
+  - Gotchas encountered
+    - CLI command docs should mirror actual Cobra command shapes (`evaluate` uses `--score/--comment` flags, not subcommands)
+  - Useful context
+    - State location documentation should explicitly reference `.ludus-magnus/state.json` to keep examples consistent with implementation
+
+**Summary:**
+- Task: [US-026: CLI usage documentation and examples]
+- Files: [docs/CLI_USAGE.md, tests/test_us026_cli_usage_docs.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us026_cli_usage_docs.py)]
+- Review: [PASSED]
+- Next: [US-027]
+---
