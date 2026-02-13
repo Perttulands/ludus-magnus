@@ -803,3 +803,49 @@
 - Review: [PASSED]
 - Next: [US-REVIEW-S4]
 ---
+## Review ISSUES - US-REVIEW-S4 Sprint 4 Review
+- Scope reviewed
+  - US-018 through US-023 (commits: 22d61a6, 019783a, c52c9b3, 6c986f2, b51fcf0, 6436730)
+- Validation run
+  - `/usr/local/go/bin/go test ./... -v` PASS
+  - `.venv/bin/pytest -v tests/test_us018_directive_commands.py tests/test_us019_directive_application.py tests/test_us020_export_agent.py tests/test_us021_export_evidence.py tests/test_us022_doctor.py tests/test_us023_json_output_flag.py` PASS (6 passed)
+- Linus 5-layer findings
+  - Data structures: directives and evidence structures are coherent and consistent across command and export layers
+  - Special cases: oneshot clearing behavior is correctly centralized in iterate/training iterate flows
+  - Complexity: command handlers remain straightforward; JSON output helper reduces repetition
+  - Destructive analysis: found data-loss bug in cross-format export for agent definitions
+  - Practicality: doctor and JSON output are usable for automation, but export fidelity issue must be fixed before gate can pass
+- Issues found
+  - `internal/export/agent.go`: `renderPython` and `renderTypeScript` hardcode `tools: []`, dropping stored `definition.tools` values for non-JSON exports
+  - Impact: exported Python/TypeScript definitions are not faithful to trained agent state, which can break downstream deployment expectations
+- Actions taken
+  - Inserted follow-up task in PRD: `US-020a Preserve tools arrays in Python/TypeScript agent exports (~5 min)` before `US-REVIEW-S4`
+- Taste score: Acceptable (blocked by export fidelity bug)
+---
+## Iteration 26 - Preserve tools arrays in Python/TypeScript agent exports
+- What was implemented
+- Added RED tests to assert Python and TypeScript agent exports preserve non-empty `definition.tools` instead of hardcoded empty arrays
+- Updated exporter rendering to serialize actual `tools` content for both Python and TypeScript outputs
+- Added robust Python literal rendering for nested tool payloads (maps/lists/scalars/bools/null) and JSON literal rendering for TypeScript
+- Marked US-020a complete in `PRD_LUDUS_MAGNUS.md`
+- Files changed
+- internal/export/agent.go
+- internal/export/agent_test.go
+- tests/test_us020_export_agent.py
+- PRD_LUDUS_MAGNUS.md
+- progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+  - Export templates should use shared serializers from state values to avoid cross-format data loss bugs
+  - Gotchas encountered
+  - String-based assertions on serialized structures are whitespace-sensitive; keep expected formatting aligned with renderer output
+  - Useful context
+  - Python export now emits executable Python literals for nested tool arrays while preserving key order deterministically for maps
+
+**Summary:**
+- Task: [US-020a: Preserve tools arrays in Python/TypeScript agent exports]
+- Files: [internal/export/agent.go, internal/export/agent_test.go, tests/test_us020_export_agent.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us020_export_agent.py), go test ./internal/export -v PASS, go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-REVIEW-S4]
+---

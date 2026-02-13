@@ -71,6 +71,11 @@ def test_us020_export_agent_formats_and_missing_agent_error(tmp_path: Path):
         state_doc = json.loads((tmp_path / ".ludus-magnus" / "state.json").read_text())
         session_doc = next(iter(state_doc["sessions"].values()))
         lineage_doc = next(iter(session_doc["lineages"].values()))
+        lineage_doc["agents"][0]["definition"]["tools"] = [
+            {"name": "search", "type": "function"},
+            {"name": "calculator", "type": "function"},
+        ]
+        (tmp_path / ".ludus-magnus" / "state.json").write_text(json.dumps(state_doc, indent=2) + "\n")
         agent_id = lineage_doc["agents"][0]["id"]
 
         exported_json = run(f"{binary} export agent {agent_id} --format json", cwd=tmp_path)
@@ -87,6 +92,12 @@ def test_us020_export_agent_formats_and_missing_agent_error(tmp_path: Path):
         import_python = run('python3 -c "import agent; print(agent.agent_definition.get(\'model\'))"', cwd=tmp_path)
         assert import_python.returncode == 0, import_python.stderr
         assert import_python.stdout.strip() == agent_def["model"]
+        import_python_tools = run(
+            'python3 -c "import agent; print(len(agent.agent_definition.get(\'tools\', [])))"',
+            cwd=tmp_path,
+        )
+        assert import_python_tools.returncode == 0, import_python_tools.stderr
+        assert import_python_tools.stdout.strip() == "2"
 
         exported_typescript = run(f"{binary} export agent {agent_id} --format typescript > agent.ts", cwd=tmp_path)
         assert exported_typescript.returncode == 0, exported_typescript.stderr
@@ -94,6 +105,8 @@ def test_us020_export_agent_formats_and_missing_agent_error(tmp_path: Path):
         assert "const agentDefinition: AgentDefinition" in ts_code
         assert "systemPrompt" in ts_code
         assert "maxTokens" in ts_code
+        assert '"name":"search"' in ts_code
+        assert '"name":"calculator"' in ts_code
 
         missing = run(f"{binary} export agent nonexistent-id --format json", cwd=tmp_path)
         assert missing.returncode != 0

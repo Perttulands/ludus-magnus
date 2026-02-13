@@ -40,6 +40,9 @@ func TestAgentDefinitionPython(t *testing.T) {
 	if !strings.Contains(payload, `"model": "gpt-4.1"`) {
 		t.Fatalf("expected model field in python export, got %q", payload)
 	}
+	if !strings.Contains(payload, `"tools": [{"name": "search", "type": "function"}]`) {
+		t.Fatalf("expected python export to preserve tools array, got %q", payload)
+	}
 }
 
 func TestAgentDefinitionTypeScript(t *testing.T) {
@@ -56,6 +59,9 @@ func TestAgentDefinitionTypeScript(t *testing.T) {
 	}
 	if !strings.Contains(payload, "systemPrompt") {
 		t.Fatalf("expected camelCase TypeScript fields, got %q", payload)
+	}
+	if !strings.Contains(payload, `tools: [{"name":"search","type":"function"}]`) {
+		t.Fatalf("expected typescript export to preserve tools array, got %q", payload)
 	}
 }
 
@@ -95,7 +101,12 @@ func sampleStateWithAgent(agentID string) state.State {
 							Model:        "gpt-4.1",
 							Temperature:  0.7,
 							MaxTokens:    2048,
-							Tools:        []any{},
+							Tools: []any{
+								map[string]any{
+									"name": "search",
+									"type": "function",
+								},
+							},
 						},
 					},
 				},
