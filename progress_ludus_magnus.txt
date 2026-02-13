@@ -313,3 +313,61 @@
 - Review: [PASSED]
 - Next: [US-010]
 ---
+## Iteration 11 - Evaluation commands (score/comment)
+- What was implemented
+  - Added `evaluate` CLI command (`ludus-magnus evaluate <artifact-id> --score --comment`) and wired it into root command registration
+  - Implemented immutable artifact evaluation storage in `internal/state/EvaluateArtifact` with score validation (1-10), timestamping, and single-evaluation guard
+  - Added Go unit tests for evaluation success, invalid score rejection, and re-evaluation rejection
+  - Added acceptance test validating end-to-end evaluate flow after quickstart+run, including persisted score/comment and expected error cases
+- Files changed
+  - cmd/root.go
+  - cmd/evaluate.go
+  - internal/state/evaluation.go
+  - internal/state/evaluation_test.go
+  - tests/test_us010_evaluation_commands.py
+  - PRD_LUDUS_MAGNUS.md
+  - progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+    - State mutations remain cleaner when command handlers delegate persistence rules to `internal/state` helpers
+  - Gotchas encountered
+    - US-010 acceptance requires command immutability semantics (`artifact already evaluated`), so second-write protection must be in state logic, not only CLI validation
+  - Useful context
+    - `evaluate` finds artifacts globally across sessions/lineages, enabling later artifact inspect/list flows to reuse the same traversal pattern
+
+**Summary:**
+- Task: [US-010: Evaluation commands (score/comment)]
+- Files: [cmd/root.go, cmd/evaluate.go, internal/state/evaluation.go, internal/state/evaluation_test.go, tests/test_us010_evaluation_commands.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us010_evaluation_commands.py), 9 passed (go test ./internal/state -v), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-011]
+---
+## Iteration 12 - Status/inspect commands for artifacts
+- What was implemented
+- Added `artifact` command group with `list` and `inspect` subcommands and registered it in root CLI
+- Implemented `artifact list <session-id>` with tabular output columns: ID, Agent Version, Score, Created At
+- Implemented `artifact inspect <artifact-id>` returning pretty JSON for full artifact details (input, output, execution metadata, evaluation)
+- Added acceptance test covering list/inspect happy path plus missing-session error handling
+- Files changed
+- cmd/root.go
+- cmd/artifact.go
+- cmd/artifact_list.go
+- cmd/artifact_inspect.go
+- tests/test_us011_artifact_commands.py
+- PRD_LUDUS_MAGNUS.md
+- progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+  - Session-scoped listing and global ID-based inspect pair well: list for discovery, inspect for detail without additional filters
+  - Gotchas encountered
+  - `artifact list` score values need graceful handling for unevaluated artifacts (`-`) to avoid nil evaluation dereference
+  - Useful context
+  - Agent version in list can be resolved from `artifact.agent_id` against lineage agents, keeping artifact schema unchanged
+
+**Summary:**
+- Task: [US-011: Status/inspect commands for artifacts]
+- Files: [cmd/root.go, cmd/artifact.go, cmd/artifact_list.go, cmd/artifact_inspect.go, tests/test_us011_artifact_commands.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us011_artifact_commands.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-REVIEW-S2]
+---
