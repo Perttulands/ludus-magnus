@@ -226,3 +226,31 @@
   - `state.json` schema in `internal/state/schema.go` matches Sprint 1 spec fields
 - Taste score: Good taste
 ---
+## Iteration 8 - Agent execution engine with provider integration and executor modes
+- What was implemented
+  - Added execution engine in `internal/engine/execute.go` with `api` and `cli` modes, including provider/executor metadata capture and runtime duration/cost/tokens fields
+  - Added `run` command in `cmd/run.go` with required `--input`, lineage selection (`main` default for quickstart, required for non-quickstart), provider integration for API mode, and artifact persistence to state
+  - Added tests: Go unit tests for engine execution modes and acceptance test covering quickstart run, training lineage run, and CLI executor metadata capture
+- Files changed
+  - cmd/root.go
+  - cmd/run.go
+  - internal/engine/execute.go
+  - internal/engine/execute_test.go
+  - tests/test_us007_execution_engine.py
+  - PRD_LUDUS_MAGNUS.md
+  - progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+    - Using lineage `name` lookup (not map key) keeps `run --lineage` compatible with both quickstart and training state shapes
+  - Gotchas encountered
+    - CLI mode requires executor binaries in `PATH`; acceptance tests should inject a fake executor when validating metadata behavior
+  - Useful context
+    - Current execution metadata stores aggregate provider tokens in `tokens_output`; token split/tool-call enrichment is a natural follow-up for US-008
+
+**Summary:**
+- Task: [US-007: Agent execution engine with provider integration and executor modes]
+- Files: [cmd/root.go, cmd/run.go, internal/engine/execute.go, internal/engine/execute_test.go, tests/test_us007_execution_engine.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 4 passed (go test ./internal/engine -v), 1 passed (tests/test_us007_execution_engine.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-008]
+---

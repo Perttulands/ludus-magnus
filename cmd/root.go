@@ -14,6 +14,7 @@ func newRootCmd() *cobra.Command {
 
 	cmd.AddCommand(newSessionCmd())
 	cmd.AddCommand(newQuickstartCmd())
+	cmd.AddCommand(newRunCmd())
 
 	return cmd
 }

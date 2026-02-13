@@ -88,7 +88,7 @@ graph TD
 
 **Priority:** HIGH
 **Purpose:** Establish project structure, state management, and agent generation
-**Status:** IN PROGRESS
+**Status:** COMPLETE
 
 - [x] **US-001** Project scaffolding and Go module setup (~15 min, ~50 lines)
 - [x] **US-002** Define state file schema and persistence layer (~20 min, ~150 lines)
@@ -104,9 +104,9 @@ graph TD
 
 **Priority:** HIGH
 **Purpose:** Execute agent definitions, capture observability, store artifacts, enable evaluation
-**Status:** NOT STARTED
+**Status:** IN PROGRESS
 
-- [ ] **US-007** Agent execution engine with provider integration and executor modes (~30 min, ~250 lines) [depends: US-004, US-006]
+- [x] **US-007** Agent execution engine with provider integration and executor modes (~30 min, ~250 lines) [depends: US-004, US-006]
 - [ ] **US-008** Observability capture (tokens, timing, tool calls, costs) (~20 min, ~150 lines) [depends: US-007]
 - [ ] **US-009** Artifact storage with metadata (~15 min, ~100 lines) [depends: US-002, US-007]
 - [ ] **US-010** Evaluation commands (score/comment) (~15 min, ~80 lines) [depends: US-009]
