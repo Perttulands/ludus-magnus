@@ -16,6 +16,7 @@ func newExportCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(newExportAgentCmd())
+	cmd.AddCommand(newExportEvidenceCmd())
 	return cmd
 }
 
@@ -48,5 +49,37 @@ func newExportAgentCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&format, "format", exporter.FormatJSON, "Export format: json, python, typescript")
+	return cmd
+}
+
+func newExportEvidenceCmd() *cobra.Command {
+	var format string
+
+	cmd := &cobra.Command{
+		Use:   "evidence <session-id>",
+		Short: "Export one session evidence pack",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			sessionID := strings.TrimSpace(args[0])
+			if sessionID == "" {
+				return fmt.Errorf("session id is required")
+			}
+
+			st, err := state.Load("")
+			if err != nil {
+				return err
+			}
+
+			payload, err := exporter.EvidencePack(st, sessionID, format)
+			if err != nil {
+				return err
+			}
+
+			_, err = fmt.Fprint(cmd.OutOrStdout(), payload)
+			return err
+		},
+	}
+
+	cmd.Flags().StringVar(&format, "format", exporter.FormatJSON, "Export format: json")
 	return cmd
 }

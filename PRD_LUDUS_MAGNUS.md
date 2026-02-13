@@ -141,7 +141,7 @@ graph TD
 - [x] **US-018** Directive set/clear commands (oneshot/sticky) (~20 min, ~120 lines) [depends: US-002]
 - [x] **US-019** Directive application in evolution (~15 min, ~80 lines) [depends: US-012, US-018]
 - [x] **US-020** Export agent definitions (JSON/Python/TypeScript) (~25 min, ~180 lines) [depends: US-006]
-- [ ] **US-021** Export evidence packs (scores/comments/lineage history) (~15 min, ~100 lines) [depends: US-010]
+- [x] **US-021** Export evidence packs (scores/comments/lineage history) (~15 min, ~100 lines) [depends: US-010]
 - [ ] **US-022** Doctor command (env diagnostics, provider and executor checks) (~20 min, ~120 lines) [depends: US-004]
 - [ ] **US-023** JSON output flag for all commands (~15 min, ~100 lines)
 - [ ] **US-REVIEW-S4** Sprint 4 Review 🚧 GATE (~10 min)

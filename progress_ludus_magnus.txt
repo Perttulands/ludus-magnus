@@ -708,3 +708,30 @@
 - Review: [PASSED]
 - Next: [US-021]
 ---
+## Iteration 23 - Export evidence packs (scores/comments/lineage history)
+- What was implemented
+- Added `export evidence <session-id> --format json` command and wired it under `export`
+- Implemented `internal/export/evidence.go` to build full-session evidence packs containing session metadata, lineage lock state, agent version history, artifacts (including evaluations), and directives
+- Added Go unit tests for evidence export success and error paths, plus acceptance test validating quickstart/run/evaluate/iterate flow and evidence JSON contents
+- Files changed
+- cmd/export.go
+- internal/export/evidence.go
+- internal/export/evidence_test.go
+- tests/test_us021_export_evidence.py
+- PRD_LUDUS_MAGNUS.md
+- progress_ludus_magnus.txt
+- Learnings for future iterations:
+- Patterns discovered
+  - Keep new export surfaces in `internal/export` with thin Cobra wrappers so future export commands stay consistent
+- Gotchas encountered
+  - Acceptance flows that validate evolution history must run `iterate` after evaluation to ensure at least two agent versions in evidence output
+- Useful context
+  - Evidence export currently supports JSON only and intentionally exports the full session without filtering, matching PRD scope
+
+**Summary:**
+- Task: [US-021: Export evidence packs (scores/comments/lineage history)]
+- Files: [cmd/export.go, internal/export/evidence.go, internal/export/evidence_test.go, tests/test_us021_export_evidence.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us021_export_evidence.py), 7 passed (go test ./internal/export -v), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-022]
+---
