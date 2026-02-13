@@ -94,7 +94,7 @@ graph TD
 - [x] **US-002** Define state file schema and persistence layer (~20 min, ~150 lines)
 - [x] **US-003** Session create/list/inspect commands (~20 min, ~120 lines) [depends: US-002]
 - [x] **US-004** Provider adapter interface with Anthropic + OpenAI-compatible implementations (~25 min, ~200 lines)
-- [ ] **US-005** Quickstart initialization flow (~15 min, ~100 lines) [depends: US-002, US-003]
+- [x] **US-005** Quickstart initialization flow (~15 min, ~100 lines) [depends: US-002, US-003]
 - [ ] **US-006** Agent definition generation from intent (~25 min, ~180 lines) [depends: US-004, US-005]
 - [ ] **US-REVIEW-S1** Sprint 1 Review 🚧 GATE (~10 min)
 

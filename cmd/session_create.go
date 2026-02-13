@@ -1,12 +1,9 @@
 package cmd
 
 import (
-	"fmt"
-	"strings"
 	"time"
 
 	"github.com/Perttulands/ludus-magnus/internal/state"
-	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +20,7 @@ func newSessionCreateCmd() *cobra.Command {
 				return err
 			}
 
-			sessionID := fmt.Sprintf("ses_%s", strings.ReplaceAll(uuid.NewString(), "-", "")[:8])
+			sessionID := newPrefixedID("ses")
 			now := time.Now().UTC().Format(time.RFC3339)
 			st.Sessions[sessionID] = state.Session{
 				ID:        sessionID,
