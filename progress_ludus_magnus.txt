@@ -868,3 +868,56 @@
   - Export templates preserve non-empty `tools` arrays in Python and TypeScript renderers
 - Taste score: Good taste
 ---
+## Iteration 27 - Integration test: quickstart flow end-to-end
+- What was implemented
+  - Added Go integration test `test/integration/quickstart_test.go` covering full quickstart lifecycle: `quickstart init` → `run` → `evaluate` → `iterate` → second `run`
+  - Implemented an in-test mock OpenAI-compatible `/chat/completions` server to avoid real API calls and return deterministic baseline/evolved responses
+  - Asserted end-to-end state outcomes: session created, second agent version exists after iterate, and v2 run output differs from v1 output
+  - Added explicit temporary-workspace cleanup assertion to verify state file path is removed after test cleanup
+  - Added acceptance test `tests/test_us024_quickstart_integration.py` that executes `go test ./test/integration -v`
+- Files changed
+  - test/integration/quickstart_test.go
+  - tests/test_us024_quickstart_integration.py
+  - PRD_LUDUS_MAGNUS.md
+  - progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+    - Using a single deterministic mock server that branches on prompt content makes iterate-version behavior verifiable without brittle fixture files
+  - Gotchas encountered
+    - `go test ./test/integration` failed initially because the `test/integration` package directory did not exist; creating the package resolved the setup failure
+  - Useful context
+    - Running CLI binaries in integration tests is stable when the test builds the binary into a temp workspace and executes commands with explicit provider flags
+
+**Summary:**
+- Task: [US-024: Integration test: quickstart flow end-to-end]
+- Files: [test/integration/quickstart_test.go, tests/test_us024_quickstart_integration.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (go test ./test/integration -v), 1 passed (pytest tests/test_us024_quickstart_integration.py -v), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-025]
+---
+## Iteration 28 - Integration test: training flow with promotion
+- What was implemented
+- Added `test/integration/training_test.go` with a full training-flow integration test: quickstart init, promote to training, run A/B/C/D, evaluate artifacts, lock top scorers, and training iterate
+- Implemented deterministic mock OpenAI-compatible server behavior for generation/evolution/execution so lock-aware iteration behavior is verifiable without external API calls
+- Added acceptance wrapper `tests/test_us025_training_integration.py` that asserts `go test ./test/integration -v` passes and includes `TestTrainingFlowWithPromotionAndLocks`
+- Marked US-025 complete in `PRD_LUDUS_MAGNUS.md`
+- Files changed
+- test/integration/training_test.go
+- tests/test_us025_training_integration.py
+- PRD_LUDUS_MAGNUS.md
+- progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+  - Integration tests remain stable when command flows are validated through state file assertions plus deterministic mock branching
+  - Gotchas encountered
+  - Mock response matching must prioritize specific promotion/evolution prompt cases before generic generation markers to avoid false-positive behavior
+  - Useful context
+  - Shared helpers in `test/integration/quickstart_test.go` (`runCmd`, `captureMatch`, `findRepoRoot`, `mustMkdirTemp`) are reusable across integration test files in the same package
+
+**Summary:**
+- Task: [US-025: Integration test: training flow with promotion]
+- Files: [test/integration/training_test.go, tests/test_us025_training_integration.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us025_training_integration.py), go test ./test/integration -v PASS (2 tests), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-026]
+---

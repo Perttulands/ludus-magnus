@@ -156,7 +156,7 @@ graph TD
 **Status:** IN PROGRESS
 
 - [x] **US-024** Integration test: quickstart flow end-to-end (~15 min, ~150 lines)
-- [ ] **US-025** Integration test: training flow with promotion (~15 min, ~180 lines)
+- [x] **US-025** Integration test: training flow with promotion (~15 min, ~180 lines)
 - [ ] **US-026** CLI usage documentation and examples (~10 min, ~200 lines)
 - [ ] **US-027** State file migration/compaction strategy (~10 min, ~100 lines)
 - [ ] **US-REVIEW-S5** Sprint 5 Review 🚧 GATE (~10 min)
