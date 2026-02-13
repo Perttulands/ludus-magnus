@@ -735,3 +735,30 @@
 - Review: [PASSED]
 - Next: [US-022]
 ---
+## Iteration 24 - Doctor command (env diagnostics, provider and executor checks)
+- What was implemented
+- Added `doctor` command in `cmd/doctor.go` with required checks for provider credentials, provider initialization, and state file readability, plus optional executor discovery checks for `claude` and `codex`
+- Wired `doctor` into the root command so `ludus-magnus doctor` is available from the main CLI
+- Added acceptance test `tests/test_us022_doctor.py` covering success path with `ANTHROPIC_API_KEY`, missing-credential failure + exit code, readable state-file reporting, and optional `codex` reporting when installed
+- Marked US-022 complete in `PRD_LUDUS_MAGNUS.md`
+- Files changed
+- cmd/doctor.go
+- cmd/root.go
+- tests/test_us022_doctor.py
+- PRD_LUDUS_MAGNUS.md
+- progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+  - Keep doctor checks split into small functions (credentials, provider init, state, executors) so required vs optional failure behavior stays explicit
+  - Gotchas encountered
+  - `provider.NewFactory` already centralizes provider alias normalization and credential rules, so doctor should validate through the same path instead of reimplementing factory logic
+  - Useful context
+  - Required-check failures are surfaced as `RunE` errors so Cobra exits with status 1 while still printing per-check diagnostics
+
+**Summary:**
+- Task: [US-022: Doctor command (env diagnostics, provider and executor checks)]
+- Files: [cmd/doctor.go, cmd/root.go, tests/test_us022_doctor.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us022_doctor.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-023]
+---

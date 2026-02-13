@@ -23,6 +23,7 @@ func newRootCmd() *cobra.Command {
 	cmd.AddCommand(newPromoteCmd())
 	cmd.AddCommand(newDirectiveCmd())
 	cmd.AddCommand(newExportCmd())
+	cmd.AddCommand(newDoctorCmd())
 
 	return cmd
 }
