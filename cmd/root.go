@@ -15,6 +15,7 @@ func newRootCmd() *cobra.Command {
 	cmd.AddCommand(newSessionCmd())
 	cmd.AddCommand(newQuickstartCmd())
 	cmd.AddCommand(newTrainingCmd())
+	cmd.AddCommand(newLineageCmd())
 	cmd.AddCommand(newIterateCmd())
 	cmd.AddCommand(newRunCmd())
 	cmd.AddCommand(newEvaluateCmd())

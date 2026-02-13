@@ -125,7 +125,7 @@ graph TD
 - [x] **US-012** Evolution prompt generation from evaluations (~25 min, ~200 lines) [depends: US-010]
 - [x] **US-013** Iterate command (regenerate with evolution) (~20 min, ~120 lines) [depends: US-006, US-012]
 - [x] **US-014** Training mode initialization (four lineages A/B/C/D) (~25 min, ~180 lines) [depends: US-003, US-004, US-006]
-- [ ] **US-015** Lock/unlock lineage controls (~15 min, ~80 lines) [depends: US-014]
+- [x] **US-015** Lock/unlock lineage controls (~15 min, ~80 lines) [depends: US-014]
 - [ ] **US-016** Training iteration (regenerate unlocked only) (~20 min, ~120 lines) [depends: US-013, US-015]
 - [ ] **US-017** Promotion flow (quickstart → training) (~15 min, ~100 lines) [depends: US-005, US-014]
 - [ ] **US-REVIEW-S3** Sprint 3 Review 🚧 GATE (~10 min)

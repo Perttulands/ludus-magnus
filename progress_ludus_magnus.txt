@@ -526,3 +526,30 @@
 - Review: [PASSED]
 - Next: [US-015]
 ---
+## Iteration 17 - Lock/unlock lineage controls
+- What was implemented
+- Added `lineage` command group with `lock` and `unlock` subcommands
+- Implemented state mutation flow to resolve lineage by name within a session and toggle `lineage.locked`
+- Added user-facing confirmations: `Lineage <name> locked` and `Lineage <name> unlocked`
+- Added acceptance test covering lock, unlock, persisted state verification, and missing-lineage error path
+- Files changed
+- cmd/root.go
+- cmd/lineage.go
+- tests/test_us015_lineage_lock.py
+- PRD_LUDUS_MAGNUS.md
+- progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+  - Reusing `findLineageByName` avoids duplicated lineage lookup logic and keeps command behavior consistent
+  - Gotchas encountered
+  - Session lineages are keyed by lineage ID, so CLI selectors should continue matching on user-facing lineage `name`
+  - Useful context
+  - Lock state is now persisted and ready for US-016 training-iterate skip logic
+
+**Summary:**
+- Task: [US-015: Lock/unlock lineage controls]
+- Files: [cmd/root.go, cmd/lineage.go, tests/test_us015_lineage_lock.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us015_lineage_lock.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-016]
+---
