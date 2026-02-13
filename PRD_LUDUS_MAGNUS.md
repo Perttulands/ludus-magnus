@@ -112,7 +112,7 @@ graph TD
 - [x] **US-009a** Enforce globally unique artifact IDs and collision-safe artifact lookup (~10 min, ~70 lines) [depends: US-009]
 - [x] **US-010** Evaluation commands (score/comment) (~15 min, ~80 lines) [depends: US-009]
 - [x] **US-011** Status/inspect commands for artifacts (~20 min, ~120 lines) [depends: US-009]
-- [ ] **US-REVIEW-S2** Sprint 2 Review 🚧 GATE (~10 min)
+- [x] **US-REVIEW-S2** Sprint 2 Review 🚧 GATE (~10 min)
 
 ---
 
