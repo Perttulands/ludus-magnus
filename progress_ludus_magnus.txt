@@ -606,3 +606,22 @@
 - Review: [PASSED]
 - Next: [US-REVIEW-S3]
 ---
+## Review PASSED - US-REVIEW-S3 Sprint 3 Review
+- Scope reviewed
+  - US-012 through US-017 (commits: 8ab5ca0, ba3d862, 166839b, 8ca2431, 35bc5e6, a8e3584)
+- Gate checks run
+  - `/usr/local/go/bin/go test ./... -v` PASS
+  - End-to-end flow PASS (quickstart init -> iterate -> promote -> training iterate) using local OpenAI-compatible mock endpoint
+  - Lock behavior PASS (after `lineage lock A`, `training iterate` left lineage A at one agent and regenerated B/C/D only)
+- Linus 5-layer findings
+  - Data structures: lineage lock state, lineage naming, and evolution prompt inputs are modeled consistently with state schema
+  - Special cases: quickstart-vs-training branching is explicit and localized to command entry points; no scattered mode checks
+  - Complexity: iterate/training-iterate/promote reuse common generation pipeline and remain straightforward
+  - Destructive analysis: promotion intentionally replaces quickstart lineage map with A/B/C/D as specified by US-017; no hidden side effects observed
+  - Practicality: four-lineage training mode enables parallel variants and lock-based control as intended
+- Cross-task checks
+  - Locked lineages do not mutate during training iteration
+  - Promotion creates exactly four lineages named A/B/C/D
+  - Evolution prompt output includes current agent prompt, evaluation summary, feedback, and directives context
+- Taste score: Good taste
+---

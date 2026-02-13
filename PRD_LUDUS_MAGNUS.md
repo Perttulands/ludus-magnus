@@ -128,7 +128,7 @@ graph TD
 - [x] **US-015** Lock/unlock lineage controls (~15 min, ~80 lines) [depends: US-014]
 - [x] **US-016** Training iteration (regenerate unlocked only) (~20 min, ~120 lines) [depends: US-013, US-015]
 - [x] **US-017** Promotion flow (quickstart → training) (~15 min, ~100 lines) [depends: US-005, US-014]
-- [ ] **US-REVIEW-S3** Sprint 3 Review 🚧 GATE (~10 min)
+- [x] **US-REVIEW-S3** Sprint 3 Review 🚧 GATE (~10 min)
 
 ---
 
