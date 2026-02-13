@@ -553,3 +553,30 @@
 - Review: [PASSED]
 - Next: [US-016]
 ---
+## Iteration 18 - Training iteration (regenerate unlocked only)
+- What was implemented
+- Added `training iterate <session-id>` command to regenerate only unlocked training lineages (A/B/C/D order)
+- Implemented training-mode guard, lock-aware skip logic, per-lineage evolution prompt generation, provider/model fallback from previous agent metadata, and versioned agent append/save flow
+- Added summary output with regenerated and locked lineage names
+- Added acceptance test validating locked lineage A remains unchanged while unlocked B/C/D get version 2 agents
+- Files changed
+- cmd/training.go
+- cmd/training_iterate.go
+- tests/test_us016_training_iterate.py
+- PRD_LUDUS_MAGNUS.md
+- progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+  - Iterating in canonical lineage order (`A,B,C,D`) keeps user-facing summaries deterministic and testable
+  - Gotchas encountered
+  - Empty regenerated sets should be rendered explicitly (`none`) to avoid ambiguous output formatting
+  - Useful context
+  - `training iterate` reuses the same evolution/generation pipeline as `iterate`, but applies lock filtering at lineage loop level
+
+**Summary:**
+- Task: [US-016: Training iteration (regenerate unlocked only)]
+- Files: [cmd/training.go, cmd/training_iterate.go, tests/test_us016_training_iterate.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us016_training_iterate.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-017]
+---

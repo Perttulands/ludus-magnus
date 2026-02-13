@@ -29,6 +29,7 @@ func newTrainingCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(newTrainingInitCmd())
+	cmd.AddCommand(newTrainingIterateCmd())
 	return cmd
 }
 
