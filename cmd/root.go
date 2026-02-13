@@ -11,6 +11,7 @@ func newRootCmd() *cobra.Command {
 		Use:   "ludus-magnus",
 		Short: "ludus-magnus CLI",
 	}
+	cmd.PersistentFlags().Bool("json", false, "Output JSON")
 
 	cmd.AddCommand(newSessionCmd())
 	cmd.AddCommand(newQuickstartCmd())

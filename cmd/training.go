@@ -109,6 +109,14 @@ func newTrainingInitCmd() *cobra.Command {
 				return err
 			}
 
+			if isJSONOutput(cmd) {
+				payload := map[string]any{"session_id": sessionID}
+				for _, variant := range defaultTrainingVariants {
+					payload[fmt.Sprintf("lineage_%s_id", variant.name)] = lineageIDsByName[variant.name]
+				}
+				return writeJSON(cmd, payload)
+			}
+
 			if _, err := fmt.Fprintf(cmd.OutOrStdout(), "session_id=%s\n", sessionID); err != nil {
 				return err
 			}

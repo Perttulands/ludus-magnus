@@ -19,16 +19,24 @@ func newSessionListCmd() *cobra.Command {
 				return err
 			}
 
-			w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 8, 2, '\t', 0)
-			if _, err := fmt.Fprintln(w, "ID\tMODE\tSTATUS\tCREATED_AT"); err != nil {
-				return err
-			}
-
 			ids := make([]string, 0, len(st.Sessions))
 			for id := range st.Sessions {
 				ids = append(ids, id)
 			}
 			sort.Strings(ids)
+
+			if isJSONOutput(cmd) {
+				sessions := make([]state.Session, 0, len(ids))
+				for _, id := range ids {
+					sessions = append(sessions, st.Sessions[id])
+				}
+				return writeJSON(cmd, map[string]any{"sessions": sessions})
+			}
+
+			w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 8, 2, '\t', 0)
+			if _, err := fmt.Fprintln(w, "ID\tMODE\tSTATUS\tCREATED_AT"); err != nil {
+				return err
+			}
 
 			for _, id := range ids {
 				ses := st.Sessions[id]

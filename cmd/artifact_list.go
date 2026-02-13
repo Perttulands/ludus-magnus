@@ -27,23 +27,48 @@ func newArtifactListCmd() *cobra.Command {
 				return fmt.Errorf("session not found: %s", sessionID)
 			}
 
-			tw := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
-			_, _ = fmt.Fprintln(tw, "ID\tAgent Version\tScore\tCreated At")
+			type artifactSummary struct {
+				ID           string `json:"id"`
+				AgentVersion int    `json:"agent_version"`
+				Score        *int   `json:"score,omitempty"`
+				CreatedAt    string `json:"created_at"`
+			}
+
+			summaries := []artifactSummary{}
 			for _, lineage := range session.Lineages {
 				for _, artifact := range lineage.Artifacts {
-					score := "-"
-					if artifact.Evaluation != nil {
-						score = strconv.Itoa(artifact.Evaluation.Score)
+					summary := artifactSummary{
+						ID:           artifact.ID,
+						AgentVersion: agentVersionForArtifact(lineage, artifact.AgentID),
+						CreatedAt:    artifact.CreatedAt,
 					}
-					_, _ = fmt.Fprintf(
-						tw,
-						"%s\t%d\t%s\t%s\n",
-						artifact.ID,
-						agentVersionForArtifact(lineage, artifact.AgentID),
-						score,
-						artifact.CreatedAt,
-					)
+					if artifact.Evaluation != nil {
+						score := artifact.Evaluation.Score
+						summary.Score = &score
+					}
+					summaries = append(summaries, summary)
 				}
+			}
+
+			if isJSONOutput(cmd) {
+				return writeJSON(cmd, map[string]any{"artifacts": summaries})
+			}
+
+			tw := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
+			_, _ = fmt.Fprintln(tw, "ID\tAgent Version\tScore\tCreated At")
+			for _, summary := range summaries {
+				score := "-"
+				if summary.Score != nil {
+					score = strconv.Itoa(*summary.Score)
+				}
+				_, _ = fmt.Fprintf(
+					tw,
+					"%s\t%d\t%s\t%s\n",
+					summary.ID,
+					summary.AgentVersion,
+					score,
+					summary.CreatedAt,
+				)
 			}
 			return tw.Flush()
 		},

@@ -52,6 +52,13 @@ func newDirectiveClearCmd() *cobra.Command {
 				return err
 			}
 
+			if isJSONOutput(cmd) {
+				return writeJSON(cmd, map[string]any{
+					"directive_id": directiveID,
+					"cleared":      true,
+				})
+			}
+
 			_, err = fmt.Fprintf(cmd.OutOrStdout(), "directive_id=%s cleared\n", directiveID)
 			return err
 		},

@@ -71,6 +71,14 @@ func setLineageLock(cmd *cobra.Command, sessionID, lineageName string, locked bo
 		return err
 	}
 
+	if isJSONOutput(cmd) {
+		return writeJSON(cmd, map[string]any{
+			"session_id": trimmedSessionID,
+			"lineage":    trimmedLineageName,
+			"locked":     locked,
+		})
+	}
+
 	if locked {
 		_, err = fmt.Fprintf(cmd.OutOrStdout(), "Lineage %s locked\n", trimmedLineageName)
 	} else {

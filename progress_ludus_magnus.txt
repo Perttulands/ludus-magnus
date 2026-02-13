@@ -762,3 +762,44 @@
 - Review: [PASSED]
 - Next: [US-023]
 ---
+## Iteration 25 - JSON output flag for all commands
+- What was implemented
+- Added global persistent `--json` flag on the root command so every subcommand accepts machine-readable output mode
+- Added shared JSON helpers in `cmd/output.go` and integrated conditional JSON output into command handlers that previously printed human-readable key/value or table output
+- Added acceptance test `tests/test_us023_json_output_flag.py` validating `session list --json`, `artifact list --json`, and `doctor --json` produce valid structured JSON
+- Marked US-023 complete in `PRD_LUDUS_MAGNUS.md`
+- Files changed
+- cmd/root.go
+- cmd/output.go
+- cmd/session_list.go
+- cmd/artifact_list.go
+- cmd/doctor.go
+- cmd/session_create.go
+- cmd/quickstart.go
+- cmd/training.go
+- cmd/run.go
+- cmd/evaluate.go
+- cmd/lineage.go
+- cmd/iterate.go
+- cmd/training_iterate.go
+- cmd/promote.go
+- cmd/directive_set.go
+- cmd/directive_clear.go
+- tests/test_us023_json_output_flag.py
+- PRD_LUDUS_MAGNUS.md
+- progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+  - A root persistent Cobra flag is the cleanest way to guarantee cross-command availability for output-mode toggles
+  - Gotchas encountered
+  - State fixture fields must match exact schema types (`execution_metadata.tool_calls` is an array, not an integer)
+  - Useful context
+  - Existing human-readable output behavior remains unchanged when `--json` is omitted; JSON is opt-in per invocation
+
+**Summary:**
+- Task: [US-023: JSON output flag for all commands]
+- Files: [cmd/root.go, cmd/output.go, cmd/session_list.go, cmd/artifact_list.go, cmd/doctor.go, cmd/session_create.go, cmd/quickstart.go, cmd/training.go, cmd/run.go, cmd/evaluate.go, cmd/lineage.go, cmd/iterate.go, cmd/training_iterate.go, cmd/promote.go, cmd/directive_set.go, cmd/directive_clear.go, tests/test_us023_json_output_flag.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 4 passed (tests/test_us003_session_commands.py, tests/test_us011_artifact_commands.py, tests/test_us022_doctor.py, tests/test_us023_json_output_flag.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-REVIEW-S4]
+---

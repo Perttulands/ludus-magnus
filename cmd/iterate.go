@@ -100,6 +100,13 @@ func newIterateCmd() *cobra.Command {
 				return err
 			}
 
+			if isJSONOutput(cmd) {
+				return writeJSON(cmd, map[string]any{
+					"agent_id": newAgent.ID,
+					"version":  newAgent.Version,
+				})
+			}
+
 			if _, err := fmt.Fprintf(cmd.OutOrStdout(), "agent_id=%s\n", newAgent.ID); err != nil {
 				return err
 			}

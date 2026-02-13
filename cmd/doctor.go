@@ -12,9 +12,9 @@ import (
 )
 
 type doctorCheck struct {
-	Required bool
-	Passed   bool
-	Message  string
+	Required bool   `json:"required"`
+	Passed   bool   `json:"passed"`
+	Message  string `json:"message"`
 }
 
 func newDoctorCmd() *cobra.Command {
@@ -36,6 +36,21 @@ func newDoctorCmd() *cobra.Command {
 			checks = append(checks, checkOptionalExecutor("codex"))
 
 			hasRequiredFailures := false
+			if isJSONOutput(cmd) {
+				for _, check := range checks {
+					if check.Required && !check.Passed {
+						hasRequiredFailures = true
+					}
+				}
+				if err := writeJSON(cmd, map[string]any{"checks": checks}); err != nil {
+					return err
+				}
+				if hasRequiredFailures {
+					return fmt.Errorf("doctor found failed required checks")
+				}
+				return nil
+			}
+
 			for _, check := range checks {
 				if _, err := fmt.Fprintln(cmd.OutOrStdout(), check.Message); err != nil {
 					return err

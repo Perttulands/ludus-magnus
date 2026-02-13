@@ -35,6 +35,10 @@ func newSessionCreateCmd() *cobra.Command {
 				return err
 			}
 
+			if isJSONOutput(cmd) {
+				return writeJSON(cmd, map[string]any{"session_id": sessionID})
+			}
+
 			_, err = cmd.OutOrStdout().Write([]byte(sessionID + "\n"))
 			return err
 		},

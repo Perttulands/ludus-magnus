@@ -98,6 +98,10 @@ func newRunCmd() *cobra.Command {
 				return err
 			}
 
+			if isJSONOutput(cmd) {
+				return writeJSON(cmd, map[string]any{"artifact_id": artifactID})
+			}
+
 			_, err = fmt.Fprintf(cmd.OutOrStdout(), "artifact_id=%s\n", artifactID)
 			return err
 		},

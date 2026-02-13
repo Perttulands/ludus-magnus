@@ -113,6 +113,14 @@ func newTrainingIterateCmd() *cobra.Command {
 				lockedText = strings.Join(locked, ", ")
 			}
 
+			if isJSONOutput(cmd) {
+				return writeJSON(cmd, map[string]any{
+					"regenerated_count": len(regenerated),
+					"regenerated":       regenerated,
+					"locked":            locked,
+				})
+			}
+
 			_, err = fmt.Fprintf(
 				cmd.OutOrStdout(),
 				"Regenerated %d lineages: %s. Locked: %s.\n",

@@ -69,6 +69,14 @@ func newDirectiveSetCmd() *cobra.Command {
 				return err
 			}
 
+			if isJSONOutput(cmd) {
+				return writeJSON(cmd, map[string]any{
+					"directive_id": directive.ID,
+					"lineage":      lineageName,
+					"type":         map[bool]string{true: "oneshot", false: "sticky"}[oneshot],
+				})
+			}
+
 			_, err = fmt.Fprintf(cmd.OutOrStdout(), "directive_id=%s\n", directive.ID)
 			return err
 		},

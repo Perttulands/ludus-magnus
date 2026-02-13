@@ -26,6 +26,14 @@ func newEvaluateCmd() *cobra.Command {
 				return err
 			}
 
+			if isJSONOutput(cmd) {
+				return writeJSON(cmd, map[string]any{
+					"artifact_id": artifactID,
+					"score":       score,
+					"comment":     comment,
+				})
+			}
+
 			_, err := fmt.Fprintf(cmd.OutOrStdout(), "Artifact %s evaluated: %d/10\n", artifactID, score)
 			return err
 		},

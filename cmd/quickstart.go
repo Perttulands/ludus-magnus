@@ -88,6 +88,13 @@ func newQuickstartInitCmd() *cobra.Command {
 				return err
 			}
 
+			if isJSONOutput(cmd) {
+				return writeJSON(cmd, map[string]any{
+					"session_id": sessionID,
+					"lineage_id": lineageID,
+				})
+			}
+
 			if _, err := fmt.Fprintf(cmd.OutOrStdout(), "session_id=%s\n", sessionID); err != nil {
 				return err
 			}

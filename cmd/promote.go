@@ -123,6 +123,14 @@ func newPromoteCmd() *cobra.Command {
 				return err
 			}
 
+			if isJSONOutput(cmd) {
+				return writeJSON(cmd, map[string]any{
+					"session_id": sessionID,
+					"mode":       "training",
+					"lineages":   []string{"A", "B", "C", "D"},
+				})
+			}
+
 			_, err = fmt.Fprintln(cmd.OutOrStdout(), "Session promoted to training mode with 4 lineages")
 			return err
 		},
