@@ -37,11 +37,8 @@ func Load(path string) (State, error) {
 		return State{}, fmt.Errorf("decode state file %q: %w", path, err)
 	}
 
-	if st.Version == "" {
-		st.Version = "1.0"
-	}
-	if st.Sessions == nil {
-		st.Sessions = map[string]Session{}
+	if err := MigrateState(&st); err != nil {
+		return State{}, fmt.Errorf("migrate state file %q: %w", path, err)
 	}
 
 	return st, nil
@@ -54,7 +51,7 @@ func Save(path string, st State) error {
 	}
 
 	if st.Version == "" {
-		st.Version = "1.0"
+		st.Version = CurrentVersion
 	}
 	if st.Sessions == nil {
 		st.Sessions = map[string]Session{}

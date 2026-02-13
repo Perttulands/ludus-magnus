@@ -946,3 +946,34 @@
 - Review: [PASSED]
 - Next: [US-027]
 ---
+## Iteration 30 - State file migration/compaction strategy
+- What was implemented
+  - Added migration framework in `internal/state/migration.go` with `CurrentVersion`, version-step registry, and `MigrateState` for in-place upgrades
+  - Implemented legacy upgrade path from `0.9` to `1.0` and wired migration execution into `state.Load`
+  - Added manual compaction hook `CompactState` as a no-op placeholder for future retention logic
+  - Added Go tests for migration success/unsupported version/no-op compaction and load-time legacy migration
+  - Added acceptance test `tests/test_us027_state_migration.py` validating migration framework and `state.Load` upgrade behavior from `0.9` to `1.0`
+- Files changed
+  - internal/state/migration.go
+  - internal/state/migration_test.go
+  - internal/state/persistence.go
+  - internal/state/persistence_test.go
+  - internal/state/schema.go
+  - tests/test_us027_state_migration.py
+  - PRD_LUDUS_MAGNUS.md
+  - progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+    - Centralizing version constants and migration dispatch in `internal/state` keeps load behavior stable while allowing additive version bumps
+  - Gotchas encountered
+    - Migration tests should validate both pure migration helpers and the real `Load` path to avoid drift between framework and persistence wiring
+  - Useful context
+    - `CompactState` is intentionally manual/no-op in v1 and can be extended later without changing current command behavior
+
+**Summary:**
+- Task: [US-027: State file migration/compaction strategy]
+- Files: [internal/state/migration.go, internal/state/migration_test.go, internal/state/persistence.go, internal/state/persistence_test.go, internal/state/schema.go, tests/test_us027_state_migration.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us027_state_migration.py), go test ./internal/state -v PASS, go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-REVIEW-S5]
+---

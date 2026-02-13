@@ -1,6 +1,7 @@
 package state_test
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -69,6 +70,34 @@ func TestSaveUsesDefaultStatePath(t *testing.T) {
 		t.Fatalf("stat default state path: %v", err)
 	} else if info.Size() == 0 {
 		t.Fatalf("expected non-empty state file at %s", defaultPath)
+	}
+}
+
+func TestLoadMigratesLegacyVersion(t *testing.T) {
+	t.Parallel()
+
+	testPath := filepath.Join(t.TempDir(), "state.json")
+	raw := map[string]any{
+		"version":  "0.9",
+		"sessions": map[string]any{},
+	}
+
+	content, err := json.Marshal(raw)
+	if err != nil {
+		t.Fatalf("marshal raw state: %v", err)
+	}
+
+	if err := os.WriteFile(testPath, content, 0o644); err != nil {
+		t.Fatalf("write raw state: %v", err)
+	}
+
+	st, err := state.Load(testPath)
+	if err != nil {
+		t.Fatalf("load state: %v", err)
+	}
+
+	if st.Version != state.CurrentVersion {
+		t.Fatalf("expected version %q, got %q", state.CurrentVersion, st.Version)
 	}
 }
 

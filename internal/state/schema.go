@@ -110,7 +110,7 @@ type Directive struct {
 // NewState returns an initialized v1 state document.
 func NewState() State {
 	return State{
-		Version:  "1.0",
+		Version:  CurrentVersion,
 		Sessions: map[string]Session{},
 	}
 }
