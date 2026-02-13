@@ -654,3 +654,29 @@
 - Review: [PASSED]
 - Next: [US-019]
 ---
+## Iteration 21 - Directive application in evolution
+- What was implemented
+- Added one-shot directive consumption to both `iterate` and `training iterate` flows so one-shot directives are cleared after successful regeneration while sticky directives persist
+- Added US-019 integration test that validates directives are embedded in the evolution prompt and confirms one-shot directives are removed from persisted state after iteration
+- Marked US-019 complete in the PRD task checklist
+- Files changed
+- cmd/iterate.go
+- cmd/training_iterate.go
+- tests/test_us019_directive_application.py
+- PRD_LUDUS_MAGNUS.md
+- progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+  - Clear consumed one-shot directives to an explicit empty slice (`[]`) to preserve stable JSON shape and avoid `null` in persisted state
+  - Gotchas encountered
+  - Clearing to `nil` marshals as `null`, which breaks tests and API expectations that check for empty arrays
+  - Useful context
+  - Evolution prompt generation already receives both sticky and one-shot directives; US-019 behavior was completed by post-generation one-shot cleanup
+
+**Summary:**
+- Task: [US-019: Directive application in evolution]
+- Files: [cmd/iterate.go, cmd/training_iterate.go, tests/test_us019_directive_application.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us019_directive_application.py), 8 passed (go test ./internal/engine -v), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-020]
+---

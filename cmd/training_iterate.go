@@ -93,6 +93,7 @@ func newTrainingIterateCmd() *cobra.Command {
 				}
 
 				lineage.Agents = append(lineage.Agents, newAgent)
+				lineage.Directives.Oneshot = []state.Directive{}
 				session.Lineages[lineageKey] = lineage
 				regenerated = append(regenerated, lineage.Name)
 			}

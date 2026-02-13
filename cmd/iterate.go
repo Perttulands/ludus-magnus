@@ -92,6 +92,7 @@ func newIterateCmd() *cobra.Command {
 			}
 
 			lineage.Agents = append(lineage.Agents, newAgent)
+			lineage.Directives.Oneshot = []state.Directive{}
 			session.Lineages[lineageKey] = lineage
 			st.Sessions[sessionID] = session
 
