@@ -104,7 +104,7 @@ graph TD
 
 **Priority:** HIGH
 **Purpose:** Execute agent definitions, capture observability, store artifacts, enable evaluation
-**Status:** IN PROGRESS
+**Status:** COMPLETE
 
 - [x] **US-007** Agent execution engine with provider integration and executor modes (~30 min, ~250 lines) [depends: US-004, US-006]
 - [x] **US-008** Observability capture (tokens, timing, tool calls, costs) (~20 min, ~150 lines) [depends: US-007]
@@ -120,9 +120,9 @@ graph TD
 
 **Priority:** HIGH
 **Purpose:** Evolution logic, iterate command, training mode with four lineages, promotion
-**Status:** NOT STARTED
+**Status:** IN PROGRESS
 
-- [ ] **US-012** Evolution prompt generation from evaluations (~25 min, ~200 lines) [depends: US-010]
+- [x] **US-012** Evolution prompt generation from evaluations (~25 min, ~200 lines) [depends: US-010]
 - [ ] **US-013** Iterate command (regenerate with evolution) (~20 min, ~120 lines) [depends: US-006, US-012]
 - [ ] **US-014** Training mode initialization (four lineages A/B/C/D) (~25 min, ~180 lines) [depends: US-003, US-004, US-006]
 - [ ] **US-015** Lock/unlock lineage controls (~15 min, ~80 lines) [depends: US-014]

@@ -444,3 +444,30 @@
   - Evaluation overwrite remains blocked (`artifact already evaluated`)
 - Taste score: Good taste
 ---
+## Iteration 14 - Evolution prompt generation from evaluations
+- What was implemented
+  - Added `internal/engine/evolve.go` with `GenerateEvolutionPrompt(agents, artifacts, directives)` to synthesize evaluation feedback into a structured evolution prompt
+  - Implemented evaluation heuristics for average score, score histogram, explicit low/high-scoring pattern sections, full feedback inclusion, and directive rendering
+  - Added engine tests in `internal/engine/evolve_test.go` for scored feedback aggregation (`4,7,9` -> `6.67`) and no-evaluation fallback behavior with directive inclusion
+  - Added acceptance test `tests/test_us012_evolution_prompt.py` to verify evolution tests run via `go test ./internal/engine -run Evolution -v`
+- Files changed
+  - internal/engine/evolve.go
+  - internal/engine/evolve_test.go
+  - tests/test_us012_evolution_prompt.py
+  - PRD_LUDUS_MAGNUS.md
+  - progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+    - Keep evolution synthesis deterministic and string-template based so iterate flows can rely on stable prompt shape
+  - Gotchas encountered
+    - No-evaluation lineages still need an explicit feedback placeholder to avoid empty FEEDBACK sections
+  - Useful context
+    - `GenerateEvolutionPrompt` now centralizes scoring summary and directive injection for upcoming `iterate` command work
+
+**Summary:**
+- Task: [US-012: Evolution prompt generation from evaluations]
+- Files: [internal/engine/evolve.go, internal/engine/evolve_test.go, tests/test_us012_evolution_prompt.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 8 passed (go test ./internal/engine -v), 1 passed (tests/test_us012_evolution_prompt.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-013]
+---
