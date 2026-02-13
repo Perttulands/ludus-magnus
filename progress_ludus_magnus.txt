@@ -580,3 +580,29 @@
 - Review: [PASSED]
 - Next: [US-017]
 ---
+## Iteration 19 - Promotion flow (quickstart → training)
+- What was implemented
+- Added `promote` command (`ludus-magnus promote <session-id> --strategy variations|alternatives`) to convert a quickstart session into training mode
+- Implemented promotion logic to validate quickstart mode, read latest `main` lineage agent, regenerate A/B/C/D lineages, replace quickstart lineage map, and persist state
+- Wired promote command into root CLI and added acceptance test for quickstart init -> promote -> session inspect verification
+- Files changed
+- cmd/promote.go
+- cmd/root.go
+- tests/test_us017_promotion_flow.py
+- PRD_LUDUS_MAGNUS.md
+- progress_ludus_magnus.txt
+- Learnings for future iterations:
+- Patterns discovered
+  - Promotion can reuse `trainingVariant` and generation wiring from training init while replacing session lineages atomically
+- Gotchas encountered
+  - The repository does not include `linus-prompt-code-review.md`; review used the Linus criteria provided in the task instructions
+- Useful context
+  - `promote` defaults to the source agent's provider/model when overrides are not passed, matching iterate/run behavior
+
+**Summary:**
+- Task: [US-017: Promotion flow (quickstart → training)]
+- Files: [cmd/promote.go, cmd/root.go, tests/test_us017_promotion_flow.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us017_promotion_flow.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-REVIEW-S3]
+---
