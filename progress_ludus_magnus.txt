@@ -85,3 +85,33 @@
 - Review: [PASSED]
 - Next: [US-003]
 ---
+## Iteration 4 - Session create/list/inspect commands
+- What was implemented
+  - Added `session` command group and subcommands `new`, `list`, and `inspect`
+  - Implemented session creation with IDs in `ses_<8-hex>` format using UUID, persisted to `.ludus-magnus/state.json`
+  - Implemented tabular session listing (ID, mode, status, created_at) and JSON session inspection by ID
+  - Added acceptance test for full CLI flow covering create/list/inspect and persisted state validation
+- Files changed
+  - cmd/root.go
+  - cmd/session.go
+  - cmd/session_create.go
+  - cmd/session_list.go
+  - cmd/session_inspect.go
+  - tests/test_us003_session_commands.py
+  - PRD_LUDUS_MAGNUS.md
+  - progress_ludus_magnus.txt
+- Learnings for future iterations:
+  - Patterns discovered
+    - Session commands can rely on `state.Load("")`/`state.Save("")` default path behavior to support running in any working directory
+  - Gotchas encountered
+    - Acceptance tests running in temp directories must invoke the binary with absolute path after build
+  - Useful context
+    - `session list` uses tabwriter spacing, so tests should assert semantic columns, not exact tab count
+
+**Summary:**
+- Task: [US-003: Session create/list/inspect commands]
+- Files: [cmd/root.go, cmd/session.go, cmd/session_create.go, cmd/session_list.go, cmd/session_inspect.go, tests/test_us003_session_commands.py, PRD_LUDUS_MAGNUS.md, progress_ludus_magnus.txt]
+- Tests: [PASS with count: 1 passed (tests/test_us003_session_commands.py), go test ./... PASS]
+- Review: [PASSED]
+- Next: [US-004]
+---

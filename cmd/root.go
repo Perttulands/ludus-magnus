@@ -7,8 +7,12 @@ func Execute() error {
 }
 
 func newRootCmd() *cobra.Command {
-	return &cobra.Command{
+	cmd := &cobra.Command{
 		Use:   "ludus-magnus",
 		Short: "ludus-magnus CLI",
 	}
+
+	cmd.AddCommand(newSessionCmd())
+
+	return cmd
 }
