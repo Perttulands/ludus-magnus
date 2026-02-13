@@ -136,7 +136,7 @@ graph TD
 
 **Priority:** MEDIUM
 **Purpose:** Directive controls, export functionality, doctor checks, JSON output
-**Status:** IN PROGRESS
+**Status:** COMPLETE
 
 - [x] **US-018** Directive set/clear commands (oneshot/sticky) (~20 min, ~120 lines) [depends: US-002]
 - [x] **US-019** Directive application in evolution (~15 min, ~80 lines) [depends: US-012, US-018]
@@ -153,9 +153,9 @@ graph TD
 
 **Priority:** MEDIUM
 **Purpose:** Integration tests, examples, documentation
-**Status:** NOT STARTED
+**Status:** IN PROGRESS
 
-- [ ] **US-024** Integration test: quickstart flow end-to-end (~15 min, ~150 lines)
+- [x] **US-024** Integration test: quickstart flow end-to-end (~15 min, ~150 lines)
 - [ ] **US-025** Integration test: training flow with promotion (~15 min, ~180 lines)
 - [ ] **US-026** CLI usage documentation and examples (~10 min, ~200 lines)
 - [ ] **US-027** State file migration/compaction strategy (~10 min, ~100 lines)
