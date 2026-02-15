@@ -26,3 +26,4 @@ coverage.out
 # Go module workspace
 go.work
 go.work.sum
+.gomodcache/
