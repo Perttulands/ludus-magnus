@@ -1,49 +1,135 @@
-# Agent Academy CLI
+# Ludus Magnus
 
-Production-quality Go CLI scaffold for Agent Academy.
+Train AI agents through iterative evaluation loops. Define what you need, generate an agent, run it, score it, evolve it.
 
-## Features
+## How it works
 
-- Cobra-based command system
-- SQLite persistence via pure Go `modernc.org/sqlite` (no CGO)
-- Config and env wiring with Viper
-- Styled terminal output and structured logging
-- Session creation/listing workflow
-- Environment diagnostics with `academy doctor`
+Ludus Magnus generates system prompts for AI agents, runs them against your inputs, collects your evaluations, and uses the feedback to evolve better prompts. All state is stored locally in a single JSON file.
 
-## Quick Start
+**Quickstart flow** (single lineage):
+```
+init -> run -> evaluate -> iterate -> run again
+```
+
+**Training flow** (four parallel lineages A/B/C/D):
+```
+init -> run all -> evaluate all -> lock winners -> iterate losers -> repeat
+```
+
+## Install
 
 ```bash
 make build
-./bin/academy version
-./bin/academy doctor
-./bin/academy session new --need "Draft onboarding flow" --mode quickstart
-./bin/academy session list
+# Binary at ./bin/ludus-magnus
+```
+
+Or directly:
+```bash
+go install .
+```
+
+## Quick start
+
+```bash
+# Set your API key
+export ANTHROPIC_API_KEY=sk-...
+
+# Create a session and generate the first agent
+ludus-magnus quickstart init --need "Customer support assistant that handles refund requests"
+
+# Run the agent (use the session_id from output)
+ludus-magnus run ses_XXXXXXXX --input "I want a refund for order #1234"
+
+# Score the result (use the artifact_id from output)
+ludus-magnus evaluate art_XXXXXXXX --score 5 --comment "Too generic, needs order lookup"
+
+# Evolve the agent based on feedback
+ludus-magnus iterate ses_XXXXXXXX
+
+# Run the evolved agent
+ludus-magnus run ses_XXXXXXXX --input "I want a refund for order #1234"
 ```
 
 ## Commands
 
-- `academy version`
-- `academy doctor`
-- `academy session new --need "..." --mode quickstart`
-- `academy session list`
+| Command | Description |
+|---------|-------------|
+| `quickstart init --need "..."` | Create session with one lineage and first agent |
+| `training init --need "..."` | Create session with four lineages (A/B/C/D) |
+| `run <session-id> --input "..."` | Execute latest agent, store artifact |
+| `evaluate <artifact-id> --score N` | Score artifact 1-10 with optional `--comment` |
+| `iterate <session-id>` | Generate next agent version from evaluations |
+| `training iterate <session-id>` | Iterate all unlocked training lineages |
+| `promote <session-id>` | Convert quickstart to training (4 lineages) |
+| `lineage lock <session-id> <name>` | Freeze a lineage (skip during iterate) |
+| `lineage unlock <session-id> <name>` | Unfreeze a lineage |
+| `directive set <session-id> <lineage> --text "..." --sticky` | Add persistent directive |
+| `directive set <session-id> <lineage> --text "..." --oneshot` | Add one-time directive |
+| `directive clear <session-id> <lineage> <directive-id>` | Remove a directive |
+| `session list` | List all sessions |
+| `session inspect <session-id>` | Show session details |
+| `artifact list <session-id>` | List artifacts with scores |
+| `artifact inspect <artifact-id>` | Show artifact details |
+| `export agent <agent-id> --format json\|python\|typescript` | Export agent definition |
+| `export evidence <session-id>` | Export session data for analysis |
+| `doctor` | Check environment (API keys, executors) |
+
+All commands support `--json` for machine-readable output.
+
+## Providers
+
+**Anthropic** (default):
+```bash
+export ANTHROPIC_API_KEY=sk-...
+ludus-magnus quickstart init --need "..."
+```
+
+**OpenAI-compatible** (OpenAI, LiteLLM, OpenRouter):
+```bash
+export OPENAI_API_KEY=sk-...
+ludus-magnus quickstart init --need "..." --provider openai-compatible --model gpt-4o
+```
+
+Override per-command with `--provider`, `--model`, `--base-url`, `--api-key`.
+
+## Training workflow
+
+```bash
+# 1. Initialize with four variant strategies
+ludus-magnus training init --need "Generate migration plans"
+
+# 2. Run all lineages
+for L in A B C D; do
+  ludus-magnus run ses_XXX --lineage $L --input "Migrate users table"
+done
+
+# 3. Evaluate each artifact
+ludus-magnus evaluate art_AAA --score 9 --comment "Best balance"
+ludus-magnus evaluate art_BBB --score 6 --comment "Too conservative"
+ludus-magnus evaluate art_CCC --score 7 --comment "Creative but uneven"
+ludus-magnus evaluate art_DDD --score 5 --comment "Too risky"
+
+# 4. Lock the winner, evolve the rest
+ludus-magnus lineage lock ses_XXX A
+ludus-magnus training iterate ses_XXX
+```
+
+## State
+
+State lives at `.ludus-magnus/state.json` relative to your working directory. One directory per project keeps state isolated. Add `.ludus-magnus/` to your `.gitignore`.
+
+## CLI execution mode
+
+Run agents through `claude` or `codex` CLI tools instead of the API:
+
+```bash
+ludus-magnus run ses_XXX --mode cli --executor claude --input "..."
+```
 
 ## Development
 
 ```bash
-make test
-make install
-make clean
-```
-
-## Database
-
-By default, session data is stored in:
-
-- Linux/macOS: `${XDG_CONFIG_HOME:-~/.config}/agent-academy/academy.db`
-
-Override with:
-
-```bash
-academy --db /path/to/academy.db session list
+make test              # Unit tests
+make test-integration  # Integration tests (builds binary, uses mock server)
+make clean             # Remove build artifacts
 ```

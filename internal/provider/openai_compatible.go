@@ -40,12 +40,7 @@ func NewOpenAICompatibleProvider(apiKey, model, baseURL string) *OpenAICompatibl
 }
 
 func (p *OpenAICompatibleProvider) GenerateAgent(ctx context.Context, need string, directives []string) (AgentDefinition, Metadata, error) {
-	prompt := "Generate a system prompt for an AI agent that does: " + need
-	if len(directives) > 0 {
-		prompt += "\nDirectives:\n- " + strings.Join(directives, "\n- ")
-	}
-
-	text, usage, meta, err := p.chatCompletionCall(ctx, "", prompt, 1024, 1.0)
+	text, usage, meta, err := p.chatCompletionCall(ctx, "", need, 4096, 1.0)
 	if err != nil {
 		return AgentDefinition{}, Metadata{}, err
 	}

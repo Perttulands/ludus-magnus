@@ -43,12 +43,7 @@ func NewAnthropicProvider(apiKey, model, baseURL string) *AnthropicProvider {
 }
 
 func (p *AnthropicProvider) GenerateAgent(ctx context.Context, need string, directives []string) (AgentDefinition, Metadata, error) {
-	prompt := "Generate a system prompt for an AI agent that does: " + need
-	if len(directives) > 0 {
-		prompt += "\nDirectives:\n- " + strings.Join(directives, "\n- ")
-	}
-
-	text, usage, meta, err := p.messagesCall(ctx, "", prompt, 1024)
+	text, usage, meta, err := p.messagesCall(ctx, "", need, 4096)
 	if err != nil {
 		return AgentDefinition{}, Metadata{}, err
 	}

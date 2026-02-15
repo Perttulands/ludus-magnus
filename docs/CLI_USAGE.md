@@ -95,13 +95,6 @@ Score an artifact with optional comment:
 ludus-magnus evaluate art_12345678 --score 8 --comment "Good correctness, improve naming"
 ```
 
-Equivalent operation labels often used in scripts/docs:
-
-```bash
-# ludus-magnus evaluate score
-# ludus-magnus evaluate comment
-```
-
 ### Iterate command
 
 Iterate one lineage (`main` default for quickstart):

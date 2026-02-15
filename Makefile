@@ -1,21 +1,20 @@
 GO ?= $(shell command -v go 2>/dev/null || echo /usr/local/go/bin/go)
-BINARY := academy
-GOCACHE ?= $(CURDIR)/.gocache
-GOMODCACHE ?= $(CURDIR)/.gomodcache
+BINARY := ludus-magnus
 
 .PHONY: build test install clean
 
 build:
-	@mkdir -p bin $(GOCACHE) $(GOMODCACHE)
-	GOCACHE=$(GOCACHE) GOMODCACHE=$(GOMODCACHE) $(GO) build -trimpath -ldflags "-s -w -X github.com/Perttulands/agent-academy/internal/cli.Version=dev" -o bin/$(BINARY) ./cmd/academy
+	@mkdir -p bin
+	$(GO) build -trimpath -ldflags "-s -w" -o bin/$(BINARY) .
 
 test:
-	@mkdir -p $(GOCACHE) $(GOMODCACHE)
-	GOCACHE=$(GOCACHE) GOMODCACHE=$(GOMODCACHE) $(GO) test ./...
+	$(GO) test ./...
+
+test-integration:
+	$(GO) test ./test/integration/... -v -count=1
 
 install:
-	@mkdir -p $(GOCACHE) $(GOMODCACHE)
-	GOCACHE=$(GOCACHE) GOMODCACHE=$(GOMODCACHE) $(GO) install ./cmd/academy
+	$(GO) install .
 
 clean:
-	rm -rf bin dist coverage.out $(GOCACHE) $(GOMODCACHE)
+	rm -rf bin dist coverage.out

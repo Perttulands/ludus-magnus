@@ -1,15 +1,15 @@
 version: 2
 
-project_name: academy
+project_name: ludus-magnus
 
 before:
   hooks:
     - go mod tidy
 
 builds:
-  - id: academy
-    binary: academy
-    main: ./cmd/academy
+  - id: ludus-magnus
+    binary: ludus-magnus
+    main: .
     env:
       - CGO_ENABLED=0
     goos:
@@ -21,9 +21,6 @@ builds:
       - arm64
     ldflags:
       - -s -w
-      - -X github.com/Perttulands/agent-academy/internal/cli.Version={{.Version}}
-      - -X github.com/Perttulands/agent-academy/internal/cli.Commit={{.Commit}}
-      - -X github.com/Perttulands/agent-academy/internal/cli.BuildDate={{.Date}}
 
 archives:
   - formats: [tar.gz]

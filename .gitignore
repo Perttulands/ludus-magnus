@@ -1,4 +1,4 @@
-# Go build artifacts
+# Build artifacts
 /bin/
 /dist/
 *.exe
@@ -6,10 +6,6 @@
 *.dll
 *.so
 *.dylib
-
-# Go caches
-.gocache/
-.gomodcache/
 
 # Test artifacts
 *.test
@@ -24,11 +20,8 @@ coverage.out
 .vscode/
 .DS_Store
 
-# Local database and runtime files
-*.db
-*.sqlite
-*.sqlite3
-.academy/
+# Runtime state
+.ludus-magnus/
 
 # Go module workspace
 go.work
