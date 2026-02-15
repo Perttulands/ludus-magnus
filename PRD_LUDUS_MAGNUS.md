@@ -153,7 +153,7 @@ graph TD
 
 **Priority:** MEDIUM
 **Purpose:** Integration tests, examples, documentation
-**Status:** IN PROGRESS
+**Status:** COMPLETE
 
 - [x] **US-024** Integration test: quickstart flow end-to-end (~15 min, ~150 lines)
 - [x] **US-025** Integration test: training flow with promotion (~15 min, ~180 lines)
