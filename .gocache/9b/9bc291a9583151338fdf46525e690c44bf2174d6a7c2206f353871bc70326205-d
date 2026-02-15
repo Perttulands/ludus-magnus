@@ -1,0 +1,5 @@
+# test log
+getenv GOTMPDIR
+getenv TMPDIR
+stat /tmp/TestStoreCreateAndListSessions2089394200/001
+open /tmp

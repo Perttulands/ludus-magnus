@@ -1,0 +1,7 @@
+./artifact.go
+./artifact_lookup.go
+./doc.go
+./evaluation.go
+./migration.go
+./persistence.go
+./schema.go

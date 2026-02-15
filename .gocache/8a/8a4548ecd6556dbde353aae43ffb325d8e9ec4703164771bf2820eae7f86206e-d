@@ -1,0 +1,9 @@
+# test log
+getenv GOTMPDIR
+getenv TMPDIR
+stat /tmp/TestManagerCreateAndList2785140778/001
+getenv GOTMPDIR
+getenv TMPDIR
+stat /tmp/TestManagerRejectsEmptyNeed858214854/001
+open /tmp
+open /tmp

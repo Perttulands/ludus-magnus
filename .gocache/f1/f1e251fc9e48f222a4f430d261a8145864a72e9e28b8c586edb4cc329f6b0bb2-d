@@ -1,0 +1,6 @@
+./anthropic.go
+./doc.go
+./factory.go
+./interface.go
+./openai_compatible.go
+./provider_test.go

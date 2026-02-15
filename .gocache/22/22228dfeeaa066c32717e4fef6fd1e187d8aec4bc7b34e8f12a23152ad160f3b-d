@@ -1,0 +1,15 @@
+# test log
+getenv ANTHROPIC_API_KEY
+getenv ANTHROPIC_API_KEY
+getenv ANTHROPIC_API_KEY
+getenv OPENAI_API_KEY
+getenv OPENAI_COMPATIBLE_API_KEY
+getenv API_KEY
+open /proc/sys/net/core/somaxconn
+getenv HTTP_PROXY
+getenv http_proxy
+getenv HTTPS_PROXY
+getenv https_proxy
+getenv NO_PROXY
+getenv no_proxy
+getenv REQUEST_METHOD

@@ -1,0 +1,4 @@
+./doctor.go
+./root.go
+./session.go
+./version.go

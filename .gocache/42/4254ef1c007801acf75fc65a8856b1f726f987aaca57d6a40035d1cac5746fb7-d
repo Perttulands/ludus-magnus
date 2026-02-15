@@ -1,0 +1,10 @@
+# test log
+getenv GOTMPDIR
+getenv TMPDIR
+open /tmp/TestExecuteCLIMode1710507896/001/codex
+getenv PATH
+getenv PATH
+getenv PATH
+stat /tmp/TestExecuteCLIMode1710507896/001/codex
+open /tmp/TestExecuteCLIMode1710507896/001/codex
+open /tmp
