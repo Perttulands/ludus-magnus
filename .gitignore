@@ -27,3 +27,7 @@ coverage.out
 go.work
 go.work.sum
 .gomodcache/
+
+.venv/
+__pycache__/
+*.pyc
