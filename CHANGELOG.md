@@ -17,6 +17,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - Challenge schema: `internal/challenge` package with Challenge and ChallengeSet types
 - Four challenge types: feature, bugfix, refactor, review with difficulty levels
 - Challenge validation and integrated test suite support
+- Challenge generator: LLM-powered synthetic challenge creation with Generate and GenerateBatch
 
 ### Changed
 - README: mythology-forward rewrite — each README now reads like discovering a character in a world
