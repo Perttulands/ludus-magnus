@@ -20,6 +20,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - Challenge generator: LLM-powered synthetic challenge creation with Generate and GenerateBatch
 - Tournament runner: `internal/tournament` package with Bout, Round, RunBout, RunRound, RunAll
 - Contestant abstraction wrapping agents for competition
+- Tournament orchestrator: lifecycle management with New, Run, Winner, TopN, standings computation
 
 ### Changed
 - README: mythology-forward rewrite — each README now reads like discovering a character in a world
