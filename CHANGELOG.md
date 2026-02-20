@@ -23,6 +23,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - Tournament orchestrator: lifecycle management with New, Run, Winner, TopN, standings computation
 - Selection and evolution: `internal/selection` with truncation, tournament, and elitist strategies
 - Partition function to split standings into winners and eliminated
+- Training loop runner: `internal/training` package with Loop, Generation, Config types
+- RunGeneration with auto-termination by max generations or target score
 
 ### Changed
 - README: mythology-forward rewrite — each README now reads like discovering a character in a world
