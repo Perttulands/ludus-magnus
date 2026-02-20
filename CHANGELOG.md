@@ -11,6 +11,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - Truthsayer integration: `internal/truthsayer` package wrapping truthsayer binary
 - Scan files/directories/strings with JSON output parsing
 - QualityScore() converts findings to 1-10 scale (errors=-2, warnings=-1)
+- Scoring pipeline: `internal/scoring` package combining harness, truthsayer, manual, and efficiency scores
+- Configurable weights (default: harness 35%, truthsayer 25%, manual 30%, efficiency 10%)
+- Composite scoring with weighted average and normalized 1-10 output
 
 ### Changed
 - README: mythology-forward rewrite — each README now reads like discovering a character in a world
