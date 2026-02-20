@@ -1,4 +1,14 @@
-# Ludus Magnus
+# 🏟️ Ludus Magnus
+
+*The Training Ground. Four sparring zones. Floating score tablets. An evolution spiral carved into the arena floor.*
+
+---
+
+The Ludus Magnus was the largest gladiatorial training school in Rome, connected to the Colosseum by an underground passage. Gladiators didn't walk into the arena on their first day. They trained. They sparred. They fought practice rounds until the trainers decided they were ready. Some lineages were better than others. The best survived.
+
+This Ludus Magnus is an open-air arena — sunlit marble with holographic training dummies. Four sparring zones marked A, B, C, D, each running a different lineage of the same agent. Floating score tablets show 1-10 evaluations. You watch them compete, lock the winner, evolve the losers, and repeat until what walks out of here is actually good at its job. The evolution spiral carved into the floor isn't decorative. It's the process.
+
+Any agent type trains here — coding, research, customer service, analysis. The arena doesn't care what you're building. It cares whether you're improving.
 
 Train AI agents through iterative evaluation loops. Define what you need, generate an agent, run it, score it, evolve it.
 
@@ -133,3 +143,15 @@ make test              # Unit tests
 make test-integration  # Integration tests (builds binary, uses mock server)
 make clean             # Remove build artifacts
 ```
+
+## Part of the Agora
+
+Ludus Magnus was forged in **[Athena's Agora](https://github.com/Perttulands/athena-workspace)** — an autonomous coding system where AI agents build software and a training arena makes sure they earn their place before deployment.
+
+[Argus](https://github.com/Perttulands/argus) watches the server. [Truthsayer](https://github.com/Perttulands/truthsayer) watches the code. [Oathkeeper](https://github.com/Perttulands/oathkeeper) watches the promises. [Relay](https://github.com/Perttulands/relay) carries the messages. Ludus Magnus trains what the others will judge.
+
+The [mythology](https://github.com/Perttulands/athena-workspace/blob/main/mythology.md) has the full story.
+
+## License
+
+MIT

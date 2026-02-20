@@ -4,6 +4,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 
+### Changed
+- README: restored mythology intro (The Training Ground), arena description, 4 zones A/B/C/D, "Part of the Agora" section
+
 ### Added
 - Test harness integration: `internal/harness` package with TestCase, TestSuite, SuiteResult types
 - Test types: contains, not_contains, regex, equals with weighted scoring
