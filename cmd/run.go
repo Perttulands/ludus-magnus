@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"context"
 	"fmt"
 	"strings"
 
@@ -81,7 +80,7 @@ func newRunCmd() *cobra.Command {
 				request.Provider = adapter
 			}
 
-			result, err := engine.Execute(context.Background(), request)
+			result, err := engine.Execute(cmd.Context(), request)
 			if err != nil {
 				return err
 			}

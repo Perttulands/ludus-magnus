@@ -55,20 +55,24 @@ func newArtifactListCmd() *cobra.Command {
 			}
 
 			tw := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 0, 2, ' ', 0)
-			_, _ = fmt.Fprintln(tw, "ID\tAgent Version\tScore\tCreated At")
+			if _, err := fmt.Fprintln(tw, "ID\tAgent Version\tScore\tCreated At"); err != nil {
+				return fmt.Errorf("write artifact table header: %w", err)
+			}
 			for _, summary := range summaries {
 				score := "-"
 				if summary.Score != nil {
 					score = strconv.Itoa(*summary.Score)
 				}
-				_, _ = fmt.Fprintf(
+				if _, err := fmt.Fprintf(
 					tw,
 					"%s\t%d\t%s\t%s\n",
 					summary.ID,
 					summary.AgentVersion,
 					score,
 					summary.CreatedAt,
-				)
+				); err != nil {
+					return fmt.Errorf("write artifact table row %q: %w", summary.ID, err)
+				}
 			}
 			return tw.Flush()
 		},
