@@ -25,6 +25,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - Partition function to split standings into winners and eliminated
 - Training loop runner: `internal/training` package with Loop, Generation, Config types
 - RunGeneration with auto-termination by max generations or target score
+- Mutation operator library: `internal/mutation` with rephrase, expand, simplify, crossover, targeted operators
+- Operator interface, RandomOperator, NewOperator factory
 
 ### Changed
 - README: mythology-forward rewrite — each README now reads like discovering a character in a world
