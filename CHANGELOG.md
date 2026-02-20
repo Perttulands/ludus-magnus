@@ -2,6 +2,21 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
+## [Unreleased]
+
+### Added
+- Test harness integration: `internal/harness` package with TestCase, TestSuite, SuiteResult types
+- Test types: contains, not_contains, regex, equals with weighted scoring
+- NormalizedScore() maps suite results to 1-10 evaluation scale
+
+### Changed
+- README: mythology-forward rewrite — each README now reads like discovering a character in a world
+
+## [1.0.1] - 2026-02-19
+
+### Added
+- "For Agents" section in README: install, what-this-is, and runtime usage for agent consumers
+
 ## [1.0.0] - 2026-02-15
 
 ### Added
