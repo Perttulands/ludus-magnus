@@ -10,6 +10,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 ### Fixed
 - Bead `athena-4t0`: handled JSON string marshal failures in `internal/export/agent.go` instead of discarding errors
 - Bead `athena-4t0`: improved truthsayer scan error handling in `internal/truthsayer/truthsayer.go` by returning contextual errors for unexpected exit codes and invalid JSON output
+- Bead `athena-q3br`: wrapped `cmd/run.go` command-boundary errors with `fmt.Errorf` and added session/lineage context to provider, execution, persistence, and output failures
 
 ### Added
 - Test harness integration: `internal/harness` package with TestCase, TestSuite, SuiteResult types

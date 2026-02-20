@@ -29,7 +29,7 @@ func newRunCmd() *cobra.Command {
 
 			st, err := state.Load("")
 			if err != nil {
-				return err
+				return fmt.Errorf("run session=%q lineage=%q: load state: %w", sessionID, strings.TrimSpace(lineageName), err)
 			}
 
 			session, ok := st.Sessions[sessionID]
@@ -75,14 +75,14 @@ func newRunCmd() *cobra.Command {
 					APIKey:   apiKey,
 				})
 				if err != nil {
-					return err
+					return fmt.Errorf("run session=%q lineage=%q: configure provider: %w", sessionID, selectedLineage, err)
 				}
 				request.Provider = adapter
 			}
 
 			result, err := engine.Execute(cmd.Context(), request)
 			if err != nil {
-				return err
+				return fmt.Errorf("run session=%q lineage=%q: execute agent: %w", sessionID, selectedLineage, err)
 			}
 
 			artifact := state.Artifact{
@@ -94,15 +94,21 @@ func newRunCmd() *cobra.Command {
 
 			artifactID, err := state.AddArtifact(sessionID, lineage.ID, artifact)
 			if err != nil {
-				return err
+				return fmt.Errorf("run session=%q lineage=%q lineage_id=%q: persist artifact: %w", sessionID, selectedLineage, lineage.ID, err)
 			}
 
 			if isJSONOutput(cmd) {
-				return writeJSON(cmd, map[string]any{"artifact_id": artifactID})
+				if err := writeJSON(cmd, map[string]any{"artifact_id": artifactID}); err != nil {
+					return fmt.Errorf("run session=%q lineage=%q: write json output: %w", sessionID, selectedLineage, err)
+				}
+				return nil
 			}
 
 			_, err = fmt.Fprintf(cmd.OutOrStdout(), "artifact_id=%s\n", artifactID)
-			return err
+			if err != nil {
+				return fmt.Errorf("run session=%q lineage=%q: write output: %w", sessionID, selectedLineage, err)
+			}
+			return nil
 		},
 	}
 
