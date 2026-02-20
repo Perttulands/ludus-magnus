@@ -32,6 +32,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - Learning Loop integration: `internal/learningloop` with TrainedPrompt and TrainingReport
 - ExportReport extracts winner prompts from completed training loops
 - WriteReport/ReadReport for JSON persistence to state/trained-prompts/
+- Cost tracking: `internal/cost` with Tracker, Event, Summary types
+- Budget enforcement with CheckBudget, OverBudget, Remaining
+- Cost aggregation by operation and model
 
 ### Changed
 - README: mythology-forward rewrite — each README now reads like discovering a character in a world
