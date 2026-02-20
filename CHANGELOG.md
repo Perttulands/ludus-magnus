@@ -29,6 +29,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - Operator interface, RandomOperator, NewOperator factory
 - Checkpoint and resume: `internal/checkpoint` with Save, Load, Exists, Remove, List
 - JSON-based checkpoint persistence for training loop state
+- Learning Loop integration: `internal/learningloop` with TrainedPrompt and TrainingReport
+- ExportReport extracts winner prompts from completed training loops
+- WriteReport/ReadReport for JSON persistence to state/trained-prompts/
 
 ### Changed
 - README: mythology-forward rewrite — each README now reads like discovering a character in a world
