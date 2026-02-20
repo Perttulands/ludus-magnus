@@ -35,6 +35,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - Cost tracking: `internal/cost` with Tracker, Event, Summary types
 - Budget enforcement with CheckBudget, OverBudget, Remaining
 - Cost aggregation by operation and model
+- Production dispatch integration: `internal/dispatch` with PromptManifest and DeployedPrompt
+- GenerateManifest converts training reports to dispatch-ready format
+- BestPrompt extracts highest-scoring prompt from manifest
 
 ### Changed
 - README: mythology-forward rewrite — each README now reads like discovering a character in a world
