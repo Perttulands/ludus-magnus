@@ -2,6 +2,7 @@ package truthsayer
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -68,16 +69,24 @@ func ScanWithBinary(binary, path string) (ScanResult, error) {
 
 	exitCode := 0
 	if err != nil {
-		if exitErr, ok := err.(*exec.ExitError); ok {
-			exitCode = exitErr.ExitCode()
-		} else {
+		var exitErr *exec.ExitError
+		if !errors.As(err, &exitErr) {
 			return ScanResult{}, fmt.Errorf("run truthsayer: %w", err)
 		}
+		exitCode = exitErr.ExitCode()
 	}
 
-	// Exit code 2 means tool error (not findings)
-	if exitCode == 2 {
-		return ScanResult{}, fmt.Errorf("truthsayer tool error (exit 2): %s", strings.TrimSpace(string(output)))
+	trimmedOutput := strings.TrimSpace(string(output))
+	switch exitCode {
+	case 0, 1:
+		// 1 means findings were detected.
+	case 2:
+		return ScanResult{}, fmt.Errorf("truthsayer tool error (exit 2): %s", trimmedOutput)
+	default:
+		if trimmedOutput == "" {
+			return ScanResult{}, fmt.Errorf("truthsayer failed with exit %d", exitCode)
+		}
+		return ScanResult{}, fmt.Errorf("truthsayer failed with exit %d: %s", exitCode, trimmedOutput)
 	}
 
 	result := ScanResult{
@@ -88,12 +97,13 @@ func ScanWithBinary(binary, path string) (ScanResult, error) {
 
 	if len(output) > 0 {
 		var scanOut ScanOutput
-		if jsonErr := json.Unmarshal(output, &scanOut); jsonErr == nil {
-			result.Findings = scanOut.Findings
-			result.Errors = scanOut.Summary.Errors
-			result.Warnings = scanOut.Summary.Warnings
-			result.Info = scanOut.Summary.Info
+		if jsonErr := json.Unmarshal(output, &scanOut); jsonErr != nil {
+			return ScanResult{}, fmt.Errorf("decode truthsayer output: %w", jsonErr)
 		}
+		result.Findings = scanOut.Findings
+		result.Errors = scanOut.Summary.Errors
+		result.Warnings = scanOut.Summary.Warnings
+		result.Info = scanOut.Summary.Info
 	}
 
 	if result.Findings == nil {

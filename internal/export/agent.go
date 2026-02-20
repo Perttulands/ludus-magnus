@@ -125,7 +125,11 @@ func renderTypeScript(def state.AgentDefinition) string {
 }
 
 func jsonString(value string) string {
-	payload, _ := json.Marshal(value)
+	payload, err := json.Marshal(value)
+	if err != nil {
+		// Strings should always marshal, but keep output valid if this ever fails.
+		return `""`
+	}
 	return string(payload)
 }
 

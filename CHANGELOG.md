@@ -7,6 +7,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 ### Changed
 - README: restored mythology intro (The Training Ground), arena description, 4 zones A/B/C/D, "Part of the Agora" section
 
+### Fixed
+- Bead `athena-4t0`: handled JSON string marshal failures in `internal/export/agent.go` instead of discarding errors
+- Bead `athena-4t0`: improved truthsayer scan error handling in `internal/truthsayer/truthsayer.go` by returning contextual errors for unexpected exit codes and invalid JSON output
+
 ### Added
 - Test harness integration: `internal/harness` package with TestCase, TestSuite, SuiteResult types
 - Test types: contains, not_contains, regex, equals with weighted scoring
