@@ -14,6 +14,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - Scoring pipeline: `internal/scoring` package combining harness, truthsayer, manual, and efficiency scores
 - Configurable weights (default: harness 35%, truthsayer 25%, manual 30%, efficiency 10%)
 - Composite scoring with weighted average and normalized 1-10 output
+- Challenge schema: `internal/challenge` package with Challenge and ChallengeSet types
+- Four challenge types: feature, bugfix, refactor, review with difficulty levels
+- Challenge validation and integrated test suite support
 
 ### Changed
 - README: mythology-forward rewrite — each README now reads like discovering a character in a world
