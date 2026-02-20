@@ -27,7 +27,7 @@ type Config struct {
 	SelectionStrategy string            `json:"selection_strategy"`
 	Weights          scoring.Weights    `json:"weights"`
 	TargetScore      float64            `json:"target_score"` // stop if avg score >= this
-	IDFunc           func(string) string
+	IDFunc           func(string) string `json:"-"`
 }
 
 // DefaultConfig returns sensible training defaults.

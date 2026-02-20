@@ -27,6 +27,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - RunGeneration with auto-termination by max generations or target score
 - Mutation operator library: `internal/mutation` with rephrase, expand, simplify, crossover, targeted operators
 - Operator interface, RandomOperator, NewOperator factory
+- Checkpoint and resume: `internal/checkpoint` with Save, Load, Exists, Remove, List
+- JSON-based checkpoint persistence for training loop state
 
 ### Changed
 - README: mythology-forward rewrite — each README now reads like discovering a character in a world
