@@ -1,5 +1,8 @@
 # 🏟️ Ludus Magnus
 
+![Ludus Magnus](images/ludus-magnus.jpg)
+
+
 *The Training Ground. Four sparring zones. Floating score tablets. An evolution spiral carved into the arena floor.*
 
 ---
