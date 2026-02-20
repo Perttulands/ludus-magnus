@@ -8,6 +8,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - Test harness integration: `internal/harness` package with TestCase, TestSuite, SuiteResult types
 - Test types: contains, not_contains, regex, equals with weighted scoring
 - NormalizedScore() maps suite results to 1-10 evaluation scale
+- Truthsayer integration: `internal/truthsayer` package wrapping truthsayer binary
+- Scan files/directories/strings with JSON output parsing
+- QualityScore() converts findings to 1-10 scale (errors=-2, warnings=-1)
 
 ### Changed
 - README: mythology-forward rewrite — each README now reads like discovering a character in a world
