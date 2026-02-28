@@ -67,7 +67,7 @@ func newDoctorCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&providerName, "provider", "anthropic", "Provider name to validate (anthropic or openai-compatible)")
+	cmd.Flags().StringVar(&providerName, "provider", "anthropic", "Provider name (anthropic, openai-compatible, or claude-cli)")
 	cmd.Flags().StringVar(&model, "model", "", "Provider model override")
 	cmd.Flags().StringVar(&baseURL, "base-url", "", "Provider base URL override")
 	cmd.Flags().StringVar(&apiKey, "api-key", "", "Provider API key override")
@@ -94,6 +94,12 @@ func checkProviderCredentials(providerName string, apiKey string) doctorCheck {
 			return doctorCheck{Required: true, Passed: true, Message: "✓ OPENAI_API_KEY (or equivalent) set"}
 		}
 		return doctorCheck{Required: true, Passed: false, Message: "✗ missing OPENAI_API_KEY (or equivalent) for provider openai-compatible"}
+	case "claude-cli":
+		_, err := exec.LookPath("claude")
+		if err != nil {
+			return doctorCheck{Required: true, Passed: false, Message: "✗ claude binary not found (required for claude-cli provider)"}
+		}
+		return doctorCheck{Required: true, Passed: true, Message: "✓ claude binary found (claude-cli provider uses Claude Code auth)"}
 	default:
 		return doctorCheck{Required: true, Passed: false, Message: fmt.Sprintf("✗ unsupported provider: %s", strings.TrimSpace(providerName))}
 	}
@@ -144,6 +150,9 @@ func normalizeDoctorProvider(raw string) string {
 	}
 	if normalized == "openai" || normalized == "openai_compatible" || normalized == "openrouter" || normalized == "litellm" {
 		return "openai-compatible"
+	}
+	if normalized == "claude" || normalized == "claude_cli" || normalized == "claude-code" {
+		return "claude-cli"
 	}
 	return normalized
 }

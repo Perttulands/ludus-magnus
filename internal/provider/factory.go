@@ -40,6 +40,8 @@ func NewFactory(cfg Config) (Provider, error) {
 			return nil, fmt.Errorf("missing openai-compatible credentials: set OPENAI_API_KEY or equivalent")
 		}
 		return NewOpenAICompatibleProvider(key, cfg.Model, cfg.BaseURL), nil
+	case "claude-cli":
+		return NewClaudeCLIProvider(cfg.Model, ""), nil
 	default:
 		return nil, fmt.Errorf("unsupported provider: %s", cfg.Provider)
 	}
@@ -53,6 +55,8 @@ func normalizeProviderName(raw string) string {
 	switch name {
 	case "openai", "openai_compatible", "openrouter", "litellm":
 		return "openai-compatible"
+	case "claude", "claude_cli", "claude-code":
+		return "claude-cli"
 	default:
 		return name
 	}
