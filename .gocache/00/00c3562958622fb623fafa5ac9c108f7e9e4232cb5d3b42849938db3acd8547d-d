@@ -1,5 +1,0 @@
-./artifact_lookup_test.go
-./artifact_test.go
-./evaluation_test.go
-./migration_test.go
-./persistence_test.go

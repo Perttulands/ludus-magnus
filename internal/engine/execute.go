@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Perttulands/ludus-magnus/internal/provider"
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/provider"
+	"github.com/Perttulands/chiron/internal/state"
 )
 
 const (

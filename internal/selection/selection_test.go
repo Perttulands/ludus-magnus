@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/Perttulands/ludus-magnus/internal/tournament"
+	"github.com/Perttulands/chiron/internal/tournament"
 )
 
 func testStandings() []tournament.Standing {

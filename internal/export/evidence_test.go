@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	exporter "github.com/Perttulands/ludus-magnus/internal/export"
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	exporter "github.com/Perttulands/chiron/internal/export"
+	"github.com/Perttulands/chiron/internal/state"
 )
 
 func TestEvidencePackJSON(t *testing.T) {

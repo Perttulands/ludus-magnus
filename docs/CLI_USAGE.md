@@ -1,6 +1,6 @@
-# Ludus Magnus CLI Usage
+# Chiron CLI Usage
 
-This guide documents the `ludus-magnus` command surface, common flags, and end-to-end workflows.
+This guide documents the `chiron` command surface, common flags, and end-to-end workflows.
 
 ## Commands
 
@@ -9,8 +9,8 @@ This guide documents the `ludus-magnus` command surface, common flags, and end-t
 Use `--json` on most commands to return machine-readable output.
 
 ```bash
-ludus-magnus --json session list
-ludus-magnus --json run ses_12345678 --input "hello"
+chiron --json session list
+chiron --json run ses_12345678 --input "hello"
 ```
 
 ### Session commands
@@ -18,20 +18,20 @@ ludus-magnus --json run ses_12345678 --input "hello"
 Create a session directly:
 
 ```bash
-ludus-magnus session new --mode quickstart --need "Build a safe code review assistant"
+chiron session new --mode quickstart --need "Build a safe code review assistant"
 ```
 
 List sessions:
 
 ```bash
-ludus-magnus session list
-ludus-magnus --json session list
+chiron session list
+chiron --json session list
 ```
 
 Inspect one session:
 
 ```bash
-ludus-magnus session inspect ses_12345678
+chiron session inspect ses_12345678
 ```
 
 ### Quickstart commands
@@ -39,7 +39,7 @@ ludus-magnus session inspect ses_12345678
 Initialize quickstart with one `main` lineage and first generated agent:
 
 ```bash
-ludus-magnus quickstart init \
+chiron quickstart init \
   --need "Refactor Python code safely" \
   --provider openai-compatible \
   --model gpt-4.1 \
@@ -52,7 +52,7 @@ ludus-magnus quickstart init \
 Initialize training with lineages `A/B/C/D`:
 
 ```bash
-ludus-magnus training init \
+chiron training init \
   --need "Design robust API tests" \
   --provider anthropic
 ```
@@ -60,7 +60,7 @@ ludus-magnus training init \
 Iterate all unlocked training lineages:
 
 ```bash
-ludus-magnus training iterate ses_12345678
+chiron training iterate ses_12345678
 ```
 
 ### Run command
@@ -68,19 +68,19 @@ ludus-magnus training iterate ses_12345678
 Run latest agent in a lineage and store artifact:
 
 ```bash
-ludus-magnus run ses_12345678 --input "Solve task X"
+chiron run ses_12345678 --input "Solve task X"
 ```
 
 Run one training lineage explicitly:
 
 ```bash
-ludus-magnus run ses_12345678 --lineage A --input "Solve task X"
+chiron run ses_12345678 --lineage A --input "Solve task X"
 ```
 
 Run using CLI executor mode (`claude` or `codex`):
 
 ```bash
-ludus-magnus run ses_12345678 \
+chiron run ses_12345678 \
   --lineage A \
   --mode cli \
   --executor codex \
@@ -92,7 +92,7 @@ ludus-magnus run ses_12345678 \
 Score an artifact with optional comment:
 
 ```bash
-ludus-magnus evaluate art_12345678 --score 8 --comment "Good correctness, improve naming"
+chiron evaluate art_12345678 --score 8 --comment "Good correctness, improve naming"
 ```
 
 ### Iterate command
@@ -100,8 +100,8 @@ ludus-magnus evaluate art_12345678 --score 8 --comment "Good correctness, improv
 Iterate one lineage (`main` default for quickstart):
 
 ```bash
-ludus-magnus iterate ses_12345678
-ludus-magnus iterate ses_12345678 --lineage B
+chiron iterate ses_12345678
+chiron iterate ses_12345678 --lineage B
 ```
 
 ### Lineage lock commands
@@ -109,8 +109,8 @@ ludus-magnus iterate ses_12345678 --lineage B
 Lock/unlock a training lineage:
 
 ```bash
-ludus-magnus lineage lock ses_12345678 A
-ludus-magnus lineage unlock ses_12345678 A
+chiron lineage lock ses_12345678 A
+chiron lineage unlock ses_12345678 A
 ```
 
 ### Promotion command
@@ -118,7 +118,7 @@ ludus-magnus lineage unlock ses_12345678 A
 Promote quickstart session into training session:
 
 ```bash
-ludus-magnus promote ses_12345678
+chiron promote ses_12345678
 ```
 
 ### Directive commands
@@ -126,7 +126,7 @@ ludus-magnus promote ses_12345678
 Set one-shot directive:
 
 ```bash
-ludus-magnus directive set ses_12345678 A \
+chiron directive set ses_12345678 A \
   --text "Increase robustness checks" \
   --oneshot
 ```
@@ -134,7 +134,7 @@ ludus-magnus directive set ses_12345678 A \
 Set sticky directive:
 
 ```bash
-ludus-magnus directive set ses_12345678 A \
+chiron directive set ses_12345678 A \
   --text "Always explain tradeoffs" \
   --sticky
 ```
@@ -142,7 +142,7 @@ ludus-magnus directive set ses_12345678 A \
 Clear a directive:
 
 ```bash
-ludus-magnus directive clear ses_12345678 A dir_12345678
+chiron directive clear ses_12345678 A dir_12345678
 ```
 
 ### Artifact commands
@@ -150,14 +150,14 @@ ludus-magnus directive clear ses_12345678 A dir_12345678
 List artifacts in a session:
 
 ```bash
-ludus-magnus artifact list ses_12345678
-ludus-magnus --json artifact list ses_12345678
+chiron artifact list ses_12345678
+chiron --json artifact list ses_12345678
 ```
 
 Inspect one artifact:
 
 ```bash
-ludus-magnus artifact inspect art_12345678
+chiron artifact inspect art_12345678
 ```
 
 ### Export commands
@@ -165,15 +165,15 @@ ludus-magnus artifact inspect art_12345678
 Export one agent definition:
 
 ```bash
-ludus-magnus export agent agt_12345678 --format json
-ludus-magnus export agent agt_12345678 --format python
-ludus-magnus export agent agt_12345678 --format typescript
+chiron export agent agt_12345678 --format json
+chiron export agent agt_12345678 --format python
+chiron export agent agt_12345678 --format typescript
 ```
 
 Export one session evidence pack:
 
 ```bash
-ludus-magnus export evidence ses_12345678 --format json
+chiron export evidence ses_12345678 --format json
 ```
 
 ### Doctor command
@@ -181,8 +181,8 @@ ludus-magnus export evidence ses_12345678 --format json
 Validate credentials, provider initialization, optional executors, and state readability:
 
 ```bash
-ludus-magnus doctor
-ludus-magnus doctor --provider openai-compatible --api-key test-key --json
+chiron doctor
+chiron doctor --provider openai-compatible --api-key test-key --json
 ```
 
 ## Workflows
@@ -193,19 +193,19 @@ Copy-paste sequence:
 
 ```bash
 # 1) Initialize quickstart
-ludus-magnus quickstart init --need "Build a deterministic parser" --provider anthropic
+chiron quickstart init --need "Build a deterministic parser" --provider anthropic
 
 # 2) Capture generated session id from output, then run
-ludus-magnus run <session-id> --input "Parse: a,b,c"
+chiron run <session-id> --input "Parse: a,b,c"
 
 # 3) Capture artifact id and evaluate
-ludus-magnus evaluate <artifact-id> --score 7 --comment "Works but needs clearer error handling"
+chiron evaluate <artifact-id> --score 7 --comment "Works but needs clearer error handling"
 
 # 4) Evolve next version
-ludus-magnus iterate <session-id>
+chiron iterate <session-id>
 
 # 5) Run evolved agent
-ludus-magnus run <session-id> --input "Parse: a,b,c,d"
+chiron run <session-id> --input "Parse: a,b,c,d"
 ```
 
 ### Training Workflow
@@ -214,25 +214,25 @@ Copy-paste sequence:
 
 ```bash
 # 1) Initialize training with A/B/C/D
-ludus-magnus training init --need "Generate reliable migration plans" --provider anthropic
+chiron training init --need "Generate reliable migration plans" --provider anthropic
 
 # 2) Run all variants (replace <session-id>)
-ludus-magnus run <session-id> --lineage A --input "Plan DB migration"
-ludus-magnus run <session-id> --lineage B --input "Plan DB migration"
-ludus-magnus run <session-id> --lineage C --input "Plan DB migration"
-ludus-magnus run <session-id> --lineage D --input "Plan DB migration"
+chiron run <session-id> --lineage A --input "Plan DB migration"
+chiron run <session-id> --lineage B --input "Plan DB migration"
+chiron run <session-id> --lineage C --input "Plan DB migration"
+chiron run <session-id> --lineage D --input "Plan DB migration"
 
 # 3) Evaluate each produced artifact id
-ludus-magnus evaluate <artifact-A> --score 9 --comment "Best balance"
-ludus-magnus evaluate <artifact-B> --score 6 --comment "Too conservative"
-ludus-magnus evaluate <artifact-C> --score 7 --comment "Creative but uneven"
-ludus-magnus evaluate <artifact-D> --score 5 --comment "Too risky"
+chiron evaluate <artifact-A> --score 9 --comment "Best balance"
+chiron evaluate <artifact-B> --score 6 --comment "Too conservative"
+chiron evaluate <artifact-C> --score 7 --comment "Creative but uneven"
+chiron evaluate <artifact-D> --score 5 --comment "Too risky"
 
 # 4) Lock winners
-ludus-magnus lineage lock <session-id> A
+chiron lineage lock <session-id> A
 
 # 5) Regenerate only unlocked variants
-ludus-magnus training iterate <session-id>
+chiron training iterate <session-id>
 ```
 
 ### Promotion Workflow
@@ -241,13 +241,13 @@ Copy-paste sequence:
 
 ```bash
 # 1) Start quickstart
-ludus-magnus quickstart init --need "Create test-first bugfix prompts" --provider anthropic
+chiron quickstart init --need "Create test-first bugfix prompts" --provider anthropic
 
 # 2) Promote quickstart session into training mode
-ludus-magnus promote <session-id>
+chiron promote <session-id>
 
 # 3) Iterate training lineages after promotion
-ludus-magnus training iterate <session-id>
+chiron training iterate <session-id>
 ```
 
 ## JSON Output Examples
@@ -255,19 +255,19 @@ ludus-magnus training iterate <session-id>
 Session listing:
 
 ```bash
-ludus-magnus --json session list
+chiron --json session list
 ```
 
 Training iterate summary:
 
 ```bash
-ludus-magnus --json training iterate <session-id>
+chiron --json training iterate <session-id>
 ```
 
 Directive set response:
 
 ```bash
-ludus-magnus --json directive set <session-id> A --text "Keep steps minimal" --sticky
+chiron --json directive set <session-id> A --text "Keep steps minimal" --sticky
 ```
 
 ## State File
@@ -275,7 +275,7 @@ ludus-magnus --json directive set <session-id> A --text "Keep steps minimal" --s
 State is stored relative to current working directory at:
 
 ```text
-.ludus-magnus/state.json
+.chiron/state.json
 ```
 
 High-level structure:

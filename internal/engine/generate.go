@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Perttulands/ludus-magnus/internal/provider"
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/provider"
+	"github.com/Perttulands/chiron/internal/state"
 )
 
 const (
@@ -49,13 +49,13 @@ Focus on clarity, specificity, and task alignment. The agent will use Claude Son
 }
 
 // GenerateAgentDefinition keeps the minimal API requested by the PRD.
-func GenerateAgentDefinition(need string, directives []string, p provider.Provider) (state.AgentDefinition, error) {
-	definition, _, err := GenerateAgentDefinitionWithMetadata(need, directives, p)
+func GenerateAgentDefinition(ctx context.Context, need string, directives []string, p provider.Provider) (state.AgentDefinition, error) {
+	definition, _, err := GenerateAgentDefinitionWithMetadata(ctx, need, directives, p)
 	return definition, err
 }
 
 // GenerateAgentDefinitionWithMetadata generates an agent definition plus provider metadata.
-func GenerateAgentDefinitionWithMetadata(need string, directives []string, p provider.Provider) (state.AgentDefinition, state.GenerationMetadata, error) {
+func GenerateAgentDefinitionWithMetadata(ctx context.Context, need string, directives []string, p provider.Provider) (state.AgentDefinition, state.GenerationMetadata, error) {
 	if strings.TrimSpace(need) == "" {
 		return state.AgentDefinition{}, state.GenerationMetadata{}, fmt.Errorf("need is required")
 	}
@@ -64,7 +64,7 @@ func GenerateAgentDefinitionWithMetadata(need string, directives []string, p pro
 	}
 
 	prompt := BuildGenerationPrompt(need, directives)
-	generated, meta, err := p.GenerateAgent(context.Background(), prompt, nil)
+	generated, meta, err := p.GenerateAgent(ctx, prompt, nil)
 	if err != nil {
 		return state.AgentDefinition{}, state.GenerationMetadata{}, fmt.Errorf("generate agent: %w", err)
 	}

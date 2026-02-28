@@ -3,8 +3,8 @@ package engine
 import (
 	"strings"
 
-	"github.com/Perttulands/ludus-magnus/internal/provider"
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/provider"
+	"github.com/Perttulands/chiron/internal/state"
 )
 
 var anthropicPricing2026 = map[string]struct {

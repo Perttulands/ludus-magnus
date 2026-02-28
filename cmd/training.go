@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Perttulands/ludus-magnus/internal/engine"
-	"github.com/Perttulands/ludus-magnus/internal/provider"
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/engine"
+	"github.com/Perttulands/chiron/internal/provider"
+	"github.com/Perttulands/chiron/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -46,7 +46,7 @@ func newTrainingInitCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			st, err := state.Load("")
 			if err != nil {
-				return err
+				return fmt.Errorf("load state: %w", err)
 			}
 
 			now := time.Now().UTC().Format(time.RFC3339)
@@ -59,7 +59,7 @@ func newTrainingInitCmd() *cobra.Command {
 				APIKey:   apiKey,
 			})
 			if err != nil {
-				return err
+				return fmt.Errorf("initialize provider: %w", err)
 			}
 
 			lineages := make(map[string]state.Lineage, len(defaultTrainingVariants))
@@ -70,9 +70,9 @@ func newTrainingInitCmd() *cobra.Command {
 				agentID := newPrefixedID("agt")
 				variantNeed := fmt.Sprintf("%s\n\nVariation strategy: %s", need, variant.strategy)
 
-				agentDef, generationMeta, err := engine.GenerateAgentDefinitionWithMetadata(variantNeed, nil, adapter)
+				agentDef, generationMeta, err := engine.GenerateAgentDefinitionWithMetadata(cmd.Context(), variantNeed, nil, adapter)
 				if err != nil {
-					return err
+					return fmt.Errorf("generate agent for lineage %s: %w", variant.name, err)
 				}
 
 				lineages[lineageID] = state.Lineage{
@@ -106,7 +106,7 @@ func newTrainingInitCmd() *cobra.Command {
 			}
 
 			if err := state.Save("", st); err != nil {
-				return err
+				return fmt.Errorf("save state: %w", err)
 			}
 
 			if isJSONOutput(cmd) {
@@ -118,11 +118,11 @@ func newTrainingInitCmd() *cobra.Command {
 			}
 
 			if _, err := fmt.Fprintf(cmd.OutOrStdout(), "session_id=%s\n", sessionID); err != nil {
-				return err
+				return fmt.Errorf("write output: %w", err)
 			}
 			for _, variant := range defaultTrainingVariants {
 				if _, err := fmt.Fprintf(cmd.OutOrStdout(), "lineage_%s_id=%s\n", variant.name, lineageIDsByName[variant.name]); err != nil {
-					return err
+					return fmt.Errorf("write output: %w", err)
 				}
 			}
 			return nil

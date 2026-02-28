@@ -6,7 +6,7 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +19,7 @@ func newArtifactListCmd() *cobra.Command {
 			sessionID := strings.TrimSpace(args[0])
 			st, err := state.Load("")
 			if err != nil {
-				return err
+				return fmt.Errorf("load state: %w", err)
 			}
 
 			session, ok := st.Sessions[sessionID]

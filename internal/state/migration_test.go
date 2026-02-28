@@ -3,7 +3,7 @@ package state_test
 import (
 	"testing"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 )
 
 func TestMigrateStateFromLegacyVersion(t *testing.T) {

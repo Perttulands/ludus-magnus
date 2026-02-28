@@ -5,7 +5,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 ## [Unreleased]
 
 ### Changed
-- README: restored mythology intro (The Training Ground), arena description, 4 zones A/B/C/D, "Part of the Agora" section
+- **Renamed project from ludus-magnus to chiron** — aligns with Polis Greek mythology (Chiron the centaur teacher on Mount Pelion)
+- Binary: `ludus-magnus` -> `chiron`
+- Go module: `github.com/Perttulands/ludus-magnus` -> `github.com/Perttulands/chiron`
+- State directory: `.ludus-magnus/` -> `.chiron/` (auto-migrated on first run)
+- README: rewritten from Roman gladiatorial arena to Chiron's cave on Pelion
 
 ### Fixed
 - Bead `athena-4t0`: handled JSON string marshal failures in `internal/export/agent.go` instead of discarding errors

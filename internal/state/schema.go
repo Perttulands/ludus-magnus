@@ -1,6 +1,6 @@
 package state
 
-// State is the root JSON document stored at .ludus-magnus/state.json.
+// State is the root JSON document stored at .chiron/state.json.
 type State struct {
 	Version  string             `json:"version"`
 	Sessions map[string]Session `json:"sessions"`

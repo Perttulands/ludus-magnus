@@ -7,11 +7,11 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/Perttulands/ludus-magnus/internal/training"
+	"github.com/Perttulands/chiron/internal/training"
 )
 
 const (
-	checkpointDir  = ".ludus-magnus"
+	checkpointDir  = ".chiron"
 	checkpointFile = "checkpoint.json"
 )
 

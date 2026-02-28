@@ -5,7 +5,7 @@ import (
 	"sort"
 	"text/tabwriter"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +16,7 @@ func newSessionListCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			st, err := state.Load("")
 			if err != nil {
-				return err
+				return fmt.Errorf("load state: %w", err)
 			}
 
 			ids := make([]string, 0, len(st.Sessions))
@@ -35,13 +35,13 @@ func newSessionListCmd() *cobra.Command {
 
 			w := tabwriter.NewWriter(cmd.OutOrStdout(), 0, 8, 2, '\t', 0)
 			if _, err := fmt.Fprintln(w, "ID\tMODE\tSTATUS\tCREATED_AT"); err != nil {
-				return err
+				return fmt.Errorf("write session list header: %w", err)
 			}
 
 			for _, id := range ids {
 				ses := st.Sessions[id]
 				if _, err := fmt.Fprintf(w, "%s\t%s\t%s\t%s\n", ses.ID, ses.Mode, ses.Status, ses.CreatedAt); err != nil {
-					return err
+					return fmt.Errorf("write session list row: %w", err)
 				}
 			}
 

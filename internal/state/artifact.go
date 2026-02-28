@@ -12,7 +12,7 @@ import (
 func AddArtifact(sessionID, lineageID string, artifact Artifact) (string, error) {
 	st, err := Load("")
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("load state: %w", err)
 	}
 
 	session, ok := st.Sessions[sessionID]
@@ -36,7 +36,7 @@ func AddArtifact(sessionID, lineageID string, artifact Artifact) (string, error)
 	if strings.TrimSpace(artifact.ID) == "" {
 		artifact.ID, err = newUniqueArtifactID(st)
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("find artifact id: %w", err)
 		}
 	} else if artifactIDExists(st, artifact.ID) {
 		return "", fmt.Errorf("artifact id %q already exists", artifact.ID)
@@ -50,7 +50,7 @@ func AddArtifact(sessionID, lineageID string, artifact Artifact) (string, error)
 	st.Sessions[sessionID] = session
 
 	if err := Save("", st); err != nil {
-		return "", err
+		return "", fmt.Errorf("save state: %w", err)
 	}
 	return artifact.ID, nil
 }

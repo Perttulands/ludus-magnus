@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -50,7 +50,7 @@ func setLineageLock(cmd *cobra.Command, sessionID, lineageName string, locked bo
 
 	st, err := state.Load("")
 	if err != nil {
-		return err
+		return fmt.Errorf("load state: %w", err)
 	}
 
 	session, ok := st.Sessions[trimmedSessionID]
@@ -68,7 +68,7 @@ func setLineageLock(cmd *cobra.Command, sessionID, lineageName string, locked bo
 	st.Sessions[trimmedSessionID] = session
 
 	if err := state.Save("", st); err != nil {
-		return err
+		return fmt.Errorf("save state: %w", err)
 	}
 
 	if isJSONOutput(cmd) {
@@ -84,5 +84,8 @@ func setLineageLock(cmd *cobra.Command, sessionID, lineageName string, locked bo
 	} else {
 		_, err = fmt.Fprintf(cmd.OutOrStdout(), "Lineage %s unlocked\n", trimmedLineageName)
 	}
-	return err
+	if err != nil {
+		return fmt.Errorf("write output: %w", err)
+	}
+	return nil
 }

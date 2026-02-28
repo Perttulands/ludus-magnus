@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/Perttulands/ludus-magnus/cmd"
+	"github.com/Perttulands/chiron/cmd"
 )
 
 func main() {

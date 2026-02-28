@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +37,7 @@ func newDirectiveSetCmd() *cobra.Command {
 
 			st, err := state.Load("")
 			if err != nil {
-				return err
+				return fmt.Errorf("load state: %w", err)
 			}
 
 			session, ok := st.Sessions[sessionID]
@@ -66,7 +66,7 @@ func newDirectiveSetCmd() *cobra.Command {
 			st.Sessions[sessionID] = session
 
 			if err := state.Save("", st); err != nil {
-				return err
+				return fmt.Errorf("save state: %w", err)
 			}
 
 			if isJSONOutput(cmd) {
@@ -77,8 +77,10 @@ func newDirectiveSetCmd() *cobra.Command {
 				})
 			}
 
-			_, err = fmt.Fprintf(cmd.OutOrStdout(), "directive_id=%s\n", directive.ID)
-			return err
+			if _, err = fmt.Fprintf(cmd.OutOrStdout(), "directive_id=%s\n", directive.ID); err != nil {
+				return fmt.Errorf("write output: %w", err)
+			}
+			return nil
 		},
 	}
 

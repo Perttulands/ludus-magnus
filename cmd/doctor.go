@@ -6,8 +6,8 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/Perttulands/ludus-magnus/internal/provider"
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/provider"
+	"github.com/Perttulands/chiron/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -43,7 +43,7 @@ func newDoctorCmd() *cobra.Command {
 					}
 				}
 				if err := writeJSON(cmd, map[string]any{"checks": checks}); err != nil {
-					return err
+					return fmt.Errorf("marshal results: %w", err)
 				}
 				if hasRequiredFailures {
 					return fmt.Errorf("doctor found failed required checks")
@@ -53,7 +53,7 @@ func newDoctorCmd() *cobra.Command {
 
 			for _, check := range checks {
 				if _, err := fmt.Fprintln(cmd.OutOrStdout(), check.Message); err != nil {
-					return err
+					return fmt.Errorf("write check result: %w", err)
 				}
 				if check.Required && !check.Passed {
 					hasRequiredFailures = true
@@ -81,12 +81,16 @@ func checkProviderCredentials(providerName string, apiKey string) doctorCheck {
 
 	switch normalized {
 	case "anthropic":
-		if suppliedAPIKey != "" || strings.TrimSpace(os.Getenv("ANTHROPIC_API_KEY")) != "" {
+		envKey := strings.TrimSpace(os.Getenv("ANTHROPIC_API_KEY"))
+		if suppliedAPIKey != "" || envKey != "" {
 			return doctorCheck{Required: true, Passed: true, Message: "✓ ANTHROPIC_API_KEY set"}
 		}
 		return doctorCheck{Required: true, Passed: false, Message: "✗ missing ANTHROPIC_API_KEY for provider anthropic"}
 	case "openai-compatible":
-		if suppliedAPIKey != "" || strings.TrimSpace(os.Getenv("OPENAI_API_KEY")) != "" || strings.TrimSpace(os.Getenv("OPENAI_COMPATIBLE_API_KEY")) != "" || strings.TrimSpace(os.Getenv("API_KEY")) != "" {
+		openaiKey := strings.TrimSpace(os.Getenv("OPENAI_API_KEY"))
+		compatKey := strings.TrimSpace(os.Getenv("OPENAI_COMPATIBLE_API_KEY"))
+		genericKey := strings.TrimSpace(os.Getenv("API_KEY"))
+		if suppliedAPIKey != "" || openaiKey != "" || compatKey != "" || genericKey != "" {
 			return doctorCheck{Required: true, Passed: true, Message: "✓ OPENAI_API_KEY (or equivalent) set"}
 		}
 		return doctorCheck{Required: true, Passed: false, Message: "✗ missing OPENAI_API_KEY (or equivalent) for provider openai-compatible"}
@@ -114,6 +118,7 @@ func checkStateFileReadable() doctorCheck {
 		if os.IsNotExist(err) {
 			return doctorCheck{Required: false, Passed: true, Message: fmt.Sprintf("✓ State file not found (optional): %s", path)}
 		}
+		fmt.Fprintf(os.Stderr, "doctor: state file stat error: %s: %v\n", path, err) //nolint:errcheck // best-effort stderr log
 		return doctorCheck{Required: true, Passed: false, Message: fmt.Sprintf("✗ State file stat failed: %s (%v)", path, err)}
 	}
 

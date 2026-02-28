@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Perttulands/ludus-magnus/internal/provider"
+	"github.com/Perttulands/chiron/internal/provider"
 )
 
 type mockProvider struct {

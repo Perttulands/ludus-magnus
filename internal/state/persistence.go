@@ -9,8 +9,9 @@ import (
 )
 
 const (
-	stateDirName  = ".ludus-magnus"
-	stateFileName = "state.json"
+	stateDirName       = ".chiron"
+	legacyStateDirName = ".ludus-magnus"
+	stateFileName      = "state.json"
 )
 
 // DefaultStatePath returns the default on-disk state location.
@@ -18,9 +19,31 @@ func DefaultStatePath() string {
 	return filepath.Join(stateDirName, stateFileName)
 }
 
+// MigrateLegacyDir renames .ludus-magnus/ to .chiron/ if the old directory
+// exists and the new one does not. Returns true if migration occurred.
+func MigrateLegacyDir() (bool, error) {
+	_, errNew := os.Stat(stateDirName)
+	_, errOld := os.Stat(legacyStateDirName)
+
+	if os.IsNotExist(errNew) && errOld == nil {
+		if err := os.Rename(legacyStateDirName, stateDirName); err != nil {
+			return false, fmt.Errorf("migrate %s to %s: %w", legacyStateDirName, stateDirName, err)
+		}
+		return true, nil
+	}
+	return false, nil
+}
+
 // Load reads and decodes state from disk.
 func Load(path string) (State, error) {
 	if path == "" {
+		migrated, err := MigrateLegacyDir()
+		if err != nil {
+			return State{}, fmt.Errorf("legacy state migration: %w", err)
+		}
+		if migrated {
+			fmt.Fprintf(os.Stderr, "Migrated state directory: .ludus-magnus/ -> .chiron/\n")
+		}
 		path = DefaultStatePath()
 	}
 

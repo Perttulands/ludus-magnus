@@ -42,7 +42,7 @@ func NewOpenAICompatibleProvider(apiKey, model, baseURL string) *OpenAICompatibl
 func (p *OpenAICompatibleProvider) GenerateAgent(ctx context.Context, need string, directives []string) (AgentDefinition, Metadata, error) {
 	text, usage, meta, err := p.chatCompletionCall(ctx, "", need, 4096, 1.0)
 	if err != nil {
-		return AgentDefinition{}, Metadata{}, err
+		return AgentDefinition{}, Metadata{}, fmt.Errorf("send request: %w", err)
 	}
 
 	return AgentDefinition{
@@ -65,7 +65,7 @@ func (p *OpenAICompatibleProvider) ExecuteAgent(ctx context.Context, agent Agent
 
 	text, usage, meta, err := p.chatCompletionCall(ctx, agent.SystemPrompt, input, maxTokens, temp)
 	if err != nil {
-		return "", Metadata{}, err
+		return "", Metadata{}, fmt.Errorf("send request: %w", err)
 	}
 	return text, p.metadataFromUsage(usage, meta.DurationMs), nil
 }

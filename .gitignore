@@ -21,7 +21,7 @@ coverage.out
 .DS_Store
 
 # Runtime state
-.ludus-magnus/
+.chiron/
 
 # Go module workspace
 go.work

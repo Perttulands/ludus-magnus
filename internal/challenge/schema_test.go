@@ -3,7 +3,7 @@ package challenge
 import (
 	"testing"
 
-	"github.com/Perttulands/ludus-magnus/internal/harness"
+	"github.com/Perttulands/chiron/internal/harness"
 )
 
 func TestValidateValid(t *testing.T) {

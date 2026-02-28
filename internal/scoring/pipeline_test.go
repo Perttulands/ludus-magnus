@@ -3,8 +3,8 @@ package scoring
 import (
 	"testing"
 
-	"github.com/Perttulands/ludus-magnus/internal/harness"
-	"github.com/Perttulands/ludus-magnus/internal/truthsayer"
+	"github.com/Perttulands/chiron/internal/harness"
+	"github.com/Perttulands/chiron/internal/truthsayer"
 )
 
 func intPtr(v int) *int { return &v }

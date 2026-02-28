@@ -1,9 +1,10 @@
 package cmd
 
 import (
+	"fmt"
 	"time"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +18,7 @@ func newSessionCreateCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			st, err := state.Load("")
 			if err != nil {
-				return err
+				return fmt.Errorf("load state: %w", err)
 			}
 
 			sessionID := newPrefixedID("ses")
@@ -32,15 +33,17 @@ func newSessionCreateCmd() *cobra.Command {
 			}
 
 			if err := state.Save("", st); err != nil {
-				return err
+				return fmt.Errorf("save state: %w", err)
 			}
 
 			if isJSONOutput(cmd) {
 				return writeJSON(cmd, map[string]any{"session_id": sessionID})
 			}
 
-			_, err = cmd.OutOrStdout().Write([]byte(sessionID + "\n"))
-			return err
+			if _, err = cmd.OutOrStdout().Write([]byte(sessionID + "\n")); err != nil {
+				return fmt.Errorf("write output: %w", err)
+			}
+			return nil
 		},
 	}
 

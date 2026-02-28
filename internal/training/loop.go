@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Perttulands/ludus-magnus/internal/challenge"
-	"github.com/Perttulands/ludus-magnus/internal/scoring"
-	"github.com/Perttulands/ludus-magnus/internal/selection"
-	"github.com/Perttulands/ludus-magnus/internal/tournament"
+	"github.com/Perttulands/chiron/internal/challenge"
+	"github.com/Perttulands/chiron/internal/scoring"
+	"github.com/Perttulands/chiron/internal/selection"
+	"github.com/Perttulands/chiron/internal/tournament"
 )
 
 // Status tracks the training loop lifecycle.

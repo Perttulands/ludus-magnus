@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ func newEvaluateCmd() *cobra.Command {
 			}
 
 			if err := state.EvaluateArtifact(artifactID, score, comment); err != nil {
-				return err
+				return fmt.Errorf("evaluate artifact: %w", err)
 			}
 
 			if isJSONOutput(cmd) {
@@ -34,8 +34,10 @@ func newEvaluateCmd() *cobra.Command {
 				})
 			}
 
-			_, err := fmt.Fprintf(cmd.OutOrStdout(), "Artifact %s evaluated: %d/10\n", artifactID, score)
-			return err
+			if _, err := fmt.Fprintf(cmd.OutOrStdout(), "Artifact %s evaluated: %d/10\n", artifactID, score); err != nil {
+				return fmt.Errorf("write output: %w", err)
+			}
+			return nil
 		},
 	}
 

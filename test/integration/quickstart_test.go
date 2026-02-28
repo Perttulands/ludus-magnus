@@ -82,13 +82,13 @@ func TestQuickstartFlowEndToEnd(t *testing.T) {
 	workspace := mustMkdirTemp(t, "quickstart-int-*")
 	defer func() {
 		_ = os.RemoveAll(workspace)
-		statePath := filepath.Join(workspace, ".ludus-magnus", "state.json")
+		statePath := filepath.Join(workspace, ".chiron", "state.json")
 		if _, err := os.Stat(statePath); !os.IsNotExist(err) {
 			t.Errorf("expected temporary state path to be cleaned up: %s", statePath)
 		}
 	}()
 
-	binaryPath := filepath.Join(workspace, "ludus-magnus")
+	binaryPath := filepath.Join(workspace, "chiron")
 	runCmd(t, repoRoot, "/usr/local/go/bin/go", "build", "-o", binaryPath, ".")
 
 	initOut := runCmd(t, workspace, binaryPath,
@@ -128,7 +128,7 @@ func TestQuickstartFlowEndToEnd(t *testing.T) {
 		"--base-url", server.URL,
 	))
 
-	statePath := filepath.Join(workspace, ".ludus-magnus", "state.json")
+	statePath := filepath.Join(workspace, ".chiron", "state.json")
 	rawState, err := os.ReadFile(statePath)
 	if err != nil {
 		t.Fatalf("read state file: %v", err)

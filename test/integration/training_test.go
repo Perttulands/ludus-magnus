@@ -86,13 +86,13 @@ func TestTrainingFlowWithPromotionAndLocks(t *testing.T) {
 	workspace := mustMkdirTemp(t, "training-int-*")
 	defer func() {
 		_ = os.RemoveAll(workspace)
-		statePath := filepath.Join(workspace, ".ludus-magnus", "state.json")
+		statePath := filepath.Join(workspace, ".chiron", "state.json")
 		if _, err := os.Stat(statePath); !os.IsNotExist(err) {
 			t.Errorf("expected temporary state path to be cleaned up: %s", statePath)
 		}
 	}()
 
-	binaryPath := filepath.Join(workspace, "ludus-magnus")
+	binaryPath := filepath.Join(workspace, "chiron")
 	runCmd(t, repoRoot, "/usr/local/go/bin/go", "build", "-o", binaryPath, ".")
 
 	initOut := runCmd(t, workspace, binaryPath,
@@ -165,7 +165,7 @@ func TestTrainingFlowWithPromotionAndLocks(t *testing.T) {
 		t.Fatalf("unexpected training iterate output: %s", iterateOut)
 	}
 
-	statePath := filepath.Join(workspace, ".ludus-magnus", "state.json")
+	statePath := filepath.Join(workspace, ".chiron", "state.json")
 	rawState, err := os.ReadFile(statePath)
 	if err != nil {
 		t.Fatalf("read state file: %v", err)

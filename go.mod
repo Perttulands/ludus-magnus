@@ -1,4 +1,4 @@
-module github.com/Perttulands/ludus-magnus
+module github.com/Perttulands/chiron
 
 go 1.25.0
 

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/Perttulands/ludus-magnus/internal/learningloop"
+	"github.com/Perttulands/chiron/internal/learningloop"
 )
 
 // PromptManifest is what production dispatch consumes.

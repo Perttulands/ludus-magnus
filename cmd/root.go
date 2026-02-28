@@ -8,8 +8,8 @@ func Execute() error {
 
 func newRootCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "ludus-magnus",
-		Short: "ludus-magnus CLI",
+		Use:   "chiron",
+		Short: "Chiron — train AI agents through iterative evaluation",
 	}
 	cmd.PersistentFlags().Bool("json", false, "Output JSON")
 

@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Perttulands/ludus-magnus/internal/challenge"
-	"github.com/Perttulands/ludus-magnus/internal/harness"
-	"github.com/Perttulands/ludus-magnus/internal/scoring"
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/challenge"
+	"github.com/Perttulands/chiron/internal/harness"
+	"github.com/Perttulands/chiron/internal/scoring"
+	"github.com/Perttulands/chiron/internal/state"
 )
 
 var orchIDCounter int

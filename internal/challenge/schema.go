@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Perttulands/ludus-magnus/internal/harness"
+	"github.com/Perttulands/chiron/internal/harness"
 )
 
 // Challenge types matching the PRD.

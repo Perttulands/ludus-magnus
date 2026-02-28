@@ -1,23 +1,20 @@
-# 🏟️ Ludus Magnus
+# Chiron
 
-![Ludus Magnus](images/ludus-magnus.jpg)
-
-
-*The Training Ground. Four sparring zones. Floating score tablets. An evolution spiral carved into the arena floor.*
+*The cave on Mount Pelion. Fire at the center. Patterns scratched into stone from a thousand previous sessions. Four alcoves. The climb is the filter.*
 
 ---
 
-The Ludus Magnus was the largest gladiatorial training school in Rome, connected to the Colosseum by an underground passage. Gladiators didn't walk into the arena on their first day. They trained. They sparred. They fought practice rounds until the trainers decided they were ready. Some lineages were better than others. The best survived.
+Chiron was the wisest of the centaurs, immortal teacher on Mount Pelion. Heroes climbed to his cave to learn. He didn't lecture — he watched them work, scored what they produced, and reshaped them through iteration. Not everyone who climbed made it down better than they arrived. The mountain didn't care about intentions. It cared about improvement.
 
-This Ludus Magnus is an open-air arena — sunlit marble with holographic training dummies. Four sparring zones marked A, B, C, D, each running a different lineage of the same agent. Floating score tablets show 1-10 evaluations. You watch them compete, lock the winner, evolve the losers, and repeat until what walks out of here is actually good at its job. The evolution spiral carved into the floor isn't decorative. It's the process.
+This Chiron is the cave at the peak. Fire at the center illuminates patterns scratched into the walls — each one a lesson from a previous training session. Four alcoves marked A, B, C, D, each training a different lineage of the same agent. Stone tablets record scores 1-10. You watch them learn, preserve what works, reshape what doesn't, and repeat until what descends the mountain is actually capable. The patterns on the walls aren't decoration. They're the accumulated record.
 
-Any agent type trains here — coding, research, customer service, analysis. The arena doesn't care what you're building. It cares whether you're improving.
+Any agent type trains here — coding, research, customer service, analysis. The cave doesn't care what you're building. It cares whether you're improving.
 
 Train AI agents through iterative evaluation loops. Define what you need, generate an agent, run it, score it, evolve it.
 
 ## How it works
 
-Ludus Magnus generates system prompts for AI agents, runs them against your inputs, collects your evaluations, and uses the feedback to evolve better prompts. All state is stored locally in a single JSON file.
+Chiron generates system prompts for AI agents, runs them against your inputs, collects your evaluations, and uses the feedback to evolve better prompts. All state is stored locally in a single JSON file.
 
 **Quickstart flow** (single lineage):
 ```
@@ -33,7 +30,7 @@ init -> run all -> evaluate all -> lock winners -> iterate losers -> repeat
 
 ```bash
 make build
-# Binary at ./bin/ludus-magnus
+# Binary at ./bin/chiron
 ```
 
 Or directly:
@@ -48,19 +45,19 @@ go install .
 export ANTHROPIC_API_KEY=sk-...
 
 # Create a session and generate the first agent
-ludus-magnus quickstart init --need "Customer support assistant that handles refund requests"
+chiron quickstart init --need "Customer support assistant that handles refund requests"
 
 # Run the agent (use the session_id from output)
-ludus-magnus run ses_XXXXXXXX --input "I want a refund for order #1234"
+chiron run ses_XXXXXXXX --input "I want a refund for order #1234"
 
 # Score the result (use the artifact_id from output)
-ludus-magnus evaluate art_XXXXXXXX --score 5 --comment "Too generic, needs order lookup"
+chiron evaluate art_XXXXXXXX --score 5 --comment "Too generic, needs order lookup"
 
 # Evolve the agent based on feedback
-ludus-magnus iterate ses_XXXXXXXX
+chiron iterate ses_XXXXXXXX
 
 # Run the evolved agent
-ludus-magnus run ses_XXXXXXXX --input "I want a refund for order #1234"
+chiron run ses_XXXXXXXX --input "I want a refund for order #1234"
 ```
 
 ## Commands
@@ -94,13 +91,13 @@ All commands support `--json` for machine-readable output.
 **Anthropic** (default):
 ```bash
 export ANTHROPIC_API_KEY=sk-...
-ludus-magnus quickstart init --need "..."
+chiron quickstart init --need "..."
 ```
 
 **OpenAI-compatible** (OpenAI, LiteLLM, OpenRouter):
 ```bash
 export OPENAI_API_KEY=sk-...
-ludus-magnus quickstart init --need "..." --provider openai-compatible --model gpt-4o
+chiron quickstart init --need "..." --provider openai-compatible --model gpt-4o
 ```
 
 Override per-command with `--provider`, `--model`, `--base-url`, `--api-key`.
@@ -109,34 +106,36 @@ Override per-command with `--provider`, `--model`, `--base-url`, `--api-key`.
 
 ```bash
 # 1. Initialize with four variant strategies
-ludus-magnus training init --need "Generate migration plans"
+chiron training init --need "Generate migration plans"
 
 # 2. Run all lineages
 for L in A B C D; do
-  ludus-magnus run ses_XXX --lineage $L --input "Migrate users table"
+  chiron run ses_XXX --lineage $L --input "Migrate users table"
 done
 
 # 3. Evaluate each artifact
-ludus-magnus evaluate art_AAA --score 9 --comment "Best balance"
-ludus-magnus evaluate art_BBB --score 6 --comment "Too conservative"
-ludus-magnus evaluate art_CCC --score 7 --comment "Creative but uneven"
-ludus-magnus evaluate art_DDD --score 5 --comment "Too risky"
+chiron evaluate art_AAA --score 9 --comment "Best balance"
+chiron evaluate art_BBB --score 6 --comment "Too conservative"
+chiron evaluate art_CCC --score 7 --comment "Creative but uneven"
+chiron evaluate art_DDD --score 5 --comment "Too risky"
 
 # 4. Lock the winner, evolve the rest
-ludus-magnus lineage lock ses_XXX A
-ludus-magnus training iterate ses_XXX
+chiron lineage lock ses_XXX A
+chiron training iterate ses_XXX
 ```
 
 ## State
 
-State lives at `.ludus-magnus/state.json` relative to your working directory. One directory per project keeps state isolated. Add `.ludus-magnus/` to your `.gitignore`.
+State lives at `.chiron/state.json` relative to your working directory. One directory per project keeps state isolated. Add `.chiron/` to your `.gitignore`.
+
+If upgrading from a previous version, the tool automatically migrates `.ludus-magnus/` to `.chiron/` on first run.
 
 ## CLI execution mode
 
 Run agents through `claude` or `codex` CLI tools instead of the API:
 
 ```bash
-ludus-magnus run ses_XXX --mode cli --executor claude --input "..."
+chiron run ses_XXX --mode cli --executor claude --input "..."
 ```
 
 ## Development
@@ -147,13 +146,15 @@ make test-integration  # Integration tests (builds binary, uses mock server)
 make clean             # Remove build artifacts
 ```
 
-## Part of the Agora
+## Dependencies
 
-Ludus Magnus was forged in **[Athena's Agora](https://github.com/Perttulands/athena-workspace)** — an autonomous coding system where AI agents build software and a training arena makes sure they earn their place before deployment.
+None required. Standalone tool.
 
-[Argus](https://github.com/Perttulands/argus) watches the server. [Truthsayer](https://github.com/Perttulands/truthsayer) watches the code. [Oathkeeper](https://github.com/Perttulands/oathkeeper) watches the promises. [Relay](https://github.com/Perttulands/relay) carries the messages. Ludus Magnus trains what the others will judge.
+Optional: `gate` -- enables quality scoring of agent outputs during evaluation.
 
-The [mythology](https://github.com/Perttulands/athena-workspace/blob/main/mythology.md) has the full story.
+## Part of Polis
+
+Chiron trains what the city will judge. [Cerberus](https://github.com/Perttulands/gate) guards the gate. [Aletheia](https://github.com/Perttulands/truthsayer) demands the code be true. [Horkos](https://github.com/Perttulands/oathkeeper) watches the promises. [Hermes](https://github.com/Perttulands/relay) carries the messages. Chiron teaches agents until they're ready to descend the mountain and pass through the gate.
 
 ## License
 

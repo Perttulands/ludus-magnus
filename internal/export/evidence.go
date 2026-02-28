@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 )
 
 // EvidencePack renders one session's evidence bundle as JSON.

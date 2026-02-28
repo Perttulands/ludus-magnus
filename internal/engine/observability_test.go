@@ -3,7 +3,7 @@ package engine
 import (
 	"testing"
 
-	"github.com/Perttulands/ludus-magnus/internal/provider"
+	"github.com/Perttulands/chiron/internal/provider"
 )
 
 func TestCaptureExecutionMetadataAnthropicPricing(t *testing.T) {

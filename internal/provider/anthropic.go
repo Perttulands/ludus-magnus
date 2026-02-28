@@ -45,7 +45,7 @@ func NewAnthropicProvider(apiKey, model, baseURL string) *AnthropicProvider {
 func (p *AnthropicProvider) GenerateAgent(ctx context.Context, need string, directives []string) (AgentDefinition, Metadata, error) {
 	text, usage, meta, err := p.messagesCall(ctx, "", need, 4096)
 	if err != nil {
-		return AgentDefinition{}, Metadata{}, err
+		return AgentDefinition{}, Metadata{}, fmt.Errorf("send request: %w", err)
 	}
 
 	return AgentDefinition{
@@ -64,7 +64,7 @@ func (p *AnthropicProvider) ExecuteAgent(ctx context.Context, agent AgentDefinit
 
 	text, usage, meta, err := p.messagesCall(ctx, agent.SystemPrompt, input, maxTokens)
 	if err != nil {
-		return "", Metadata{}, err
+		return "", Metadata{}, fmt.Errorf("send request: %w", err)
 	}
 
 	return text, p.metadataFromUsage(usage, meta.DurationMs), nil

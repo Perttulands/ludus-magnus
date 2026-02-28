@@ -20,17 +20,21 @@ func NewFactory(cfg Config) (Provider, error) {
 
 	switch providerName {
 	case "anthropic":
-		key := firstNonEmpty(strings.TrimSpace(cfg.APIKey), os.Getenv("ANTHROPIC_API_KEY"))
+		envKey := strings.TrimSpace(os.Getenv("ANTHROPIC_API_KEY"))
+		key := firstNonEmpty(strings.TrimSpace(cfg.APIKey), envKey)
 		if key == "" {
 			return nil, fmt.Errorf("missing anthropic credentials: set ANTHROPIC_API_KEY")
 		}
 		return NewAnthropicProvider(key, cfg.Model, cfg.BaseURL), nil
 	case "openai-compatible":
+		openaiKey := strings.TrimSpace(os.Getenv("OPENAI_API_KEY"))
+		compatKey := strings.TrimSpace(os.Getenv("OPENAI_COMPATIBLE_API_KEY"))
+		genericKey := strings.TrimSpace(os.Getenv("API_KEY"))
 		key := firstNonEmpty(
 			strings.TrimSpace(cfg.APIKey),
-			os.Getenv("OPENAI_API_KEY"),
-			os.Getenv("OPENAI_COMPATIBLE_API_KEY"),
-			os.Getenv("API_KEY"),
+			openaiKey,
+			compatKey,
+			genericKey,
 		)
 		if key == "" {
 			return nil, fmt.Errorf("missing openai-compatible credentials: set OPENAI_API_KEY or equivalent")

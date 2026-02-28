@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	exporter "github.com/Perttulands/ludus-magnus/internal/export"
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	exporter "github.com/Perttulands/chiron/internal/export"
+	"github.com/Perttulands/chiron/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -35,16 +35,18 @@ func newExportAgentCmd() *cobra.Command {
 
 			st, err := state.Load("")
 			if err != nil {
-				return err
+				return fmt.Errorf("load state: %w", err)
 			}
 
 			payload, err := exporter.AgentDefinition(st, agentID, format)
 			if err != nil {
-				return err
+				return fmt.Errorf("export agent: %w", err)
 			}
 
-			_, err = fmt.Fprint(cmd.OutOrStdout(), payload)
-			return err
+			if _, err = fmt.Fprint(cmd.OutOrStdout(), payload); err != nil {
+				return fmt.Errorf("write output: %w", err)
+			}
+			return nil
 		},
 	}
 
@@ -67,16 +69,18 @@ func newExportEvidenceCmd() *cobra.Command {
 
 			st, err := state.Load("")
 			if err != nil {
-				return err
+				return fmt.Errorf("load state: %w", err)
 			}
 
 			payload, err := exporter.EvidencePack(st, sessionID, format)
 			if err != nil {
-				return err
+				return fmt.Errorf("export evidence: %w", err)
 			}
 
-			_, err = fmt.Fprint(cmd.OutOrStdout(), payload)
-			return err
+			if _, err = fmt.Fprint(cmd.OutOrStdout(), payload); err != nil {
+				return fmt.Errorf("write output: %w", err)
+			}
+			return nil
 		},
 	}
 

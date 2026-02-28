@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Perttulands/ludus-magnus/internal/engine"
-	"github.com/Perttulands/ludus-magnus/internal/provider"
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/engine"
+	"github.com/Perttulands/chiron/internal/provider"
+	"github.com/Perttulands/chiron/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -30,7 +30,7 @@ func newIterateCmd() *cobra.Command {
 
 			st, err := state.Load("")
 			if err != nil {
-				return err
+				return fmt.Errorf("load state: %w", err)
 			}
 
 			session, ok := st.Sessions[sessionID]
@@ -74,12 +74,12 @@ func newIterateCmd() *cobra.Command {
 				APIKey:   apiKey,
 			})
 			if err != nil {
-				return err
+				return fmt.Errorf("initialize provider: %w", err)
 			}
 
-			newDefinition, generationMeta, err := engine.GenerateAgentDefinitionWithMetadata(evolutionPrompt, nil, adapter)
+			newDefinition, generationMeta, err := engine.GenerateAgentDefinitionWithMetadata(cmd.Context(), evolutionPrompt, nil, adapter)
 			if err != nil {
-				return err
+				return fmt.Errorf("generate agent: %w", err)
 			}
 
 			newAgent := state.Agent{
@@ -97,7 +97,7 @@ func newIterateCmd() *cobra.Command {
 			st.Sessions[sessionID] = session
 
 			if err := state.Save("", st); err != nil {
-				return err
+				return fmt.Errorf("save state: %w", err)
 			}
 
 			if isJSONOutput(cmd) {
@@ -108,10 +108,12 @@ func newIterateCmd() *cobra.Command {
 			}
 
 			if _, err := fmt.Fprintf(cmd.OutOrStdout(), "agent_id=%s\n", newAgent.ID); err != nil {
-				return err
+				return fmt.Errorf("write output: %w", err)
 			}
-			_, err = fmt.Fprintf(cmd.OutOrStdout(), "version=%d\n", newAgent.Version)
-			return err
+			if _, err = fmt.Fprintf(cmd.OutOrStdout(), "version=%d\n", newAgent.Version); err != nil {
+				return fmt.Errorf("write output: %w", err)
+			}
+			return nil
 		},
 	}
 

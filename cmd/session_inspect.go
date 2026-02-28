@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +16,7 @@ func newSessionInspectCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			st, err := state.Load("")
 			if err != nil {
-				return err
+				return fmt.Errorf("load state: %w", err)
 			}
 
 			sessionID := args[0]
@@ -30,8 +30,10 @@ func newSessionInspectCmd() *cobra.Command {
 				return fmt.Errorf("marshal session: %w", err)
 			}
 
-			_, err = cmd.OutOrStdout().Write(append(data, '\n'))
-			return err
+			if _, err = cmd.OutOrStdout().Write(append(data, '\n')); err != nil {
+				return fmt.Errorf("write output: %w", err)
+			}
+			return nil
 		},
 	}
 }

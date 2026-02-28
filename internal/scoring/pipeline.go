@@ -1,8 +1,8 @@
 package scoring
 
 import (
-	"github.com/Perttulands/ludus-magnus/internal/harness"
-	"github.com/Perttulands/ludus-magnus/internal/truthsayer"
+	"github.com/Perttulands/chiron/internal/harness"
+	"github.com/Perttulands/chiron/internal/truthsayer"
 )
 
 // Weights controls how different scoring components contribute to the final score.

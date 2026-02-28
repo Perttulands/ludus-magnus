@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Perttulands/ludus-magnus/internal/engine"
-	"github.com/Perttulands/ludus-magnus/internal/provider"
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/engine"
+	"github.com/Perttulands/chiron/internal/provider"
+	"github.com/Perttulands/chiron/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +37,7 @@ func newPromoteCmd() *cobra.Command {
 
 			st, err := state.Load("")
 			if err != nil {
-				return err
+				return fmt.Errorf("load state: %w", err)
 			}
 
 			session, ok := st.Sessions[sessionID]
@@ -59,7 +59,7 @@ func newPromoteCmd() *cobra.Command {
 
 			variants, err := variantsForStrategy(strategy)
 			if err != nil {
-				return err
+				return fmt.Errorf("resolve promotion strategy: %w", err)
 			}
 
 			configProvider := strings.TrimSpace(providerName)
@@ -74,7 +74,7 @@ func newPromoteCmd() *cobra.Command {
 				APIKey:   apiKey,
 			})
 			if err != nil {
-				return err
+				return fmt.Errorf("initialize provider: %w", err)
 			}
 
 			now := time.Now().UTC().Format(time.RFC3339)
@@ -90,9 +90,9 @@ func newPromoteCmd() *cobra.Command {
 					variant.strategy,
 				)
 
-				agentDef, generationMeta, err := engine.GenerateAgentDefinitionWithMetadata(promotionPrompt, nil, adapter)
+				agentDef, generationMeta, err := engine.GenerateAgentDefinitionWithMetadata(cmd.Context(), promotionPrompt, nil, adapter)
 				if err != nil {
-					return err
+					return fmt.Errorf("generate agent for lineage %s: %w", variant.name, err)
 				}
 
 				lineages[lineageID] = state.Lineage{
@@ -120,7 +120,7 @@ func newPromoteCmd() *cobra.Command {
 			st.Sessions[sessionID] = session
 
 			if err := state.Save("", st); err != nil {
-				return err
+				return fmt.Errorf("save state: %w", err)
 			}
 
 			if isJSONOutput(cmd) {
@@ -131,8 +131,10 @@ func newPromoteCmd() *cobra.Command {
 				})
 			}
 
-			_, err = fmt.Fprintln(cmd.OutOrStdout(), "Session promoted to training mode with 4 lineages")
-			return err
+			if _, err = fmt.Fprintln(cmd.OutOrStdout(), "Session promoted to training mode with 4 lineages"); err != nil {
+				return fmt.Errorf("write output: %w", err)
+			}
+			return nil
 		},
 	}
 

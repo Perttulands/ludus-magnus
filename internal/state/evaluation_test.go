@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 )
 
 func TestEvaluateArtifactSetsEvaluation(t *testing.T) {
@@ -120,7 +120,7 @@ func TestEvaluateArtifactRejectsNonUniqueArtifactID(t *testing.T) {
 			},
 		},
 	}
-	if err := state.Save(filepath.Join(tempDir, ".ludus-magnus", "state.json"), st); err != nil {
+	if err := state.Save(filepath.Join(tempDir, ".chiron", "state.json"), st); err != nil {
 		t.Fatalf("save state: %v", err)
 	}
 
@@ -171,7 +171,7 @@ func writeStateWithArtifact(t *testing.T, tempDir string, artifactID string, eva
 		},
 	}
 
-	if err := state.Save(filepath.Join(tempDir, ".ludus-magnus", "state.json"), st); err != nil {
+	if err := state.Save(filepath.Join(tempDir, ".chiron", "state.json"), st); err != nil {
 		t.Fatalf("save state: %v", err)
 	}
 }

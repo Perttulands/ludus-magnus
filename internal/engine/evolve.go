@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 )
 
 // GenerateEvolutionPrompt synthesizes artifact evaluations and directives into

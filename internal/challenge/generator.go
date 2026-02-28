@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Perttulands/ludus-magnus/internal/harness"
-	"github.com/Perttulands/ludus-magnus/internal/provider"
+	"github.com/Perttulands/chiron/internal/harness"
+	"github.com/Perttulands/chiron/internal/provider"
 )
 
 // GenerateRequest specifies what kind of challenge to generate.

@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Perttulands/ludus-magnus/internal/engine"
-	"github.com/Perttulands/ludus-magnus/internal/provider"
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/engine"
+	"github.com/Perttulands/chiron/internal/provider"
+	"github.com/Perttulands/chiron/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +29,7 @@ func newTrainingIterateCmd() *cobra.Command {
 
 			st, err := state.Load("")
 			if err != nil {
-				return err
+				return fmt.Errorf("load state: %w", err)
 			}
 
 			session, ok := st.Sessions[sessionID]
@@ -75,12 +75,12 @@ func newTrainingIterateCmd() *cobra.Command {
 					APIKey:   apiKey,
 				})
 				if err != nil {
-					return err
+					return fmt.Errorf("initialize provider for lineage %s: %w", lineage.Name, err)
 				}
 
-				newDefinition, generationMeta, err := engine.GenerateAgentDefinitionWithMetadata(evolutionPrompt, nil, adapter)
+				newDefinition, generationMeta, err := engine.GenerateAgentDefinitionWithMetadata(cmd.Context(), evolutionPrompt, nil, adapter)
 				if err != nil {
-					return err
+					return fmt.Errorf("generate agent for lineage %s: %w", lineage.Name, err)
 				}
 
 				newAgent := state.Agent{
@@ -100,7 +100,7 @@ func newTrainingIterateCmd() *cobra.Command {
 
 			st.Sessions[sessionID] = session
 			if err := state.Save("", st); err != nil {
-				return err
+				return fmt.Errorf("save state: %w", err)
 			}
 
 			regeneratedText := "none"
@@ -121,14 +121,16 @@ func newTrainingIterateCmd() *cobra.Command {
 				})
 			}
 
-			_, err = fmt.Fprintf(
+			if _, err = fmt.Fprintf(
 				cmd.OutOrStdout(),
 				"Regenerated %d lineages: %s. Locked: %s.\n",
 				len(regenerated),
 				regeneratedText,
 				lockedText,
-			)
-			return err
+			); err != nil {
+				return fmt.Errorf("write output: %w", err)
+			}
+			return nil
 		},
 	}
 

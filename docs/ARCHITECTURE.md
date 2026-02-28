@@ -1,8 +1,8 @@
-# Ludus Magnus Architecture
+# Chiron Architecture
 
 ## Overview
 
-Ludus Magnus is a Go CLI tool for training AI agents through iterative evaluation loops. It operates entirely locally with no external dependencies beyond LLM provider APIs.
+Chiron is a Go CLI tool for training AI agents through iterative evaluation loops. It operates entirely locally with no external dependencies beyond LLM provider APIs.
 
 **Design principles:**
 1. **Local-first**: All state in a single JSON file
@@ -44,7 +44,7 @@ Cobra commands that parse flags, load state, call engine/provider, save state, p
 ### State Layer (`internal/state/`)
 
 - **schema.go** - Data structures: State, Session, Lineage, Agent, Artifact, Evaluation, Directive
-- **persistence.go** - Load/Save JSON at `.ludus-magnus/state.json`
+- **persistence.go** - Load/Save JSON at `.chiron/state.json`
 - **migration.go** - Schema version migration framework (v0.9 -> v1.0)
 - **artifact.go** - Collision-safe artifact ID generation
 - **artifact_lookup.go** - Global artifact lookup across sessions
@@ -92,7 +92,7 @@ State (v1.0)
 
 ## State Management
 
-- JSON file at `.ludus-magnus/state.json` relative to working directory
+- JSON file at `.chiron/state.json` relative to working directory
 - Auto-created on first save
 - Pretty-printed with 2-space indent
 - Migration framework for schema upgrades

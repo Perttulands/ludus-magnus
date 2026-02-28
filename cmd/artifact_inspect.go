@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -22,14 +22,16 @@ func newArtifactInspectCmd() *cobra.Command {
 
 			artifact, err := state.LoadArtifactByID(artifactID)
 			if err != nil {
-				return err
+				return fmt.Errorf("load artifact: %w", err)
 			}
 			payload, err := json.MarshalIndent(artifact, "", "  ")
 			if err != nil {
-				return err
+				return fmt.Errorf("marshal artifact: %w", err)
 			}
-			_, err = fmt.Fprintf(cmd.OutOrStdout(), "%s\n", payload)
-			return err
+			if _, err = fmt.Fprintf(cmd.OutOrStdout(), "%s\n", payload); err != nil {
+				return fmt.Errorf("write output: %w", err)
+			}
+			return nil
 		},
 	}
 

@@ -4,9 +4,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
-	"github.com/Perttulands/ludus-magnus/internal/tournament"
-	"github.com/Perttulands/ludus-magnus/internal/training"
+	"github.com/Perttulands/chiron/internal/state"
+	"github.com/Perttulands/chiron/internal/tournament"
+	"github.com/Perttulands/chiron/internal/training"
 )
 
 func completedLoop() *training.Loop {

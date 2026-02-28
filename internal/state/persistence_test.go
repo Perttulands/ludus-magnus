@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 )
 
 func TestSaveLoadRoundTrip(t *testing.T) {
@@ -33,7 +33,7 @@ func TestSaveLoadRoundTrip(t *testing.T) {
 func TestSaveCreatesStateDirectory(t *testing.T) {
 	t.Parallel()
 
-	testPath := filepath.Join(t.TempDir(), ".ludus-magnus", "state.json")
+	testPath := filepath.Join(t.TempDir(), ".chiron", "state.json")
 
 	if err := state.Save(testPath, state.NewState()); err != nil {
 		t.Fatalf("save state: %v", err)
@@ -65,7 +65,7 @@ func TestSaveUsesDefaultStatePath(t *testing.T) {
 		t.Fatalf("save state with default path: %v", err)
 	}
 
-	defaultPath := filepath.Join(tempDir, ".ludus-magnus", "state.json")
+	defaultPath := filepath.Join(tempDir, ".chiron", "state.json")
 	if info, err := os.Stat(defaultPath); err != nil {
 		t.Fatalf("stat default state path: %v", err)
 	} else if info.Size() == 0 {
@@ -98,6 +98,75 @@ func TestLoadMigratesLegacyVersion(t *testing.T) {
 
 	if st.Version != state.CurrentVersion {
 		t.Fatalf("expected version %q, got %q", state.CurrentVersion, st.Version)
+	}
+}
+
+func TestMigrateLegacyDir(t *testing.T) {
+	tempDir := t.TempDir()
+	oldDir := filepath.Join(tempDir, ".ludus-magnus")
+	newDir := filepath.Join(tempDir, ".chiron")
+
+	if err := os.MkdirAll(oldDir, 0o755); err != nil {
+		t.Fatalf("create legacy dir: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(oldDir, "state.json"), []byte(`{"version":"1.0","sessions":{}}`), 0o644); err != nil {
+		t.Fatalf("write legacy state: %v", err)
+	}
+
+	wd, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("get working directory: %v", err)
+	}
+	t.Cleanup(func() { _ = os.Chdir(wd) })
+
+	if err := os.Chdir(tempDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+
+	migrated, err := state.MigrateLegacyDir()
+	if err != nil {
+		t.Fatalf("migrate: %v", err)
+	}
+	if !migrated {
+		t.Fatal("expected migration to occur")
+	}
+
+	if _, err := os.Stat(newDir); err != nil {
+		t.Fatalf("new dir missing after migration: %v", err)
+	}
+	if _, err := os.Stat(oldDir); !os.IsNotExist(err) {
+		t.Fatal("old dir should not exist after migration")
+	}
+}
+
+func TestMigrateLegacyDirSkipsWhenNewExists(t *testing.T) {
+	tempDir := t.TempDir()
+	oldDir := filepath.Join(tempDir, ".ludus-magnus")
+	newDir := filepath.Join(tempDir, ".chiron")
+
+	if err := os.MkdirAll(oldDir, 0o755); err != nil {
+		t.Fatalf("create legacy dir: %v", err)
+	}
+	if err := os.MkdirAll(newDir, 0o755); err != nil {
+		t.Fatalf("create new dir: %v", err)
+	}
+
+	wd, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("get working directory: %v", err)
+	}
+	t.Cleanup(func() { _ = os.Chdir(wd) })
+
+	if err := os.Chdir(tempDir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+
+	migrated, err := state.MigrateLegacyDir()
+	if err != nil {
+		t.Fatalf("migrate: %v", err)
+	}
+	if migrated {
+		t.Fatal("should not migrate when new dir already exists")
 	}
 }
 

@@ -6,12 +6,12 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 )
 
 func TestAddArtifactAddsToMatchingLineageByID(t *testing.T) {
 	tempDir := t.TempDir()
-	statePath := filepath.Join(tempDir, ".ludus-magnus", "state.json")
+	statePath := filepath.Join(tempDir, ".chiron", "state.json")
 
 	st := state.NewState()
 	st.Sessions["ses_1"] = state.Session{
@@ -98,7 +98,7 @@ func TestAddArtifactErrorsWhenLineageMissing(t *testing.T) {
 		Lineages:  map[string]state.Lineage{},
 	}
 
-	if err := state.Save(filepath.Join(tempDir, ".ludus-magnus", "state.json"), st); err != nil {
+	if err := state.Save(filepath.Join(tempDir, ".chiron", "state.json"), st); err != nil {
 		t.Fatalf("save state: %v", err)
 	}
 
@@ -118,7 +118,7 @@ func TestAddArtifactErrorsWhenLineageMissing(t *testing.T) {
 
 func TestAddArtifactRejectsDuplicateArtifactIDAcrossSessions(t *testing.T) {
 	tempDir := t.TempDir()
-	statePath := filepath.Join(tempDir, ".ludus-magnus", "state.json")
+	statePath := filepath.Join(tempDir, ".chiron", "state.json")
 
 	st := state.NewState()
 	st.Sessions["ses_1"] = state.Session{

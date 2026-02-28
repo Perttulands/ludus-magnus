@@ -68,25 +68,29 @@ func ScanWithBinary(binary, path string) (ScanResult, error) {
 	duration := int(time.Since(start).Milliseconds())
 
 	exitCode := 0
+	var runErr error
 	if err != nil {
 		var exitErr *exec.ExitError
 		if !errors.As(err, &exitErr) {
 			return ScanResult{}, fmt.Errorf("run truthsayer: %w", err)
 		}
 		exitCode = exitErr.ExitCode()
+		runErr = exitErr
 	}
 
 	trimmedOutput := strings.TrimSpace(string(output))
 	switch exitCode {
 	case 0, 1:
-		// 1 means findings were detected.
+		// Exit 0 = clean, exit 1 = findings detected. Both are expected
+		// outcomes; the original exec error (non-zero exit) is intentionally
+		// not propagated since the exit code carries the full semantic.
 	case 2:
-		return ScanResult{}, fmt.Errorf("truthsayer tool error (exit 2): %s", trimmedOutput)
+		return ScanResult{}, fmt.Errorf("truthsayer tool error (exit 2): %s: %w", trimmedOutput, runErr)
 	default:
 		if trimmedOutput == "" {
-			return ScanResult{}, fmt.Errorf("truthsayer failed with exit %d", exitCode)
+			return ScanResult{}, fmt.Errorf("truthsayer failed with exit %d: %w", exitCode, runErr)
 		}
-		return ScanResult{}, fmt.Errorf("truthsayer failed with exit %d: %s", exitCode, trimmedOutput)
+		return ScanResult{}, fmt.Errorf("truthsayer failed with exit %d: %s: %w", exitCode, trimmedOutput, runErr)
 	}
 
 	result := ScanResult{
@@ -120,7 +124,7 @@ func ScanString(content, filename string) (ScanResult, error) {
 
 // ScanStringWithBinary writes content to a temp file and scans with a specific binary.
 func ScanStringWithBinary(binary, content, filename string) (ScanResult, error) {
-	tmpDir, err := os.MkdirTemp("", "ludus-magnus-scan-*")
+	tmpDir, err := os.MkdirTemp("", "chiron-scan-*")
 	if err != nil {
 		return ScanResult{}, fmt.Errorf("create temp dir: %w", err)
 	}

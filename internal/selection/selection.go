@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"sort"
 
-	"github.com/Perttulands/ludus-magnus/internal/tournament"
+	"github.com/Perttulands/chiron/internal/tournament"
 )
 
 // Strategy names for selection methods.

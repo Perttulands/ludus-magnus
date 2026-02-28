@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 )
 
 func TestGenerateEvolutionPromptIncludesFeedbackAndAverage(t *testing.T) {

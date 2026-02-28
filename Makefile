@@ -1,5 +1,5 @@
 GO ?= $(shell command -v go 2>/dev/null || echo /usr/local/go/bin/go)
-BINARY := ludus-magnus
+BINARY := chiron
 
 .PHONY: build test install clean
 

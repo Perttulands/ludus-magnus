@@ -3,7 +3,7 @@ package dispatch
 import (
 	"testing"
 
-	"github.com/Perttulands/ludus-magnus/internal/learningloop"
+	"github.com/Perttulands/chiron/internal/learningloop"
 )
 
 func testReport() *learningloop.TrainingReport {

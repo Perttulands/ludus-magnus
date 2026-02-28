@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Perttulands/ludus-magnus/internal/challenge"
-	"github.com/Perttulands/ludus-magnus/internal/harness"
-	"github.com/Perttulands/ludus-magnus/internal/scoring"
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/challenge"
+	"github.com/Perttulands/chiron/internal/harness"
+	"github.com/Perttulands/chiron/internal/scoring"
+	"github.com/Perttulands/chiron/internal/state"
 )
 
 // Contestant represents one prompt variant competing in a tournament.

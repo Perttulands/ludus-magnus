@@ -18,9 +18,11 @@ func isJSONOutput(cmd *cobra.Command) bool {
 func writeJSON(cmd *cobra.Command, payload any) error {
 	data, err := json.MarshalIndent(payload, "", "  ")
 	if err != nil {
-		return err
+		return fmt.Errorf("marshal JSON: %w", err)
 	}
 
-	_, err = fmt.Fprintf(cmd.OutOrStdout(), "%s\n", data)
-	return err
+	if _, err = fmt.Fprintf(cmd.OutOrStdout(), "%s\n", data); err != nil {
+		return fmt.Errorf("write JSON output: %w", err)
+	}
+	return nil
 }

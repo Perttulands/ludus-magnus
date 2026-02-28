@@ -1,14 +1,14 @@
 version: 2
 
-project_name: ludus-magnus
+project_name: chiron
 
 before:
   hooks:
     - go mod tidy
 
 builds:
-  - id: ludus-magnus
-    binary: ludus-magnus
+  - id: chiron
+    binary: chiron
     main: .
     env:
       - CGO_ENABLED=0

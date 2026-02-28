@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Perttulands/ludus-magnus/internal/engine"
-	"github.com/Perttulands/ludus-magnus/internal/provider"
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/engine"
+	"github.com/Perttulands/chiron/internal/provider"
+	"github.com/Perttulands/chiron/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -33,7 +33,7 @@ func newQuickstartInitCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			st, err := state.Load("")
 			if err != nil {
-				return err
+				return fmt.Errorf("load state: %w", err)
 			}
 
 			now := time.Now().UTC().Format(time.RFC3339)
@@ -48,12 +48,12 @@ func newQuickstartInitCmd() *cobra.Command {
 				APIKey:   apiKey,
 			})
 			if err != nil {
-				return err
+				return fmt.Errorf("initialize provider: %w", err)
 			}
 
-			agentDef, generationMeta, err := engine.GenerateAgentDefinitionWithMetadata(need, nil, adapter)
+			agentDef, generationMeta, err := engine.GenerateAgentDefinitionWithMetadata(cmd.Context(), need, nil, adapter)
 			if err != nil {
-				return err
+				return fmt.Errorf("generate agent: %w", err)
 			}
 
 			mainLineage := state.Lineage{
@@ -85,7 +85,7 @@ func newQuickstartInitCmd() *cobra.Command {
 			}
 
 			if err := state.Save("", st); err != nil {
-				return err
+				return fmt.Errorf("save state: %w", err)
 			}
 
 			if isJSONOutput(cmd) {
@@ -96,10 +96,12 @@ func newQuickstartInitCmd() *cobra.Command {
 			}
 
 			if _, err := fmt.Fprintf(cmd.OutOrStdout(), "session_id=%s\n", sessionID); err != nil {
-				return err
+				return fmt.Errorf("write output: %w", err)
 			}
-			_, err = fmt.Fprintf(cmd.OutOrStdout(), "lineage_id=%s\n", lineageID)
-			return err
+			if _, err = fmt.Fprintf(cmd.OutOrStdout(), "lineage_id=%s\n", lineageID); err != nil {
+				return fmt.Errorf("write output: %w", err)
+			}
+			return nil
 		},
 	}
 

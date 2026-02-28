@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Perttulands/ludus-magnus/internal/state"
+	"github.com/Perttulands/chiron/internal/state"
 )
 
 const (
@@ -20,7 +20,7 @@ const (
 func AgentDefinition(st state.State, agentID string, format string) (string, error) {
 	agent, err := findUniqueAgentByID(st, agentID)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("find agent %q: %w", agentID, err)
 	}
 
 	switch normalizeFormat(format) {

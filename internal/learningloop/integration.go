@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/Perttulands/ludus-magnus/internal/tournament"
-	"github.com/Perttulands/ludus-magnus/internal/training"
+	"github.com/Perttulands/chiron/internal/tournament"
+	"github.com/Perttulands/chiron/internal/training"
 )
 
 // TrainedPrompt represents a prompt ready for learning loop consumption.

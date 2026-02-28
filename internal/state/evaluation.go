@@ -14,12 +14,12 @@ func EvaluateArtifact(artifactID string, score int, comment string) error {
 
 	st, err := Load("")
 	if err != nil {
-		return err
+		return fmt.Errorf("load state: %w", err)
 	}
 
 	location, err := findUniqueArtifactLocation(st, artifactID)
 	if err != nil {
-		return err
+		return fmt.Errorf("find artifact %q: %w", artifactID, err)
 	}
 
 	session := st.Sessions[location.sessionID]

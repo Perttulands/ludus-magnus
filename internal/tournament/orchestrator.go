@@ -6,8 +6,8 @@ import (
 	"sort"
 	"time"
 
-	"github.com/Perttulands/ludus-magnus/internal/challenge"
-	"github.com/Perttulands/ludus-magnus/internal/scoring"
+	"github.com/Perttulands/chiron/internal/challenge"
+	"github.com/Perttulands/chiron/internal/scoring"
 )
 
 // Status tracks the lifecycle of a tournament.

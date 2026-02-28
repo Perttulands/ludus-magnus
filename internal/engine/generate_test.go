@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Perttulands/ludus-magnus/internal/provider"
+	"github.com/Perttulands/chiron/internal/provider"
 )
 
 type mockProvider struct {
@@ -58,7 +58,7 @@ func TestGenerateAgentDefinitionWithMetadataAppliesDefaults(t *testing.T) {
 		info: provider.ProviderInfo{Provider: "anthropic", Model: "claude-sonnet-4-5"},
 	}
 
-	definition, generationMeta, err := GenerateAgentDefinitionWithMetadata("customer care agent", []string{"be concise"}, p)
+	definition, generationMeta, err := GenerateAgentDefinitionWithMetadata(context.Background(), "customer care agent", []string{"be concise"}, p)
 	if err != nil {
 		t.Fatalf("GenerateAgentDefinitionWithMetadata returned error: %v", err)
 	}

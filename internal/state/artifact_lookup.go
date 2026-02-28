@@ -15,12 +15,12 @@ type artifactLocation struct {
 func LoadArtifactByID(artifactID string) (Artifact, error) {
 	st, err := Load("")
 	if err != nil {
-		return Artifact{}, err
+		return Artifact{}, fmt.Errorf("load state: %w", err)
 	}
 
 	location, err := findUniqueArtifactLocation(st, artifactID)
 	if err != nil {
-		return Artifact{}, err
+		return Artifact{}, fmt.Errorf("find artifact %q: %w", artifactID, err)
 	}
 
 	return st.Sessions[location.sessionID].Lineages[location.lineageKey].Artifacts[location.index], nil
