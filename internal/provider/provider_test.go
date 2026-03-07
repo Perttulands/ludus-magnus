@@ -45,6 +45,26 @@ func TestFactoryValidatesCredentials(t *testing.T) {
 	}
 }
 
+func TestFactoryPiCLINoCredentialsNeeded(t *testing.T) {
+	p, err := NewFactory(Config{Provider: "pi-cli", Model: "qwen3.5:9b"})
+	if err != nil {
+		t.Fatalf("expected no error for pi-cli, got: %v", err)
+	}
+	if p.GetMetadata().Provider != "pi-cli" {
+		t.Errorf("expected pi-cli provider, got %q", p.GetMetadata().Provider)
+	}
+}
+
+func TestFactoryOllamaAlias(t *testing.T) {
+	p, err := NewFactory(Config{Provider: "ollama", Model: "qwen3.5:9b"})
+	if err != nil {
+		t.Fatalf("expected no error for ollama alias, got: %v", err)
+	}
+	if p.GetMetadata().Provider != "pi-cli" {
+		t.Errorf("expected pi-cli provider, got %q", p.GetMetadata().Provider)
+	}
+}
+
 func TestFactoryUnsupportedProvider(t *testing.T) {
 	_, err := NewFactory(Config{Provider: "azure-custom-thing"})
 	if err == nil {
@@ -95,6 +115,11 @@ func TestNormalizeProviderName(t *testing.T) {
 		{"openrouter", "openai-compatible"},
 		{"litellm", "openai-compatible"},
 		{"  Anthropic  ", "anthropic"},
+		{"pi", "pi-cli"},
+		{"pi_cli", "pi-cli"},
+		{"pi-cli", "pi-cli"},
+		{"pi-ollama", "pi-cli"},
+		{"ollama", "pi-cli"},
 		{"custom-thing", "custom-thing"},
 	}
 	for _, tt := range tests {
@@ -585,6 +610,66 @@ func TestOpenAICompatibleProviderUnknownModelCostZero(t *testing.T) {
 	}
 	if meta.CostUSD != 0 {
 		t.Errorf("expected 0 cost for unknown model, got %f", meta.CostUSD)
+	}
+}
+
+// --- Pi CLI provider tests ---
+
+func TestPiCLIProviderDefaultModel(t *testing.T) {
+	p := NewPiCLIProvider("", "", "")
+	if p.model != "qwen3.5:9b" {
+		t.Errorf("default model = %q, want %q", p.model, "qwen3.5:9b")
+	}
+}
+
+func TestPiCLIProviderDefaultBinary(t *testing.T) {
+	p := NewPiCLIProvider("model", "", "")
+	if p.binary != "pi" {
+		t.Errorf("default binary = %q, want %q", p.binary, "pi")
+	}
+}
+
+func TestPiCLIProviderDefaultBaseURL(t *testing.T) {
+	p := NewPiCLIProvider("model", "pi", "")
+	if p.baseURL != "http://localhost:11434" {
+		t.Errorf("default baseURL = %q, want %q", p.baseURL, "http://localhost:11434")
+	}
+}
+
+func TestPiCLIProviderTrimsTrailingSlash(t *testing.T) {
+	p := NewPiCLIProvider("model", "pi", "http://localhost:11434/")
+	if p.baseURL != "http://localhost:11434" {
+		t.Errorf("baseURL = %q, expected trailing slash trimmed", p.baseURL)
+	}
+}
+
+func TestPiCLIProviderGetMetadata(t *testing.T) {
+	p := NewPiCLIProvider("qwen3.5:35b", "pi", "http://localhost:11434")
+	info := p.GetMetadata()
+	if info.Provider != "pi-cli" {
+		t.Errorf("Provider = %q, want %q", info.Provider, "pi-cli")
+	}
+	if info.Model != "qwen3.5:35b" {
+		t.Errorf("Model = %q, want %q", info.Model, "qwen3.5:35b")
+	}
+	if info.BaseURL != "http://localhost:11434" {
+		t.Errorf("BaseURL = %q, want %q", info.BaseURL, "http://localhost:11434")
+	}
+}
+
+func TestPiCLIProviderResultTextPrefersResponse(t *testing.T) {
+	p := NewPiCLIProvider("", "", "")
+	r := &piJSONResult{Response: "from response", Result: "from result"}
+	if got := p.resultText(r); got != "from response" {
+		t.Errorf("resultText = %q, want %q", got, "from response")
+	}
+}
+
+func TestPiCLIProviderResultTextFallsBackToResult(t *testing.T) {
+	p := NewPiCLIProvider("", "", "")
+	r := &piJSONResult{Response: "", Result: "from result"}
+	if got := p.resultText(r); got != "from result" {
+		t.Errorf("resultText = %q, want %q", got, "from result")
 	}
 }
 

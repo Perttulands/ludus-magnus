@@ -2,6 +2,7 @@ package engine
 
 import (
 	"context"
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
@@ -105,5 +106,135 @@ func TestExecuteCLIMode(t *testing.T) {
 	}
 	if result.Metadata.ExecutorCommand == nil || !strings.Contains(*result.Metadata.ExecutorCommand, "codex") {
 		t.Fatalf("unexpected executor command: %+v", result.Metadata.ExecutorCommand)
+	}
+}
+
+func TestExecuteSealedMissingHarness(t *testing.T) {
+	_, err := Execute(context.Background(), ExecuteRequest{
+		Mode:          ExecutionModeSealed,
+		Input:         "hello",
+		Definition:    state.AgentDefinition{SystemPrompt: "sys"},
+		HarnessScript: "/nonexistent/path/harness.sh",
+		HarnessModel:  "qwen3.5:9b",
+	})
+	if err == nil {
+		t.Fatal("expected error for missing harness script")
+	}
+	if !strings.Contains(err.Error(), "harness script not found") {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func TestExecuteSealedMissingModel(t *testing.T) {
+	_, err := Execute(context.Background(), ExecuteRequest{
+		Mode:          ExecutionModeSealed,
+		Input:         "hello",
+		Definition:    state.AgentDefinition{SystemPrompt: "sys"},
+		HarnessScript: "testdata/mock-harness.sh",
+	})
+	if err == nil {
+		t.Fatal("expected error for missing harness model")
+	}
+	if !strings.Contains(err.Error(), "harness model is required") {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func TestExecuteSealedParseResult(t *testing.T) {
+	// Write a mock result.json and test parseSealedResult directly
+	tmpDir := t.TempDir()
+	resultPath := filepath.Join(tmpDir, "result.json")
+
+	resultData := sealedResult{
+		Type:              "result",
+		Subtype:           "success",
+		Result:            "parsed response text",
+		NumTurns:          5,
+		DurationMS:        60000,
+		TotalCostUSD:      0.0,
+		Usage:             sealedUsage{InputTokens: 1000, OutputTokens: 500},
+		ToolCallsObserved: []string{"read", "bash", "edit"},
+		ToolSummary:       map[string]int{"read": 2, "bash": 3, "edit": 1},
+		Model:             "qwen3.5:9b",
+		Executor:          "pi-cli",
+	}
+
+	data, err := json.Marshal(resultData)
+	if err != nil {
+		t.Fatalf("marshal test data: %v", err)
+	}
+	if err := os.WriteFile(resultPath, data, 0o644); err != nil {
+		t.Fatalf("write test result.json: %v", err)
+	}
+
+	result, err := parseSealedResult(resultPath)
+	if err != nil {
+		t.Fatalf("parseSealedResult returned error: %v", err)
+	}
+
+	if result.Output != "parsed response text" {
+		t.Fatalf("unexpected output: %q", result.Output)
+	}
+	if result.Metadata.Mode != ExecutionModeSealed {
+		t.Fatalf("unexpected mode: %q", result.Metadata.Mode)
+	}
+	if result.Metadata.TokensInput != 1000 {
+		t.Fatalf("unexpected tokens input: %d", result.Metadata.TokensInput)
+	}
+	if result.Metadata.TokensOutput != 500 {
+		t.Fatalf("unexpected tokens output: %d", result.Metadata.TokensOutput)
+	}
+	if result.Metadata.DurationMS != 60000 {
+		t.Fatalf("unexpected duration: %d", result.Metadata.DurationMS)
+	}
+	if result.Metadata.Executor == nil || *result.Metadata.Executor != "pi-cli" {
+		t.Fatalf("unexpected executor: %+v", result.Metadata.Executor)
+	}
+	if len(result.Metadata.ToolCalls) != 3 {
+		t.Fatalf("unexpected tool calls count: %d", len(result.Metadata.ToolCalls))
+	}
+	if result.Metadata.ToolCalls[0].Name != "read" {
+		t.Fatalf("unexpected first tool call: %q", result.Metadata.ToolCalls[0].Name)
+	}
+}
+
+func TestExecuteSealedEndToEnd(t *testing.T) {
+	// Use the mock harness script for an end-to-end test
+	harnessPath, err := filepath.Abs("testdata/mock-harness.sh")
+	if err != nil {
+		t.Fatalf("resolve harness path: %v", err)
+	}
+
+	if _, err := os.Stat(harnessPath); err != nil {
+		t.Skipf("mock harness not found at %s", harnessPath)
+	}
+
+	result, err := Execute(context.Background(), ExecuteRequest{
+		Mode:          ExecutionModeSealed,
+		Input:         "test input",
+		Definition:    state.AgentDefinition{SystemPrompt: "you are a test agent"},
+		HarnessScript: harnessPath,
+		HarnessModel:  "qwen3.5:9b",
+		Condition:     "minimal",
+		RunNumber:     42,
+	})
+	if err != nil {
+		t.Fatalf("Execute returned error: %v", err)
+	}
+
+	if !strings.Contains(result.Output, "mock sealed response") {
+		t.Fatalf("unexpected output: %q", result.Output)
+	}
+	if result.Metadata.Mode != ExecutionModeSealed {
+		t.Fatalf("unexpected mode: %q", result.Metadata.Mode)
+	}
+	if result.Metadata.TokensInput != 800 {
+		t.Fatalf("unexpected tokens input: %d", result.Metadata.TokensInput)
+	}
+	if result.Metadata.TokensOutput != 350 {
+		t.Fatalf("unexpected tokens output: %d", result.Metadata.TokensOutput)
+	}
+	if result.Metadata.Executor == nil || *result.Metadata.Executor != "mock-harness" {
+		t.Fatalf("unexpected executor: %+v", result.Metadata.Executor)
 	}
 }
