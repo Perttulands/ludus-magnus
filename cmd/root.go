@@ -25,6 +25,7 @@ func newRootCmd() *cobra.Command {
 	cmd.AddCommand(newDirectiveCmd())
 	cmd.AddCommand(newExportCmd())
 	cmd.AddCommand(newDoctorCmd())
+	cmd.AddCommand(newExperimentCmd())
 
 	return cmd
 }

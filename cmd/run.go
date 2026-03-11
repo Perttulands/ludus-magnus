@@ -19,6 +19,10 @@ func newRunCmd() *cobra.Command {
 	var model string
 	var baseURL string
 	var apiKey string
+	var harness string
+	var harnessModel string
+	var condition string
+	var runNumber int
 
 	cmd := &cobra.Command{
 		Use:   "run <session-id>",
@@ -63,7 +67,12 @@ func newRunCmd() *cobra.Command {
 				Executor:   executor,
 			}
 
-			if strings.TrimSpace(mode) == "" || strings.TrimSpace(mode) == engine.ExecutionModeAPI {
+			if strings.TrimSpace(mode) == engine.ExecutionModeSealed {
+				request.HarnessScript = harness
+				request.HarnessModel = harnessModel
+				request.Condition = condition
+				request.RunNumber = runNumber
+			} else if strings.TrimSpace(mode) == "" || strings.TrimSpace(mode) == engine.ExecutionModeAPI {
 				configProvider := strings.TrimSpace(providerName)
 				if configProvider == "" {
 					configProvider = strings.TrimSpace(agent.GenerationMetadata.Provider)
@@ -114,8 +123,12 @@ func newRunCmd() *cobra.Command {
 
 	cmd.Flags().StringVar(&input, "input", "", "Input for agent execution")
 	cmd.Flags().StringVar(&lineageName, "lineage", "", "Lineage name (main, A, B, C, D)")
-	cmd.Flags().StringVar(&mode, "mode", engine.ExecutionModeAPI, "Execution mode: api or cli")
+	cmd.Flags().StringVar(&mode, "mode", engine.ExecutionModeAPI, "Execution mode: api, cli, or sealed")
 	cmd.Flags().StringVar(&executor, "executor", "", "CLI executor for mode=cli: claude or codex")
+	cmd.Flags().StringVar(&harness, "harness", "", "Path to harness script for mode=sealed")
+	cmd.Flags().StringVar(&harnessModel, "harness-model", "", "Model to pass to sealed harness (e.g. qwen3.5:9b)")
+	cmd.Flags().StringVar(&condition, "condition", "chiron", "Condition name for sealed harness")
+	cmd.Flags().IntVar(&runNumber, "run-number", 0, "Run number for sealed harness (auto-generated if 0)")
 	cmd.Flags().StringVar(&providerName, "provider", "", "Provider override for mode=api")
 	cmd.Flags().StringVar(&model, "model", "", "Model override for mode=api")
 	cmd.Flags().StringVar(&baseURL, "base-url", "", "Base URL override for mode=api")

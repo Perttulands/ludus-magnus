@@ -31,3 +31,12 @@ go.work.sum
 .venv/
 __pycache__/
 *.pyc
+/chiron
+/.ludus-magnus/
+/TESTING.md
+/experiments/
+*_test.go
+/test/
+testdata/
+experiments/*/runs/
+experiments/*/matrix-run.log

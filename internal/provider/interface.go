@@ -4,10 +4,11 @@ import "context"
 
 // AgentDefinition is the prompt/model payload needed by providers.
 type AgentDefinition struct {
-	SystemPrompt string
-	Model        string
-	Temperature  float64
-	MaxTokens    int
+	SystemPrompt     string
+	Model            string
+	Temperature      float64
+	MaxTokens        int
+	InferenceOptions map[string]any // Provider-specific options (e.g., num_ctx, top_k for Ollama)
 }
 
 // Metadata captures provider call observability signals.

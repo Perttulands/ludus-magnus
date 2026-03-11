@@ -42,6 +42,10 @@ func NewFactory(cfg Config) (Provider, error) {
 		return NewOpenAICompatibleProvider(key, cfg.Model, cfg.BaseURL), nil
 	case "claude-cli":
 		return NewClaudeCLIProvider(cfg.Model, ""), nil
+	case "ollama-native":
+		return NewOllamaProvider(cfg.Model, cfg.BaseURL), nil
+	case "pi-cli":
+		return NewPiCLIProvider(cfg.Model, "", cfg.BaseURL), nil
 	default:
 		return nil, fmt.Errorf("unsupported provider: %s", cfg.Provider)
 	}
@@ -57,6 +61,10 @@ func normalizeProviderName(raw string) string {
 		return "openai-compatible"
 	case "claude", "claude_cli", "claude-code":
 		return "claude-cli"
+	case "pi", "pi_cli", "pi-cli", "pi-ollama":
+		return "pi-cli"
+	case "ollama", "ollama-native", "ollama_native":
+		return "ollama-native"
 	default:
 		return name
 	}

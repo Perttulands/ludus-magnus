@@ -67,7 +67,7 @@ func newDoctorCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&providerName, "provider", "anthropic", "Provider name (anthropic, openai-compatible, or claude-cli)")
+	cmd.Flags().StringVar(&providerName, "provider", "anthropic", "Provider name (anthropic, openai-compatible, claude-cli, ollama-native, or pi-cli)")
 	cmd.Flags().StringVar(&model, "model", "", "Provider model override")
 	cmd.Flags().StringVar(&baseURL, "base-url", "", "Provider base URL override")
 	cmd.Flags().StringVar(&apiKey, "api-key", "", "Provider API key override")
@@ -100,6 +100,14 @@ func checkProviderCredentials(providerName string, apiKey string) doctorCheck {
 			return doctorCheck{Required: true, Passed: false, Message: "✗ claude binary not found (required for claude-cli provider)"}
 		}
 		return doctorCheck{Required: true, Passed: true, Message: "✓ claude binary found (claude-cli provider uses Claude Code auth)"}
+	case "ollama-native":
+		return doctorCheck{Required: false, Passed: true, Message: "✓ ollama-native uses HTTP endpoint, no API key required"}
+	case "pi-cli":
+		_, err := exec.LookPath("pi")
+		if err != nil {
+			return doctorCheck{Required: true, Passed: false, Message: "✗ pi binary not found (required for pi-cli provider)"}
+		}
+		return doctorCheck{Required: true, Passed: true, Message: "✓ pi binary found (pi-cli provider uses local Ollama)"}
 	default:
 		return doctorCheck{Required: true, Passed: false, Message: fmt.Sprintf("✗ unsupported provider: %s", strings.TrimSpace(providerName))}
 	}
@@ -153,6 +161,12 @@ func normalizeDoctorProvider(raw string) string {
 	}
 	if normalized == "claude" || normalized == "claude_cli" || normalized == "claude-code" {
 		return "claude-cli"
+	}
+	if normalized == "pi" || normalized == "pi_cli" || normalized == "pi-cli" || normalized == "pi-ollama" {
+		return "pi-cli"
+	}
+	if normalized == "ollama" || normalized == "ollama-native" || normalized == "ollama_native" {
+		return "ollama-native"
 	}
 	return normalized
 }
