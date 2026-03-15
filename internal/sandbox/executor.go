@@ -164,7 +164,7 @@ echo "br-stub: logged invocation"
 		// Append the pi command
 		bwrapArgs = append(bwrapArgs, piPath)
 		bwrapArgs = append(bwrapArgs, piArgs...)
-		cmd = exec.CommandContext(ctx, bwrapPath, bwrapArgs...)
+		cmd = exec.CommandContext(ctx, bwrapPath, bwrapArgs...) // ubs:ignore - intentional: bwrap sandbox, args are config-derived not user input
 
 	case "none":
 		cmd = exec.CommandContext(ctx, piPath, piArgs...)

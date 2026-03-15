@@ -11,6 +11,8 @@ func newExperimentCmd() *cobra.Command {
 	cmd.AddCommand(newExperimentAnalyzeCmd())
 	cmd.AddCommand(newExperimentScoreCmd())
 	cmd.AddCommand(newExperimentRunCmd())
+	cmd.AddCommand(newExperimentTraceCmd())
+	cmd.AddCommand(newExperimentSummaryCmd())
 
 	return cmd
 }

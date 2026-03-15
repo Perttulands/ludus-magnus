@@ -198,7 +198,12 @@ func saveResults(outDir string, cell Cell, res *sandbox.RunResult, wall time.Dur
 		return fmt.Errorf("mkdir %s: %w", outDir, err)
 	}
 
-	// raw-output.jsonl
+	// transcript.jsonl — canonical transcript artifact.
+	// Also written as raw-output.jsonl for backward compatibility with existing tools.
+	transcriptPath := filepath.Join(outDir, "transcript.jsonl")
+	if err := os.WriteFile(transcriptPath, res.RawOutput, 0o644); err != nil {
+		return err
+	}
 	if err := os.WriteFile(filepath.Join(outDir, "raw-output.jsonl"),
 		res.RawOutput, 0o644); err != nil {
 		return err

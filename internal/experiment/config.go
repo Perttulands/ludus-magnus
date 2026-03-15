@@ -2,6 +2,7 @@ package experiment
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -63,6 +64,14 @@ func LoadConfig(path string) (*Config, error) {
 	var cfg Config
 	if err := yaml.Unmarshal(data, &cfg); err != nil {
 		return nil, fmt.Errorf("parsing config: %w", err)
+	}
+
+	// Deprecation: trace_capture is always true — transcripts are always persisted.
+	// Warn if the field is explicitly set so users know it has no effect.
+	if cfg.Execution.TraceCapture {
+		log.Println("DEPRECATED: execution.trace_capture is deprecated and has no effect. " +
+			"Transcripts are always captured as transcript.jsonl. " +
+			"Remove trace_capture from your config to silence this warning.")
 	}
 
 	// Apply defaults
